@@ -1,25 +1,38 @@
 {% extends "base.html" %}
-
 {% block title %}Home - KCPS HUB{% endblock %}
-
 {% block content %}
-    <div class="text-center">
-        <h1 class="text-4xl font-bold text-gray-800 mb-4">Welcome to the KCPS HUB</h1>
-        <p class="text-lg text-gray-600">Your one-stop shop for all KCPS knowledge and resources.</p>
-    </div>
+
+<div class="text-center mb-12">
+    <h1 class="text-4xl font-bold text-gray-800 mb-4">Welcome to the KCPS HUB</h1>
+    <p class="text-lg text-gray-600">Your one-stop shop for all KCPS knowledge and resources.</p>
+    
+    {% if not user.is_authenticated %}
+        <a href="/accounts/login/" class="inline-block bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-blue-50 transition">
+            Sign In with Microsoft 365
+        </a>
+    {% else %}
+        <a href="/profile/dashboard/" class="inline-block bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-blue-50 transition">
+            Go to Dashboard
+        </a>
+    {% endif %}
+    
+    <div class="hidden lg:block text-6xl opacity-20">📚</div>
+</div>
+
 {% if not user.is_authenticated %}
-<!-- User is not authenticated -->
-
-            {% else %}
-<!-- User is authenticated -->
-            {% endif %}
-            <!-- User is not authenticated -->
-            {% if user.is_authenticated %}
-            <!-- User is authenticated -->
-             
-{% else %}
-<!-- User is not authenticated -->
-
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+    <!-- Why Knowledge Portal -->
+    <div class="bg-white rounded-lg shadow p-8">
+        <h2 class="text-2xl font-bold text-gray-900 mb-6">Why Knowledge Portal?</h2>
+        <!-- content stays same -->
+    </div>
+    
+    <!-- Get Started -->
+    <div class="bg-white rounded-lg shadow p-8">
+        <h2 class="text-2xl font-bold text-gray-900 mb-6">Get Started</h2>
+        <!-- content stays same -->
+    </div>
+</div>
 {% endif %}
 
 {% endblock %}
