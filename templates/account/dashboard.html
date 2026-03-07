@@ -8,22 +8,7 @@
         <h1 class="text-4xl font-bold mb-8">Admin Dashboard</h1>
 
         <!-- Analytics Cards -->
-<div class="bg-white rounded-lg shadow p-6">
-    <h3 class="text-gray-600 text-sm font-semibold">Total Users</h3>
-    <p class="text-3xl font-bold text-blue-600 mt-2">{{ total_users }}</p>
-</div>
-<div class="bg-white rounded-lg shadow p-6">
-    <h3 class="text-gray-600 text-sm font-semibold">Videos Uploaded</h3>
-    <p class="text-3xl font-bold text-green-600 mt-2">{{ total_videos }}</p>
-</div>
-<div class="bg-white rounded-lg shadow p-6">
-    <h3 class="text-gray-600 text-sm font-semibold">Documents</h3>
-    <p class="text-3xl font-bold text-purple-600 mt-2">{{ total_documents }}</p>
-</div>
-<div class="bg-white rounded-lg shadow p-6">
-    <h3 class="text-gray-600 text-sm font-semibold">Posts</h3>
-    <p class="text-3xl font-bold text-orange-600 mt-2">{{ total_posts }}</p>
-</div>
+
 
 <!-- Content Engagement Analytics -->
 <div class="bg-white rounded-lg shadow mb-8 p-8">
@@ -167,7 +152,24 @@
     </div>
 </div>
 
-
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <div class="bg-white rounded-lg shadow p-6">
+    <h3 class="text-gray-600 text-sm font-semibold">Total Users</h3>
+    <p class="text-3xl font-bold text-blue-600 mt-2">{{ total_users }}</p>
+    </div>
+    <div class="bg-white rounded-lg shadow p-6">
+    <h3 class="text-gray-600 text-sm font-semibold">Videos Uploaded</h3>
+    <p class="text-3xl font-bold text-green-600 mt-2">{{ total_videos }}</p>
+    </div>
+    <div class="bg-white rounded-lg shadow p-6">
+    <h3 class="text-gray-600 text-sm font-semibold">Documents</h3>
+    <p class="text-3xl font-bold text-purple-600 mt-2">{{ total_documents }}</p>
+    </div>
+    <div class="bg-white rounded-lg shadow p-6">
+    <h3 class="text-gray-600 text-sm font-semibold">Posts</h3>
+    <p class="text-3xl font-bold text-orange-600 mt-2">{{ total_posts }}</p>
+    </div>
+</div>
 
 <!-- Tab Navigation dashb0ards-->
  <div class="bg-white rounded-lg shadow mb-8">
@@ -269,8 +271,6 @@
         </div>
     </div>
 </div>
-<!-- analytic Script -->
- 
 
 <!-- Tab Navigation / Analytics Script -->
 <script>

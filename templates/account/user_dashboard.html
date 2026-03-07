@@ -1,0 +1,195 @@
+{% extends "base.html" %}
+
+{% block title %}KCPS HUB Dashboard{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-100 p-8">
+    <div class="max-w-7xl mx-auto">
+        <h1 class="text-4xl font-bold mb-8">KCPS HUB Dashboard</h1>
+
+        <!-- Quick Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white rounded-lg shadow p-6">
+                <h3 class="text-gray-600 text-sm font-semibold">Content Viewed</h3>
+                <p class="text-3xl font-bold text-blue-600 mt-2">{{ user_views.count }}</p>
+            </div>
+            <div class="bg-white rounded-lg shadow p-6">
+                <h3 class="text-gray-600 text-sm font-semibold">Videos Available</h3>
+                <p class="text-3xl font-bold text-green-600 mt-2">{{ videos.count }}</p>
+            </div>
+            <div class="bg-white rounded-lg shadow p-6">
+                <h3 class="text-gray-600 text-sm font-semibold">Posts</h3>
+                <p class="text-3xl font-bold text-orange-600 mt-2">{{ posts.count }}</p>
+            </div>
+            <div class="bg-white rounded-lg shadow p-6">
+                <h3 class="text-gray-600 text-sm font-semibold">Resources</h3>
+                <p class="text-3xl font-bold text-purple-600 mt-2">{{ documents.count }}</p>
+            </div>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="bg-white rounded-lg shadow mb-8">
+            <div class="flex border-b overflow-x-auto">
+                <button onclick="showTab('videos')" class="tab-btn active flex-1 py-4 px-6 text-center font-semibold border-b-4 border-blue-600 whitespace-nowrap">📹 Videos</button>
+                <button onclick="showTab('posts')" class="tab-btn flex-1 py-4 px-6 text-center font-semibold border-b-4 border-transparent hover:border-gray-300 whitespace-nowrap">📝 Posts</button>
+                <button onclick="showTab('documents')" class="tab-btn flex-1 py-4 px-6 text-center font-semibold border-b-4 border-transparent hover:border-gray-300 whitespace-nowrap">📄 Documents</button>
+                <button onclick="showTab('images')" class="tab-btn flex-1 py-4 px-6 text-center font-semibold border-b-4 border-transparent hover:border-gray-300 whitespace-nowrap">🖼️ Images</button>
+                <button onclick="showTab('history')" class="tab-btn flex-1 py-4 px-6 text-center font-semibold border-b-4 border-transparent hover:border-gray-300 whitespace-nowrap">📊 My History</button>
+            </div>
+
+            <div class="p-8">
+
+                <!-- Videos Tab -->
+                <div id="videos" class="tab-content">
+                    <h2 class="text-2xl font-bold mb-6">Videos</h2>
+                    {% if videos %}
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {% for video in videos %}
+                        <a href="{% url 'video-detail' video.id %}" class="bg-white rounded-lg shadow overflow-hidden hover:shadow-lg transition">
+                            <div class="bg-gray-200 h-40 flex items-center justify-center">
+                                <span class="text-4xl">🎥</span>
+                            </div>
+                            <div class="p-4">
+                                <h3 class="font-bold text-lg mb-2">{{ video.title }}</h3>
+                                <p class="text-gray-600 text-sm mb-3">{{ video.description|truncatewords:15 }}</p>
+                                <div class="flex justify-between items-center text-xs text-gray-500">
+                                    <span>{{ video.category }}</span>
+                                    <span>{{ video.created_at|date:"M d" }}</span>
+                                </div>
+                            </div>
+                        </a>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p class="text-gray-500 text-center py-8">No videos available yet</p>
+                    {% endif %}
+                </div>
+
+                <!-- Posts Tab -->
+                <div id="posts" class="tab-content hidden">
+                    <h2 class="text-2xl font-bold mb-6">Posts</h2>
+                    {% if posts %}
+                    <div class="space-y-6">
+                        {% for post in posts %}
+                        <a href="{% url 'post-detail' post.id %}" class="bg-white rounded-lg shadow p-6 hover:shadow-lg transition block">
+                            <h3 class="text-xl font-bold mb-2">{{ post.title }}</h3>
+                            <p class="text-gray-600 mb-4">{{ post.content|truncatewords:30 }}</p>
+                            <div class="flex justify-between items-center text-sm text-gray-500">
+                                <span class="bg-orange-100 text-orange-800 px-3 py-1 rounded-full">{{ post.category }}</span>
+                                <span>{{ post.created_at|date:"M d, Y" }}</span>
+                            </div>
+                        </a>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p class="text-gray-500 text-center py-8">No posts available yet</p>
+                    {% endif %}
+                </div>
+
+                <!-- Documents Tab -->
+                <div id="documents" class="tab-content hidden">
+                    <h2 class="text-2xl font-bold mb-6">Documents</h2>
+                    {% if documents %}
+                    <div class="space-y-4">
+                        {% for doc in documents %}
+                        <a href="{% url 'document-detail' doc.id %}" class="bg-white rounded-lg shadow p-6 hover:shadow-lg transition flex items-center justify-between">
+                            <div>
+                                <h3 class="font-bold text-lg">{{ doc.title }}</h3>
+                                <p class="text-gray-600 text-sm">{{ doc.description|truncatewords:20 }}</p>
+                            </div>
+                            <div class="text-right text-sm text-gray-500">
+                                <p class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full mb-2">{{ doc.category }}</p>
+                                <p>{{ doc.created_at|date:"M d, Y" }}</p>
+                            </div>
+                        </a>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p class="text-gray-500 text-center py-8">No documents available yet</p>
+                    {% endif %}
+                </div>
+
+                <!-- Images Tab -->
+                <div id="images" class="tab-content hidden">
+                    <h2 class="text-2xl font-bold mb-6">Images</h2>
+                    {% if images %}
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {% for image in images %}
+                        <a href="{% url 'image-detail' image.id %}" class="bg-white rounded-lg shadow overflow-hidden hover:shadow-lg transition">
+                            <img src="{{ image.image_file.url }}" alt="{{ image.title }}" class="w-full h-48 object-cover">
+                            <div class="p-4">
+                                <h3 class="font-bold">{{ image.title }}</h3>
+                                <p class="text-gray-600 text-sm">{{ image.created_at|date:"M d, Y" }}</p>
+                            </div>
+                        </a>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p class="text-gray-500 text-center py-8">No images available yet</p>
+                    {% endif %}
+                </div>
+
+                <!-- History Tab -->
+                <div id="history" class="tab-content hidden">
+                    <h2 class="text-2xl font-bold mb-6">Your Viewing History</h2>
+                    {% if user_views %}
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm">
+                            <thead class="bg-gray-50 border-b">
+                                <tr>
+                                    <th class="px-6 py-3 text-left font-semibold">Content</th>
+                                    <th class="px-6 py-3 text-left font-semibold">Type</th>
+                                    <th class="px-6 py-3 text-left font-semibold">Viewed</th>
+                                    <th class="px-6 py-3 text-left font-semibold">Time Spent</th>
+                                    <th class="px-6 py-3 text-left font-semibold">Completion</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y">
+                                {% for view in user_views %}
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-6 py-3 font-semibold">{{ view.content_title }}</td>
+                                    <td class="px-6 py-3">
+                                        <span class="{% if view.content_type == 'video' %}bg-green-100 text-green-800{% elif view.content_type == 'post' %}bg-orange-100 text-orange-800{% elif view.content_type == 'document' %}bg-purple-100 text-purple-800{% else %}bg-pink-100 text-pink-800{% endif %} px-3 py-1 rounded-full text-xs font-semibold">
+                                            {{ view.get_content_type_display }}
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-3">{{ view.viewed_at|date:"M d, h:i A" }}</td>
+                                    <td class="px-6 py-3">{{ view.time_spent_seconds }}s</td>
+                                    <td class="px-6 py-3">
+                                        <div class="w-24 bg-gray-200 rounded-full h-2">
+                                            <div class="bg-blue-600 h-2 rounded-full" style="width: {{ view.completion_percentage }}%"></div>
+                                        </div>
+                                        <p class="text-xs text-gray-600 mt-1">{{ view.completion_percentage }}%</p>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <p class="text-gray-500 text-center py-8">No viewing history yet</p>
+                    {% endif %}
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function showTab(tabName) {
+    const tabs = document.querySelectorAll('.tab-content');
+    tabs.forEach(tab => tab.classList.add('hidden'));
+    
+    const buttons = document.querySelectorAll('.tab-btn');
+    buttons.forEach(btn => {
+        btn.classList.remove('border-blue-600');
+        btn.classList.add('border-transparent');
+    });
+    
+    document.getElementById(tabName).classList.remove('hidden');
+    event.target.classList.remove('border-transparent');
+    event.target.classList.add('border-blue-600');
+}
+</script>
+{% endblock %}

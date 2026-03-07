@@ -12,15 +12,13 @@
                 <p class="text-sm">By <strong>{{ post.author.get_full_name|default:post.author.username }}</strong></p>
                 <p class="text-sm">{{ post.created_at|date:"M d, Y" }}</p>
             </div>
-            <span class="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-sm font-semibold">{{ post.category }}</span>
+            <span class="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-sm">{{ post.category }}</span>
         </div>
 
-        <!-- Post Content -->
-        <div class="prose prose-lg max-w-none mb-8">
+        <div class="prose max-w-none mb-8">
             {{ post.content|linebreaks }}
         </div>
 
-        <!-- Media Section -->
         {% if post.media.all %}
         <div class="border-t pt-8 mt-8">
             <h2 class="text-2xl font-bold mb-6">Media</h2>
@@ -33,7 +31,7 @@
                         <source src="{{ media.file.url }}" type="video/mp4">
                     </video>
                     {% elif media.media_type == 'document' %}
-                    <a href="{{ media.file.url }}" target="_blank" class="flex items-center justify-center bg-gray-100 p-6 rounded-lg border-2 border-gray-300 hover:bg-gray-200 transition">
+                    <a href="{{ media.file.url }}" target="_blank" class="flex items-center justify-center bg-gray-100 p-6 rounded-lg border-2">
                         <span class="text-gray-700 font-semibold">📄 {{ media.file.name }}</span>
                     </a>
                     {% endif %}
@@ -44,7 +42,6 @@
     </div>
 </div>
 
-<!-- Tracking Script -->
 <script>
 const contentStartTime = Date.now() / 1000;
 const contentType = 'post';
@@ -58,7 +55,6 @@ window.addEventListener('scroll', () => {
 
 window.addEventListener('beforeunload', () => {
     const timeSpent = Math.round((Date.now() / 1000) - contentStartTime);
-    
     navigator.sendBeacon('/content/track-view/', JSON.stringify({
         content_type: contentType,
         content_title: contentTitle,

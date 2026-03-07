@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}{{ document.title }}{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-100 p-8">
+    <div class="max-w-4xl mx-auto">
+        <div class="bg-white rounded-lg shadow-lg p-8">
+            <h1 class="text-3xl font-bold mb-4">{{ document.title }}</h1>
+            
+            <div class="flex items-center justify-between mb-8 text-gray-600 border-b pb-4">
+                <div>
+                    <p class="text-sm">Uploaded by <strong>{{ document.uploaded_by.get_full_name|default:document.uploaded_by.username }}</strong></p>
+                    <p class="text-sm">{{ document.created_at|date:"M d, Y" }}</p>
+                </div>
+                <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm">{{ document.category }}</span>
+            </div>
+
+            <p class="text-gray-700 mb-8">{{ document.description }}</p>
+
+            <div class="bg-gray-50 p-8 rounded-lg text-center border-2 border-dashed">
+                <p class="text-gray-600 mb-4">📄 {{ document.file.name }}</p>
+                <a href="{{ document.file.url }}" target="_blank" class="inline-block bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-lg">
+                    View / Download
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+const contentStartTime = Date.now() / 1000;
+const contentType = 'document';
+const contentTitle = '{{ document.title|escapejs }}';
+
+window.addEventListener('beforeunload', () => {
+    const timeSpent = Math.round((Date.now() / 1000) - contentStartTime);
+    navigator.sendBeacon('/content/track-view/', JSON.stringify({
+        content_type: contentType,
+        content_title: contentTitle,
+        time_spent: timeSpent,
+        completion: 50
+    }));
+});
+</script>
+{% endblock %}
