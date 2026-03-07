@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block title %}KCPS HUB{% endblock %}
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- HTMX for dynamic interactions -->
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+     <style>
+        [hx-indicator] {
+            display: none;
+        }
+        .htmx-indicator.loading {
+            display: inline;
+        }
+        .htmx-swapping {
+            opacity: 0;
+            transition: opacity 0.3s ease-out;
+        }
+        .htmx-settling {
+            opacity: 1;
+            transition: opacity 0.3s ease-in;
+        }
+    </style>
+        {% block extra_css %}{% endblock %}
+
+</head>
+<body>
+    <body class="bg-blue-50">
+        <!-- navbar component -->
+        {% include "components/navbar.html" %}
+
+        <main class="max-w-7xl mx-auto px-4 py-8">
+        {% block content %}
+        <!-- Main content will be injected here -->
+        {% endblock %}
+        </main>
+        {% block extra_js %}{% endblock %}
+    
+</body>
+    <footer class="bg-gray-900 text-gray-100 mt-12 py-8">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="font-bold text-lg mb-4">KCPS HUB</h3>
+                    <p class="text-gray-400 text-sm">Internal KCPS knowledge hub to reduce support tickets.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Quick Links</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="/" class="hover:text-gray-100">Home</a></li>
+                        <li><a href="#about" class="hover:text-gray-100">About</a></li>
+                        <li><a href="#support" class="hover:text-gray-100">Support</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Legal</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="#privacy" class="hover:text-gray-100">Privacy</a></li>
+                        <li><a href="#terms" class="hover:text-gray-100">Terms</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-sm text-gray-400">
+                <p>&copy; 2026 KCPS HUB. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+</html>
