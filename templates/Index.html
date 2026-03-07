@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Home - KCPS HUB{% endblock %}
+
+{% block content %}
+    <div class="text-center">
+        <h1 class="text-4xl font-bold text-gray-800 mb-4">Welcome to the KCPS HUB</h1>
+        <p class="text-lg text-gray-600">Your one-stop shop for all KCPS knowledge and resources.</p>
+    </div>
+{% if not user.is_authenticated %}
+<!-- User is not authenticated -->
+
+            {% else %}
+<!-- User is authenticated -->
+            {% endif %}
+            <!-- User is not authenticated -->
+            {% if user.is_authenticated %}
+            <!-- User is authenticated -->
+             
+{% else %}
+<!-- User is not authenticated -->
+
+{% endif %}
+
+{% endblock %}
