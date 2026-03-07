@@ -1,0 +1,328 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-100 p-8">
+    <div class="max-w-7xl mx-auto">
+        <h1 class="text-4xl font-bold mb-8">Admin Dashboard</h1>
+
+        <!-- Analytics Cards -->
+        <!-- Analytics Cards -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+    <div class="bg-white rounded-lg shadow p-6">
+        <h3 class="text-gray-600 text-sm font-semibold">Total Users</h3>
+        <p class="text-3xl font-bold text-blue-600 mt-2">1,234</p>
+    </div>
+    <div class="bg-white rounded-lg shadow p-6">
+        <h3 class="text-gray-600 text-sm font-semibold">Videos Uploaded</h3>
+        <p class="text-3xl font-bold text-green-600 mt-2">45</p>
+    </div>
+    <div class="bg-white rounded-lg shadow p-6">
+        <h3 class="text-gray-600 text-sm font-semibold">Documents</h3>
+        <p class="text-3xl font-bold text-purple-600 mt-2">89</p>
+    </div>
+    <div class="bg-white rounded-lg shadow p-6">
+        <h3 class="text-gray-600 text-sm font-semibold">Posts</h3>
+        <p class="text-3xl font-bold text-orange-600 mt-2">23</p>
+    </div>
+</div>
+
+<!-- Content Engagement Analytics -->
+<div class="bg-white rounded-lg shadow mb-8 p-8">
+    <h2 class="text-2xl font-bold mb-6">Content Engagement Analytics</h2>
+    
+    <!-- Filter Section -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        <div>
+            <label class="block text-gray-700 font-semibold mb-2">Content Type</label>
+            <select id="contentType" class="w-full p-2 border rounded-lg">
+                <option value="">All Types</option>
+                <option value="video">Videos</option>
+                <option value="post">Posts</option>
+                <option value="document">Documents</option>
+                <option value="image">Images</option>
+            </select>
+        </div>
+        <div>
+            <label class="block text-gray-700 font-semibold mb-2">Date Range</label>
+            <select id="dateRange" class="w-full p-2 border rounded-lg">
+                <option>Last 7 Days</option>
+                <option>Last 30 Days</option>
+                <option>Last 3 Months</option>
+                <option>All Time</option>
+            </select>
+        </div>
+        <div>
+            <label class="block text-gray-700 font-semibold mb-2">Sort By</label>
+            <select id="sortBy" class="w-full p-2 border rounded-lg">
+                <option>Most Viewed</option>
+                <option>Most Time Spent</option>
+                <option>Recently Added</option>
+            </select>
+        </div>
+        <div class="flex items-end">
+            <button class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition">
+                Filter
+            </button>
+        </div>
+    </div>
+
+    <!-- Analytics Table -->
+    <div class="overflow-x-auto">
+        <table class="w-full">
+            <thead class="bg-gray-50 border-b">
+                <tr>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Content Title</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Type</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Views</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Avg. Time Spent</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Unique Users</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Action</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y">
+                <!-- Sample Row -->
+                <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 text-sm text-gray-900 font-semibold">Introduction to Django</td>
+                    <td class="px-6 py-4 text-sm">
+                        <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-semibold">Video</span>
+                    </td>
+                    <td class="px-6 py-4 text-sm text-gray-600">234</td>
+                    <td class="px-6 py-4 text-sm text-gray-600">12m 45s</td>
+                    <td class="px-6 py-4 text-sm text-gray-600">178</td>
+                    <td class="px-6 py-4 text-sm">
+                        <button class="text-blue-600 hover:text-blue-900 font-semibold">View Details</button>
+                    </td>
+                </tr>
+                <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 text-sm text-gray-900 font-semibold">Company Policy Update</td>
+                    <td class="px-6 py-4 text-sm">
+                        <span class="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-xs font-semibold">Post</span>
+                    </td>
+                    <td class="px-6 py-4 text-sm text-gray-600">156</td>
+                    <td class="px-6 py-4 text-sm text-gray-600">3m 20s</td>
+                    <td class="px-6 py-4 text-sm text-gray-600">142</td>
+                    <td class="px-6 py-4 text-sm">
+                        <button class="text-blue-600 hover:text-blue-900 font-semibold">View Details</button>
+                    </td>
+                </tr>
+                <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 text-sm text-gray-900 font-semibold">Employee Handbook 2024</td>
+                    <td class="px-6 py-4 text-sm">
+                        <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-xs font-semibold">Document</span>
+                    </td>
+                    <td class="px-6 py-4 text-sm text-gray-600">89</td>
+                    <td class="px-6 py-4 text-sm text-gray-600">8m 15s</td>
+                    <td class="px-6 py-4 text-sm text-gray-600">67</td>
+                    <td class="px-6 py-4 text-sm">
+                        <button class="text-blue-600 hover:text-blue-900 font-semibold">View Details</button>
+                    </td>
+                </tr>
+                <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 text-sm text-gray-900 font-semibold">Office Renovation Photos</td>
+                    <td class="px-6 py-4 text-sm">
+                        <span class="bg-pink-100 text-pink-800 px-3 py-1 rounded-full text-xs font-semibold">Image</span>
+                    </td>
+                    <td class="px-6 py-4 text-sm text-gray-600">201</td>
+                    <td class="px-6 py-4 text-sm text-gray-600">2m 10s</td>
+                    <td class="px-6 py-4 text-sm text-gray-600">189</td>
+                    <td class="px-6 py-4 text-sm">
+                        <button class="text-blue-600 hover:text-blue-900 font-semibold">View Details</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- User Engagement Details Modal (Hidden by default) -->
+<div id="detailsModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+    <div class="bg-white rounded-lg shadow-xl max-w-4xl w-full mx-4 max-h-96 overflow-y-auto">
+        <div class="sticky top-0 bg-gray-50 p-6 border-b flex justify-between items-center">
+            <h3 class="text-2xl font-bold">Content: Introduction to Django</h3>
+            <button onclick="closeModal()" class="text-gray-600 hover:text-gray-900 text-2xl">&times;</button>
+        </div>
+        
+        <div class="p-6">
+            <h4 class="text-lg font-semibold mb-4">User Engagement Details</h4>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead class="bg-gray-100 border-b">
+                        <tr>
+                            <th class="px-4 py-3 text-left font-semibold">User Name</th>
+                            <th class="px-4 py-3 text-left font-semibold">Email</th>
+                            <th class="px-4 py-3 text-left font-semibold">Viewed Date</th>
+                            <th class="px-4 py-3 text-left font-semibold">Time Spent</th>
+                            <th class="px-4 py-3 text-left font-semibold">Completion %</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y">
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-4 py-3">John Doe</td>
+                            <td class="px-4 py-3">john.doe@kcps.com</td>
+                            <td class="px-4 py-3">Mar 6, 2026</td>
+                            <td class="px-4 py-3 font-semibold">15m 30s</td>
+                            <td class="px-4 py-3"><span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-semibold">100%</span></td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-4 py-3">Jane Smith</td>
+                            <td class="px-4 py-3">jane.smith@kcps.com</td>
+                            <td class="px-4 py-3">Mar 5, 2026</td>
+                            <td class="px-4 py-3 font-semibold">12m 10s</td>
+                            <td class="px-4 py-3"><span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs font-semibold">85%</span></td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-4 py-3">Mike Johnson</td>
+                            <td class="px-4 py-3">mike.j@kcps.com</td>
+                            <td class="px-4 py-3">Mar 4, 2026</td>
+                            <td class="px-4 py-3 font-semibold">11m 45s</td>
+                            <td class="px-4 py-3"><span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-semibold">95%</span></td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-4 py-3">Sarah Williams</td>
+                            <td class="px-4 py-3">sarah.w@kcps.com</td>
+                            <td class="px-4 py-3">Mar 3, 2026</td>
+                            <td class="px-4 py-3 font-semibold">8m 20s</td>
+                            <td class="px-4 py-3"><span class="bg-orange-100 text-orange-800 px-2 py-1 rounded text-xs font-semibold">60%</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Tab Navigation dashb0ards-->
+ <div class="bg-white rounded-lg shadow mb-8">
+            <div class="flex border-b">
+                <button onclick="showTab('post')" class="tab-btn flex-1 py-4 px-6 text-center font-semibold border-b-4 border-transparent hover:border-gray-300">✍️ Write Post</button>
+                <button onclick="showTab('video')" class="tab-btn active flex-1 py-4 px-6 text-center font-semibold border-b-4 border-blue-600">📹 Upload Video</button>
+                <button onclick="showTab('document')" class="tab-btn flex-1 py-4 px-6 text-center font-semibold border-b-4 border-transparent hover:border-gray-300">📄 Upload Document</button>
+                <button onclick="showTab('image')" class="tab-btn flex-1 py-4 px-6 text-center font-semibold border-b-4 border-transparent hover:border-gray-300">🖼️ Upload Image</button>
+            </div>
+
+            <!-- dashboard Tab Contents -->
+            <div class="p-8">
+            <!-- Post Tab -->
+                <div id="post" class="tab-content hidden">
+                    <h2 class="text-2xl font-bold mb-6">Write Post</h2>
+                    <form method="POST" class="space-y-4">
+                        {% csrf_token %}
+                        <input type="hidden" name="form_type" value="post_create">
+                        <div>
+                            <label class="block text-gray-700 font-semibold mb-2">Post Title</label>
+                            <input type="text" name="post_title" class="w-full p-3 border rounded-lg" required>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 font-semibold mb-2">Post Content</label>
+                            <textarea name="post_content" rows="8" class="w-full p-3 border rounded-lg"> Please write an Post here./ page need to fix all the other tabs.</textarea>
+                        </div>
+                        <button type="submit" class="w-full bg-gray-800 hover:bg-black text-white font-bold py-3 rounded-lg transition">Publish Post</button>
+                    </form>
+                </div>
+                <!-- Video Tab -->
+                <div id="video" class="tab-content">
+                    <h2 class="text-2xl font-bold mb-6">Upload Video</h2>
+                    <form method="POST" enctype="multipart/form-data" class="space-y-4">
+                        {% csrf_token %}
+                        <input type="hidden" name="form_type" value="video_upload">
+                        <div>
+                            <label class="block text-gray-700 font-semibold mb-2">Title</label>
+                            <input type="text" name="title" class="w-full p-3 border rounded-lg" required>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 font-semibold mb-2">Description</label>
+                            <textarea name="description" rows="4" class="w-full p-3 border rounded-lg"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 font-semibold mb-2">Video File</label>
+                            <input type="file" name="video" accept="video/*" class="w-full p-3 border rounded-lg" required>
+                        </div>
+                        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition">Upload Video</button>
+                    </form>
+                </div>
+
+                <!-- Document Tab -->
+                <div id="document" class="tab-content hidden">
+                    <h2 class="text-2xl font-bold mb-6">Upload Document</h2>
+                    <form method="POST" enctype="multipart/form-data" class="space-y-4">
+                        {% csrf_token %}
+                        <input type="hidden" name="form_type" value="doc_upload">
+                        <div>
+                            <label class="block text-gray-700 font-semibold mb-2">Title</label>
+                            <input type="text" name="doc_title" class="w-full p-3 border rounded-lg" required>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 font-semibold mb-2">Description</label>
+                            <textarea name="doc_description" rows="4" class="w-full p-3 border rounded-lg"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 font-semibold mb-2">Document File</label>
+                            <input type="file" name="document" accept=".pdf,.doc,.docx" class="w-full p-3 border rounded-lg" required>
+                        </div>
+                        <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg transition">Upload Document</button>
+                    </form>
+                </div>
+
+                <!-- Image Tab -->
+                <div id="image" class="tab-content hidden">
+                    <h2 class="text-2xl font-bold mb-6">Upload Image</h2>
+                    <form method="POST" enctype="multipart/form-data" class="space-y-4">
+                        {% csrf_token %}
+                        <input type="hidden" name="form_type" value="img_upload">
+                        <div>
+                            <label class="block text-gray-700 font-semibold mb-2">Title</label>
+                            <input type="text" name="img_title" class="w-full p-3 border rounded-lg" required>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 font-semibold mb-2">Image File</label>
+                            <input type="file" name="image" accept="image/*" class="w-full p-3 border rounded-lg" required>
+                        </div>
+                        <button type="submit" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 rounded-lg transition">Upload Image</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- analytic Script -->
+ 
+
+<!-- Tab Navigation / Analytics Script -->
+<script>
+    function openDetails() {
+    document.getElementById('detailsModal').classList.remove('hidden');
+}
+
+function closeModal() {
+    document.getElementById('detailsModal').classList.add('hidden');
+}
+
+// Add click listeners to View Details buttons
+document.querySelectorAll('button:contains("View Details")').forEach(btn => {
+    btn.addEventListener('click', openDetails);
+});
+function showTab(tabName) {
+    // Hide all tabs
+    const tabs = document.querySelectorAll('.tab-content');
+    tabs.forEach(tab => tab.classList.add('hidden'));
+    
+    // Remove active state from all buttons
+    const buttons = document.querySelectorAll('.tab-btn');
+    buttons.forEach(btn => {
+        btn.classList.remove('border-blue-600');
+        btn.classList.add('border-transparent');
+    });
+    
+    // Show selected tab
+    document.getElementById(tabName).classList.remove('hidden');
+    
+    // Activate button
+    event.target.classList.remove('border-transparent');
+    event.target.classList.add('border-blue-600');
+}
+</script>
+{% endblock %}
