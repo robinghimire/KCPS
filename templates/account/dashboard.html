@@ -33,7 +33,7 @@
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
         <div>
             <label class="block text-gray-700 font-semibold mb-2">Content Type</label>
-            <select id="contentType" class="w-full p-2 border rounded-lg">
+            <select name="category" class="w-full p-2 border rounded-lg">
                 <option value="">All Types</option>
                 <option value="video">Videos</option>
                 <option value="post">Posts</option>
@@ -183,7 +183,7 @@
             <!-- Post Tab -->
                 <div id="post" class="tab-content hidden">
                     <h2 class="text-2xl font-bold mb-6">Write Post</h2>
-                    <form method="POST" class="space-y-4">
+                    <form method="post" action="{% url 'create-post' %}" enctype="multipart/form-data" class="space-y-4">
                         {% csrf_token %}
                         <input type="hidden" name="form_type" value="post_create">
                         <div>
@@ -194,13 +194,15 @@
                             <label class="block text-gray-700 font-semibold mb-2">Post Content</label>
                             <textarea name="post_content" rows="8" class="w-full p-3 border rounded-lg"> Please write an Post here./ page need to fix all the other tabs.</textarea>
                         </div>
-                        <button type="submit" class="w-full bg-gray-800 hover:bg-black text-white font-bold py-3 rounded-lg transition">Publish Post</button>
+                        <button type="submit" class="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-3 rounded-lg transition">
+                             Publish Post
+                        </button>
                     </form>
                 </div>
                 <!-- Video Tab -->
                 <div id="video" class="tab-content">
                     <h2 class="text-2xl font-bold mb-6">Upload Video</h2>
-                    <form method="POST" enctype="multipart/form-data" class="space-y-4">
+                    <form method="post" action="{% url 'upload-video' %}" enctype="multipart/form-data" class="space-y-4">
                         {% csrf_token %}
                         <input type="hidden" name="form_type" value="video_upload">
                         <div>
@@ -215,14 +217,16 @@
                             <label class="block text-gray-700 font-semibold mb-2">Video File</label>
                             <input type="file" name="video" accept="video/*" class="w-full p-3 border rounded-lg" required>
                         </div>
-                        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition">Upload Video</button>
+                          <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition">
+                            Upload Video
+                        </button>
                     </form>
                 </div>
 
                 <!-- Document Tab -->
                 <div id="document" class="tab-content hidden">
                     <h2 class="text-2xl font-bold mb-6">Upload Document</h2>
-                    <form method="POST" enctype="multipart/form-data" class="space-y-4">
+                    <form method="post" action="{% url 'upload-document' %}" enctype="multipart/form-data" class="space-y-4">
                         {% csrf_token %}
                         <input type="hidden" name="form_type" value="doc_upload">
                         <div>
@@ -237,12 +241,14 @@
                             <label class="block text-gray-700 font-semibold mb-2">Document File</label>
                             <input type="file" name="document" accept=".pdf,.doc,.docx" class="w-full p-3 border rounded-lg" required>
                         </div>
-                        <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg transition">Upload Document</button>
+                        <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg transition">
+                            Upload Document
+                        </button>
                     </form>
                 </div>
 
-                <!-- Image Tab -->
-                <div id="image" class="tab-content hidden">
+                <!-- Image Tab turned off for now, future product.  -->
+                <!-- <div id="image" class="tab-content hidden">
                     <h2 class="text-2xl font-bold mb-6">Upload Image</h2>
                     <form method="POST" enctype="multipart/form-data" class="space-y-4">
                         {% csrf_token %}
@@ -255,9 +261,11 @@
                             <label class="block text-gray-700 font-semibold mb-2">Image File</label>
                             <input type="file" name="image" accept="image/*" class="w-full p-3 border rounded-lg" required>
                         </div>
-                        <button type="submit" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 rounded-lg transition">Upload Image</button>
-                    </form>
-                </div>
+                        <button type="submit" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 rounded-lg transition">
+                            Upload Image
+                            </button>
+</form>
+                </div> -->
             </div>
         </div>
     </div>

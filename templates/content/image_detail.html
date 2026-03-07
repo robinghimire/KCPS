@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}{{ image.title }}{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-100 p-8">
+    <div class="max-w-4xl mx-auto">
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+            <img src="{{ image.image_file.url }}" alt="{{ image.title }}" class="w-full h-auto">
+            
+            <div class="p-8">
+                <h1 class="text-3xl font-bold mb-4">{{ image.title }}</h1>
+                
+                <div class="flex items-center justify-between mb-6 text-gray-600">
+                    <div>
+                        <p class="text-sm">Uploaded by <strong>{{ image.uploaded_by.get_full_name|default:image.uploaded_by.username }}</strong></p>
+                        <p class="text-sm">{{ image.created_at|date:"M d, Y" }}</p>
+                    </div>
+                </div>
+
+                <p class="text-gray-700">{{ image.description }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Tracking Script -->
+<script>
+const contentStartTime = Date.now() / 1000;
+const contentType = 'image';
+const contentTitle = '{{ image.title|escapejs }}';
+
+window.addEventListener('beforeunload', () => {
+    const timeSpent = Math.round((Date.now() / 1000) - contentStartTime);
+    
+    navigator.sendBeacon('/content/track-view/', JSON.stringify({
+        content_type: contentType,
+        content_title: contentTitle,
+        time_spent: timeSpent,
+        completion: 100
+    }));
+});
+</script>
+{% endblock %}
