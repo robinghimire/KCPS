@@ -1,0 +1,165 @@
+###############################################################################
+# Python & Bytecode
+###############################################################################
+# Compiled bytecode / caches
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+*.pyd
+*.dll
+
+# Distribution / packaging
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+pip-wheel-metadata/
+
+# PyInstaller artifacts
+*.manifest
+*.spec
+
+###############################################################################
+# Virtual Environments
+###############################################################################
+.venv/
+venv/
+env/
+ENV/
+.python-version
+
+###############################################################################
+# Django
+###############################################################################
+# SQLite DBs (keep if you want DB in git; most teams ignore it)
+db.sqlite3
+db.sqlite3-journal
+
+# Local settings and secrets
+.env
+.env.*
+*.env
+*.local
+settings_local.py
+settings.py
+SECRET_KEY=your-super-secret-django-key-here
+
+# Static & media (collectstatic output and uploaded files)
+static/
+staticfiles/
+statics/
+media/
+mediafiles/
+
+# Django logs & runtime
+logs/
+*.log
+*.pot
+*.po~
+celerybeat-schedule
+celerybeat.pid
+
+# Migrations (optional): usually keep migrations in VCS.
+# Uncomment the next line only if you intentionally DO NOT version migrations.
+# */migrations/
+# */migrations/*.py
+# !*/migrations/__init__.py
+
+###############################################################################
+# IDEs / Editors
+###############################################################################
+# VS Code
+.vscode/
+# PyCharm / IntelliJ
+.idea/
+*.iml
+# Sublime
+*.sublime-project
+*.sublime-workspace
+# Visual Studio / Rider
+.vs/
+
+###############################################################################
+# OS / Filesystem
+###############################################################################
+# Windows
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+# Linux
+.directory
+
+###############################################################################
+# Node / Frontend (if you add tooling later)
+###############################################################################
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnp/
+.pnp.js
+# build outputs
+build/
+dist/
+coverage/
+*.tsbuildinfo
+
+###############################################################################
+# Tooling / Misc
+###############################################################################
+# pytest / coverage
+.coverage
+.coverage.*
+.cache/
+.pytest_cache/
+
+# mypy / type checking
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Ruff / flake8 / lint
+.ruff_cache/
+.flake8
+.pyright
+
+# jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# Reports / exports
+*.csv
+*.xlsx
+*.xls
+*.parquet
+*.feather
+
+###############################################################################
+# Project-specific paths
+###############################################################################
+# Compiled templates (if any)
+templates_compiled/
+
+# Any temp folders you use
+tmp/
+temp/
+
+# Unfold admin (kept via package; ignore any accidental local copies)
+unfold_static/
