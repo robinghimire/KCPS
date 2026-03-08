@@ -7,9 +7,6 @@
     <div class="max-w-7xl mx-auto">
         <h1 class="text-4xl font-bold mb-8">Admin Dashboard</h1>
 
-        <!-- Analytics Cards -->
-
-
 <!-- Content Engagement Analytics -->
 <div class="bg-white rounded-lg shadow mb-8 p-8">
     <h2 class="text-2xl font-bold mb-6">Content Engagement Analytics</h2>
@@ -170,6 +167,118 @@
     <p class="text-3xl font-bold text-orange-600 mt-2">{{ total_posts }}</p>
     </div>
 </div>
+<!-- Content Management Section -->
+<div class="bg-white rounded-lg shadow mb-8">
+    <div class="flex border-b">
+        <button onclick="showContentTab('videos')" class="content-tab-btn active flex-1 py-4 px-6 text-center font-semibold border-b-4 border-blue-600">📹 Videos</button>
+        <button onclick="showContentTab('posts')" class="content-tab-btn flex-1 py-4 px-6 text-center font-semibold border-b-4 border-transparent hover:border-gray-300">📝 Posts</button>
+        <button onclick="showContentTab('documents')" class="content-tab-btn flex-1 py-4 px-6 text-center font-semibold border-b-4 border-transparent hover:border-gray-300">📄 Documents</button>
+        <button onclick="showContentTab('images')" class="content-tab-btn flex-1 py-4 px-6 text-center font-semibold border-b-4 border-transparent hover:border-gray-300">🖼️ Images</button>
+    </div>
+
+    <div class="p-8">
+        <!-- Videos Tab -->
+        <div id="videos" class="content-tab">
+            <h3 class="text-xl font-bold mb-4">Videos</h3>
+            <div class="space-y-2">
+                {% for video in videos %}
+                <div class="flex justify-between items-center bg-gray-50 p-4 rounded">
+                    <span>{{ video.title }}</span>
+                    <div class="flex gap-2">
+                        <a href="{% url 'video-detail' video.id %}" class="text-blue-600 hover:text-blue-900 font-semibold">View</a>
+                        <form method="post" action="{% url 'delete-video' video.id %}" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="text-red-600 hover:text-red-900 font-semibold" onclick="return confirm('Delete?')">Delete</button>
+                        </form>
+                    </div>
+                </div>
+                {% empty %}
+                <p class="text-gray-500">No videos</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Posts Tab -->
+        <div id="posts" class="content-tab hidden">
+            <h3 class="text-xl font-bold mb-4">Posts</h3>
+            <div class="space-y-2">
+                {% for post in posts %}
+                <div class="flex justify-between items-center bg-gray-50 p-4 rounded">
+                    <span>{{ post.title }}</span>
+                    <div class="flex gap-2">
+                        <a href="{% url 'post-detail' post.id %}" class="text-blue-600 hover:text-blue-900 font-semibold">View</a>
+                        <form method="post" action="{% url 'delete-post' post.id %}" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="text-red-600 hover:text-red-900 font-semibold" onclick="return confirm('Delete?')">Delete</button>
+                        </form>
+                    </div>
+                </div>
+                {% empty %}
+                <p class="text-gray-500">No posts</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Documents Tab -->
+        <div id="documents" class="content-tab hidden">
+            <h3 class="text-xl font-bold mb-4">Documents</h3>
+            <div class="space-y-2">
+                {% for doc in documents %}
+                <div class="flex justify-between items-center bg-gray-50 p-4 rounded">
+                    <span>{{ doc.title }}</span>
+                    <div class="flex gap-2">
+                        <a href="{% url 'document-detail' doc.id %}" class="text-blue-600 hover:text-blue-900 font-semibold">View</a>
+                        <form method="post" action="{% url 'delete-document' doc.id %}" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="text-red-600 hover:text-red-900 font-semibold" onclick="return confirm('Delete?')">Delete</button>
+                        </form>
+                    </div>
+                </div>
+                {% empty %}
+                <p class="text-gray-500">No documents</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Images Tab -->
+        <div id="images" class="content-tab hidden">
+            <h3 class="text-xl font-bold mb-4">Images</h3>
+            <div class="space-y-2">
+                {% for image in images %}
+                <div class="flex justify-between items-center bg-gray-50 p-4 rounded">
+                    <span>{{ image.title }}</span>
+                    <div class="flex gap-2">
+                        <a href="{% url 'image-detail' image.id %}" class="text-blue-600 hover:text-blue-900 font-semibold">View</a>
+                        <form method="post" action="{% url 'delete-image' image.id %}" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="text-red-600 hover:text-red-900 font-semibold" onclick="return confirm('Delete?')">Delete</button>
+                        </form>
+                    </div>
+                </div>
+                {% empty %}
+                <p class="text-gray-500">No images</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function showContentTab(tabName) {
+    const tabs = document.querySelectorAll('.content-tab');
+    tabs.forEach(tab => tab.classList.add('hidden'));
+    
+    const buttons = document.querySelectorAll('.content-tab-btn');
+    buttons.forEach(btn => {
+        btn.classList.remove('border-blue-600');
+        btn.classList.add('border-transparent');
+    });
+    
+    document.getElementById(tabName).classList.remove('hidden');
+    event.target.classList.remove('border-transparent');
+    event.target.classList.add('border-blue-600');
+}
+</script>
 
 <!-- Tab Navigation dashb0ards-->
  <div class="bg-white rounded-lg shadow mb-8">
@@ -182,25 +291,166 @@
 
             <!-- dashboard Tab Contents -->
             <div class="p-8">
-            <!-- Post Tab -->
-                <div id="post" class="tab-content hidden">
-                    <h2 class="text-2xl font-bold mb-6">Write Post</h2>
-                    <form method="post" action="{% url 'create-post' %}" enctype="multipart/form-data" class="space-y-4">
-                        {% csrf_token %}
-                        <input type="hidden" name="form_type" value="post_create">
-                        <div>
-                            <label class="block text-gray-700 font-semibold mb-2">Post Title</label>
-                            <input type="text" name="post_title" class="w-full p-3 border rounded-lg" required>
-                        </div>
-                        <div>
-                            <label class="block text-gray-700 font-semibold mb-2">Post Content</label>
-                            <textarea name="post_content" rows="8" class="w-full p-3 border rounded-lg"> Please write an Post here./ page need to fix all the other tabs.</textarea>
-                        </div>
-                        <button type="submit" class="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-3 rounded-lg transition">
-                             Publish Post
-                        </button>
-                    </form>
+               <!-- Write Post Tab -->
+<div id="post" class="tab-content hidden">
+    <h2 class="text-2xl font-bold mb-6">Create New Post</h2>
+    <form method="post" action="{% url 'create-post' %}" enctype="multipart/form-data" class="space-y-6">
+        {% csrf_token %}
+        
+        <!-- Title -->
+        <div>
+            <label class="block text-gray-700 font-semibold mb-2">Post Title</label>
+            <input type="text" name="post_title" class="w-full p-3 border rounded-lg text-2xl font-bold" placeholder="Enter post title" required>
+        </div>
+
+        <!-- Category -->
+        <div>
+            <label class="block text-gray-700 font-semibold mb-2">Category</label>
+            <select name="post_category" class="w-full p-3 border rounded-lg">
+                <option value="News">News</option>
+                <option value="Updates">Updates</option>
+                <option value="Announcements">Announcements</option>
+                <option value="Tips & Tricks">Tips & Tricks</option>
+            </select>
+        </div>
+
+        <!-- Rich Text Editor -->
+        <div>
+            <label class="block text-gray-700 font-semibold mb-2">Content</label>
+            <div class="border rounded-lg overflow-hidden">
+                <!-- Toolbar -->
+                <div class="bg-gray-100 border-b p-3 flex flex-wrap gap-2">
+                    <button type="button" onclick="formatText('bold')" class="px-3 py-1 bg-white border rounded hover:bg-gray-50"><strong>B</strong></button>
+                    <button type="button" onclick="formatText('italic')" class="px-3 py-1 bg-white border rounded hover:bg-gray-50"><i>I</i></button>
+                    <button type="button" onclick="formatText('underline')" class="px-3 py-1 bg-white border rounded hover:bg-gray-50"><u>U</u></button>
+                    <div class="border-l mx-2"></div>
+                    <select onchange="formatText('formatBlock', this.value)" class="px-3 py-1 bg-white border rounded">
+                        <option value="">Heading</option>
+                        <option value="h1">Heading 1</option>
+                        <option value="h2">Heading 2</option>
+                        <option value="h3">Heading 3</option>
+                        <option value="p">Paragraph</option>
+                    </select>
+                    <select onchange="formatText('fontSize', this.value)" class="px-3 py-1 bg-white border rounded">
+                        <option value="">Font Size</option>
+                        <option value="1">Small</option>
+                        <option value="3">Normal</option>
+                        <option value="5">Large</option>
+                        <option value="7">Extra Large</option>
+                    </select>
                 </div>
+                <!-- Editor -->
+                <textarea id="postEditor" name="post_content" rows="12" class="w-full p-4 border-0 focus:outline-none" placeholder="Write your post here..." required></textarea>
+            </div>
+        </div>
+
+        <!-- Media Section -->
+        <div class="bg-gradient-to-br from-blue-50 to-indigo-50 p-6 rounded-lg border-2 border-dashed border-blue-300">
+            <h3 class="text-lg font-bold mb-6 text-gray-800">Attach Media</h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Images -->
+                <div class="bg-white p-6 rounded-lg border-2 border-dashed border-gray-300 hover:border-pink-400 transition">
+                    <div class="text-center">
+                        <div class="text-4xl mb-2">📸</div>
+                        <label class="block">
+                            <span class="text-gray-700 font-semibold cursor-pointer hover:text-pink-600">Upload Images</span>
+                            <input type="file" name="post_images" accept="image/*" multiple class="hidden">
+                        </label>
+                        <p class="text-xs text-gray-500 mt-2">PNG, JPG, GIF</p>
+                        <div id="imagePreview" class="mt-4 space-y-2"></div>
+                    </div>
+                </div>
+
+                <!-- Videos -->
+                <div class="bg-white p-6 rounded-lg border-2 border-dashed border-gray-300 hover:border-blue-400 transition">
+                    <div class="text-center">
+                        <div class="text-4xl mb-2">🎥</div>
+                        <label class="block">
+                            <span class="text-gray-700 font-semibold cursor-pointer hover:text-blue-600">Upload Videos</span>
+                            <input type="file" name="post_videos" accept="video/*" multiple class="hidden">
+                        </label>
+                        <p class="text-xs text-gray-500 mt-2">MP4, WebM</p>
+                        <div id="videoPreview" class="mt-4 space-y-2"></div>
+                    </div>
+                </div>
+
+                <!-- Documents -->
+                <div class="bg-white p-6 rounded-lg border-2 border-dashed border-gray-300 hover:border-purple-400 transition">
+                    <div class="text-center">
+                        <div class="text-4xl mb-2">📄</div>
+                        <label class="block">
+                            <span class="text-gray-700 font-semibold cursor-pointer hover:text-purple-600">Upload Documents</span>
+                            <input type="file" name="post_documents" accept=".pdf,.doc,.docx" multiple class="hidden">
+                        </label>
+                        <p class="text-xs text-gray-500 mt-2">PDF, DOC</p>
+                        <div id="documentPreview" class="mt-4 space-y-2"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Preview -->
+        <div class="bg-gray-50 p-6 rounded-lg border">
+            <h3 class="text-lg font-bold mb-4">Preview</h3>
+            <div class="bg-white p-6 rounded-lg">
+                <h4 id="previewTitle" class="text-2xl font-bold mb-2">Post Title</h4>
+                <div id="previewContent" class="text-gray-600 mb-4">Your content will appear here...</div>
+                <span class="text-sm text-gray-500">Category: <span id="previewCategory">General</span></span>
+            </div>
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="w-full bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white font-bold py-4 rounded-lg transition text-lg">
+            ✨ Publish Post
+        </button>
+    </form>
+</div>
+
+<script>
+// Live preview
+document.querySelector('input[name="post_title"]').addEventListener('input', function() {
+    document.getElementById('previewTitle').textContent = this.value || 'Post Title';
+});
+
+document.getElementById('postEditor').addEventListener('input', function() {
+    document.getElementById('previewContent').textContent = this.value || 'Your content will appear here...';
+});
+
+document.querySelector('select[name="post_category"]').addEventListener('change', function() {
+    document.getElementById('previewCategory').textContent = this.value;
+});
+
+// Text formatting
+function formatText(command, value = null) {
+    document.execCommand(command, false, value);
+    document.getElementById('postEditor').focus();
+}
+
+// File preview
+document.querySelector('input[name="post_images"]').addEventListener('change', function() {
+    updatePreview(this, 'imagePreview', '🖼️');
+});
+
+document.querySelector('input[name="post_videos"]').addEventListener('change', function() {
+    updatePreview(this, 'videoPreview', '▶️');
+});
+
+document.querySelector('input[name="post_documents"]').addEventListener('change', function() {
+    updatePreview(this, 'documentPreview', '📎');
+});
+
+function updatePreview(input, previewId, icon) {
+    const preview = document.getElementById(previewId);
+    preview.innerHTML = '';
+    Array.from(input.files).forEach(file => {
+        const div = document.createElement('div');
+        div.className = 'text-xs text-gray-600 bg-gray-100 p-2 rounded flex items-center gap-2';
+        div.textContent = icon + ' ' + file.name;
+        preview.appendChild(div);
+    });
+}
+</script>
                 <!-- Video Tab -->
                 <div id="video" class="tab-content">
                     <h2 class="text-2xl font-bold mb-6">Upload Video</h2>
