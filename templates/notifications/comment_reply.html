@@ -1,0 +1,17 @@
+{% extends "notifications/email_base.html" %}
+
+{% block notification_content %}
+<div class="notification-type">💬 NEW REPLY</div>
+
+<h2 style="margin-top: 20px;">New Comment on {{ content_title }}</h2>
+
+<p><strong>{{ commenter_name }}</strong> replied to your comment:</p>
+
+<div style="background: white; padding: 20px; border-left: 4px solid #10b981; margin: 20px 0;">
+    <p style="margin: 0; font-style: italic; color: #666;">
+        "This is a great point, thanks for sharing!"
+    </p>
+</div>
+
+<a href="{{ comment_url }}" class="button">View Reply</a>
+{% endblock %}

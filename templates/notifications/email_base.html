@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 8px 8px 0 0; }
+        .content { background: #f9fafb; padding: 30px; border: 1px solid #e5e7eb; }
+        .footer { background: #1f2937; color: white; padding: 20px; text-align: center; font-size: 12px; border-radius: 0 0 8px 8px; }
+        .button { display: inline-block; background: #3b82f6; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; margin: 20px 0; }
+        .notification-type { background: #dbeafe; color: #1e40af; padding: 8px 12px; border-radius: 4px; font-size: 12px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔔 KCPS HUB Notification</h1>
+        </div>
+        
+        <div class="content">
+            <p>Hello {{ user.first_name|default:user.username }},</p>
+            
+            {% block notification_content %}
+            <!-- Template-specific content -->
+            {% endblock %}
+            
+            <p style="margin-top: 30px; color: #666; font-size: 14px;">
+                You received this email because you're subscribed to notifications on KCPS HUB.
+                <a href="#">Manage your preferences</a>
+            </p>
+        </div>
+        
+        <div class="footer">
+            <p>&copy; 2026 KCPS HUB. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>

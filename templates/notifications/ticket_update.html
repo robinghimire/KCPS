@@ -1,0 +1,20 @@
+{% extends "notifications/email_base.html" %}
+
+{% block notification_content %}
+<div class="notification-type">🎫 TICKET UPDATE</div>
+
+<h2 style="margin-top: 20px;">Ticket {{ ticket_id }} Updated</h2>
+
+<p>Your support ticket has been updated:</p>
+
+<div style="background: white; padding: 20px; border-left: 4px solid #f59e0b; margin: 20px 0;">
+    <p style="margin: 10px 0;">
+        <strong>Status:</strong> 
+        <span style="background: #fef3c7; color: #92400e; padding: 4px 8px; border-radius: 4px;">
+            {{ status|upper }}
+        </span>
+    </p>
+</div>
+
+<a href="{{ update_url }}" class="button">View Ticket</a>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends "notifications/email_base.html" %}
+
+{% block notification_content %}
+<div class="notification-type">📰 NEW CONTENT</div>
+
+<h2 style="margin-top: 20px;">New {{ content_type }} Published!</h2>
+
+<p>A new <strong>{{ content_type }}</strong> has been published on KCPS HUB:</p>
+
+<div style="background: white; padding: 20px; border-left: 4px solid #667eea; margin: 20px 0;">
+    <h3 style="margin-top: 0;">{{ content_title }}</h3>
+    <p style="color: #666; margin: 10px 0;">Check out the latest content and stay informed.</p>
+</div>
+
+<a href="{{ content_url }}" class="button">View Content</a>
+{% endblock %}

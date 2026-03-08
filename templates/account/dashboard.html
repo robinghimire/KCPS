@@ -269,6 +269,15 @@
     </div>
 </div>
 
+<!-- Notification Preferences Quick Link -->
+<div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg shadow p-6 border border-blue-200 mt-8">
+    <h2 class="text-xl font-bold mb-4">⚙️ Settings</h2>
+    <div class="flex flex-wrap gap-4">
+        <a href="{% url 'notification-preferences' %}" class="inline-block bg-white hover:bg-gray-50 text-gray-900 font-semibold py-2 px-6 rounded-lg transition border border-gray-300">
+            🔔 Notification Preferences
+        </a>
+    </div>
+</div>
 <script>
 function showContentTab(tabName) {
     const tabs = document.querySelectorAll('.content-tab');

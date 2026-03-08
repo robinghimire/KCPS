@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}Notification Preferences{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-100 p-8">
+    <div class="max-w-2xl mx-auto">
+        <h1 class="text-4xl font-bold mb-8">🔔 Notification Preferences</h1>
+
+        <form method="post" class="bg-white rounded-lg shadow p-8 space-y-6">
+            {% csrf_token %}
+
+            <!-- New Content -->
+            <div class="border-b pb-6">
+                <h3 class="text-lg font-bold mb-4">📰 New Content</h3>
+                <div class="space-y-3">
+                    <label class="flex items-center">
+                        <input type="radio" name="email_new_content" value="instant" {% if prefs.email_new_content == 'instant' %}checked{% endif %} class="mr-3">
+                        <span>Instant - Notify me immediately</span>
+                    </label>
+                    <label class="flex items-center">
+                        <input type="radio" name="email_new_content" value="daily" {% if prefs.email_new_content == 'daily' %}checked{% endif %} class="mr-3">
+                        <span>Daily Digest - Once per day</span>
+                    </label>
+                    <label class="flex items-center">
+                        <input type="radio" name="email_new_content" value="weekly" {% if prefs.email_new_content == 'weekly' %}checked{% endif %} class="mr-3">
+                        <span>Weekly Digest - Once per week</span>
+                    </label>
+                    <label class="flex items-center">
+                        <input type="radio" name="email_new_content" value="never" {% if prefs.email_new_content == 'never' %}checked{% endif %} class="mr-3">
+                        <span>Never - Turn off notifications</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Comments -->
+            <div class="border-b pb-6">
+                <h3 class="text-lg font-bold mb-4">💬 Comments</h3>
+                <label class="flex items-center">
+                    <input type="checkbox" name="email_comments" {% if prefs.email_comments %}checked{% endif %} class="mr-3">
+                    <span>Notify me when someone replies to my content</span>
+                </label>
+            </div>
+
+            <!-- Favorites -->
+            <div class="border-b pb-6">
+                <h3 class="text-lg font-bold mb-4">❤️ Favorites</h3>
+                <label class="flex items-center">
+                    <input type="checkbox" name="email_favorites" {% if prefs.email_favorites %}checked{% endif %} class="mr-3">
+                    <span>Notify me when someone favorites my content</span>
+                </label>
+            </div>
+
+            <!-- Tickets -->
+            <div class="pb-6">
+                <h3 class="text-lg font-bold mb-4">🎫 Support Tickets</h3>
+                <label class="flex items-center">
+                    <input type="checkbox" name="email_ticket_updates" {% if prefs.email_ticket_updates %}checked{% endif %} class="mr-3">
+                    <span>Notify me of ticket updates</span>
+                </label>
+            </div>
+
+            <!-- Submit -->
+            <div class="flex gap-4">
+                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg transition">
+                    💾 Save Preferences
+                </button>
+                <a href="/" class="text-gray-600 hover:text-gray-900 font-semibold py-3 px-8">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

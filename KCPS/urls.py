@@ -29,6 +29,7 @@ urlpatterns = [
     path('account/', include('parts.account.urls')),
     path('content/', include('parts.content.urls')),
     path('tickets/', include('parts.tickets.urls')),
+    path('notifications/', include('parts.notifications.urls')),
 
 ]
 

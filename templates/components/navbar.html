@@ -9,122 +9,49 @@
             </button>
         </div>
         
-        <div class="flex gap-4">
+        <div class="flex gap-6 items-center">
             {% if user.is_authenticated %}
-                <span class="text-gray-600">{{ user.username }}</span>
-                <a href="{% url 'logout' %}" class="text-red-600 hover:text-red-900">Logout</a>
+                <!-- Notification Bell -->
+                <div class="relative group">
+                    <button class="text-gray-600 hover:text-blue-600 text-2xl transition">
+                        🔔
+                    </button>
+                    <div class="hidden group-hover:block absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg z-50 border border-gray-200">
+                        <a href="{% url 'notification-preferences' %}" class="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 border-b">
+                            ⚙️ Notification Settings
+                        </a>
+                        <a href="/notifications/history/" class="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50">
+                            📋 Notification History
+                        </a>
+                    </div>
+                </div>
+
+                <!-- User Menu -->
+                <div class="relative group">
+                    <button class="flex items-center gap-2 text-gray-600 hover:text-gray-900">
+                        <span>{{ user.username }}</span>
+                        <span>▼</span>
+                    </button>
+                    <div class="hidden group-hover:block absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg z-50 border border-gray-200">
+                        <a href="{% url 'user-dashboard' %}" class="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 border-b">
+                            📊 Dashboard
+                        </a>
+                        <a href="{% url 'notification-preferences' %}" class="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 border-b">
+                            🔔 Notifications
+                        </a>
+                        {% if user.is_staff %}
+                        <a href="{% url 'dashboard' %}" class="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 border-b">
+                            👨‍💼 Admin Panel
+                        </a>
+                        {% endif %}
+                        <a href="{% url 'logout' %}" class="block px-4 py-3 text-sm text-red-600 hover:bg-red-50">
+                            🚪 Logout
+                        </a>
+                    </div>
+                </div>
             {% else %}
-                <a href="{% url 'login' %}" class="text-blue-600 hover:text-blue-900">Login</a>
+                <a href="{% url 'login' %}" class="text-blue-600 hover:text-blue-900 font-semibold">Login</a>
             {% endif %}
         </div>
     </div>
 </nav>
-
-<!-- Search Modal -->
-<div id="searchModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-start justify-center pt-20">
-    <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl mx-4">
-        <!-- Search Input -->
-        <div class="p-6 border-b">
-            <div class="relative">
-                <input type="text" id="searchInput" 
-                       class="w-full p-4 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none text-lg"
-                       placeholder="Search posts, videos, documents, images..."
-                       onkeyup="performSearch(this.value)">
-                <button onclick="closeSearchModal()" class="absolute right-4 top-4 text-gray-500 hover:text-gray-900 text-2xl">
-                    ✕
-                </button>
-            </div>
-        </div>
-
-        <!-- Results -->
-        <div id="searchResults" class="max-h-96 overflow-y-auto">
-            <div class="p-6 text-center text-gray-500">
-                Start typing to search...
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-function openSearchModal() {
-    document.getElementById('searchModal').classList.remove('hidden');
-    document.getElementById('searchInput').focus();
-}
-
-function closeSearchModal() {
-    document.getElementById('searchModal').classList.add('hidden');
-    document.getElementById('searchInput').value = '';
-    document.getElementById('searchResults').innerHTML = '<div class="p-6 text-center text-gray-500">Start typing to search...</div>';
-}
-
-// Close on escape key
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') closeSearchModal();
-});
-
-// Close on outside click
-document.getElementById('searchModal').addEventListener('click', function(e) {
-    if (e.target === this) closeSearchModal();
-});
-
-function performSearch(query) {
-    if (query.length < 2) {
-        document.getElementById('searchResults').innerHTML = '<div class="p-6 text-center text-gray-500">Start typing to search...</div>';
-        return;
-    }
-
-    document.getElementById('searchResults').innerHTML = '<div class="p-6 text-center text-gray-500">Searching...</div>';
-
-    fetch('{% url "global-search" %}?q=' + encodeURIComponent(query))
-        .then(response => response.json())
-        .then(data => displaySearchResults(data))
-        .catch(error => console.error('Error:', error));
-}
-
-function displaySearchResults(data) {
-    const results = data.results;
-    
-    if (results.length === 0) {
-        document.getElementById('searchResults').innerHTML = '<div class="p-6 text-center text-gray-500">No results found</div>';
-        return;
-    }
-
-    let html = '<div class="divide-y">';
-    
-    results.forEach(result => {
-        const icon = result.type === 'video' ? '🎥' : 
-                     result.type === 'post' ? '📝' : 
-                     result.type === 'document' ? '📄' : '🖼️';
-        
-        const url = result.type === 'video' ? `/content/video/${result.id}/` :
-                    result.type === 'post' ? `/content/post/${result.id}/` :
-                    result.type === 'document' ? `/content/document/${result.id}/` :
-                    `/content/image/${result.id}/`;
-        
-        html += `
-            <a href="${url}" class="block p-4 hover:bg-gray-50 transition">
-                <div class="flex items-start gap-4">
-                    <span class="text-2xl">${icon}</span>
-                    <div class="flex-1">
-                        <p class="font-bold text-gray-900">${result.title}</p>
-                        <p class="text-sm text-gray-600 mt-1">${result.description || ''}</p>
-                        <div class="flex gap-3 mt-2">
-                            <span class="text-xs font-semibold px-2 py-1 rounded-full
-                                ${result.type === 'video' ? 'bg-green-100 text-green-800' :
-                                  result.type === 'post' ? 'bg-orange-100 text-orange-800' :
-                                  result.type === 'document' ? 'bg-purple-100 text-purple-800' :
-                                  'bg-pink-100 text-pink-800'}">
-                                ${result.type.charAt(0).toUpperCase() + result.type.slice(1)}
-                            </span>
-                            <span class="text-xs text-gray-500">${result.date}</span>
-                        </div>
-                    </div>
-                </div>
-            </a>
-        `;
-    });
-    
-    html += '</div>';
-    document.getElementById('searchResults').innerHTML = html;
-}
-</script>
