@@ -44,12 +44,25 @@ document.getElementById('videoPlayer').addEventListener('timeupdate', function()
 
 window.addEventListener('beforeunload', () => {
     const timeSpent = Math.round((Date.now() / 1000) - contentStartTime);
-    navigator.sendBeacon('/content/track-view/', JSON.stringify({
+    
+    const trackingData = JSON.stringify({
         content_type: contentType,
         content_title: contentTitle,
         time_spent: timeSpent,
         completion: videoProgress
-    }));
+    });
+    
+    console.log('Sending tracking:', trackingData);
+    
+    fetch('/content/track-view/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        },
+        body: trackingData,
+        keepalive: true
+    });
 });
 </script>
 {% include "content/comments_section.html" %}

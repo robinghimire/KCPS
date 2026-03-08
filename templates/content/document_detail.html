@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="min-h-screen bg-gray-100 p-8">
-    <div class="max-w-6xl mx-auto">
+    <div class="max-w-4xl mx-auto">
         <div class="bg-white rounded-lg shadow-lg p-8">
             <h1 class="text-3xl font-bold mb-4">{{ document.title }}</h1>
             
@@ -17,28 +17,6 @@
             </div>
 
             <p class="text-gray-700 mb-8">{{ document.description }}</p>
-
-            <!-- PDF Viewer -->
-            {% if document.file.name|lower|endswith:'.pdf' %}
-        <div class="bg-gray-50 p-4 rounded-lg mb-6 border border-gray-300">
-            <h2 class="text-lg font-bold mb-4 text-gray-800">📄 PDF Preview</h2>
-            <object data="{{ document.file.url }}" type="application/pdf" class="w-full rounded-lg" style="height: 800px;">
-            <p>Your browser doesn't support PDF preview. <a href="{{ document.file.url }}" target="_blank" class="text-blue-600 hover:text-blue-900">Click here to download</a></p>
-            </object>
-        </div>
-            {% endif %}
-
-            <!-- Word Doc Viewer -->
-            {% if document.file.name|lower|endswith:'.docx' or document.file.name|lower|endswith:'.doc' %}
-            <div class="bg-gray-50 p-4 rounded-lg mb-6 border border-gray-300">
-                <h2 class="text-lg font-bold mb-4 text-gray-800">📝 Document Preview</h2>
-                <iframe src="https://docs.google.com/gview?url={{ request.build_absolute_uri|slice:':8'|add:'://'|add:request.get_host|add:document.file.url }}&embedded=true" 
-                        class="w-full rounded-lg" 
-                        style="height: 800px;" 
-                        frameborder="0">
-                </iframe>
-            </div>
-            {% endif %}
 
             <!-- Download Section -->
             <div class="bg-gradient-to-r from-purple-50 to-blue-50 p-8 rounded-lg text-center border-2 border-dashed border-purple-300">
@@ -63,13 +41,26 @@ const contentTitle = '{{ document.title|escapejs }}';
 
 window.addEventListener('beforeunload', () => {
     const timeSpent = Math.round((Date.now() / 1000) - contentStartTime);
-    navigator.sendBeacon('/content/track-view/', JSON.stringify({
+    
+    const trackingData = JSON.stringify({
         content_type: contentType,
         content_title: contentTitle,
         time_spent: timeSpent,
-        completion: timeSpent >= 60 ? 100 : Math.round((timeSpent / 60) * 100)
-    }));
+        completion: 50
+    });
+    
+    fetch('/content/track-view/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        },
+        body: trackingData,
+        keepalive: true
+    });
 });
 </script>
+
 {% include "content/comments_section.html" %}
+
 {% endblock %}

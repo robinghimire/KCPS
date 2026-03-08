@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {% block title %}KCPS HUB{% endblock %}
+    <title>{% block title %}KCPS HUB{% endblock %} </title>
 
     <script src="https://cdn.tailwindcss.com"></script>
     
     <!-- HTMX for dynamic interactions -->
-         <script src="statics\scripts\alljs.js"></script>
 
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
      <style>
@@ -41,8 +40,7 @@
         </main>
         {% block extra_js %}{% endblock %}
     
-</body>
-    <footer class="bg-gray-900 text-gray-100 mt-12 py-8">
+        <footer class="bg-gray-900 text-gray-100 mt-12 py-8">
         <div class="max-w-7xl mx-auto px-4">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div>
@@ -69,6 +67,7 @@
                 <p>&copy; 2026 KCPS HUB. All rights reserved.</p>
             </div>
         </div>
-    </footer>
+        </footer>
+    </body>
 
 </html>
