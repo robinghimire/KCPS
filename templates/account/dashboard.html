@@ -166,6 +166,12 @@
     <h3 class="text-gray-600 text-sm font-semibold">Posts</h3>
     <p class="text-3xl font-bold text-orange-600 mt-2">{{ total_posts }}</p>
     </div>
+    <div class="bg-white rounded-lg shadow p-6 border-l-4 border-green-500">
+    <a href="{% url 'ticket-list' %}" class="block">
+        <h3 class="text-gray-600 text-sm font-semibold">Total Tickets</h3>
+        <p class="text-4xl font-bold text-green-600 mt-2">{{ total_tickets }}</p>
+    </a>
+</div>
 </div>
 <!-- Content Management Section -->
 <div class="bg-white rounded-lg shadow mb-8">
