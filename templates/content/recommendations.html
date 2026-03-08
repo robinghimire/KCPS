@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+
+{% block title %}Recommended for You{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-100 p-8">
+    <div class="max-w-6xl mx-auto">
+        <!-- Header -->
+        <div class="mb-8">
+            <h1 class="text-4xl font-bold text-gray-900 mb-2">✨ Recommended for You</h1>
+            <p class="text-xl text-gray-600">Personalized content based on your interests</p>
+        </div>
+
+        <!-- Empty State -->
+        {% if not recommendations %}
+        <div class="bg-white rounded-lg shadow p-12 text-center">
+            <p class="text-gray-500 text-lg mb-4">No recommendations yet</p>
+            <p class="text-gray-400 mb-6">Start viewing content to get personalized recommendations</p>
+            <a href="{% url 'user-dashboard' %}" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition">
+                Explore Content
+            </a>
+        </div>
+        {% else %}
+
+        <!-- Recommendations Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            {% for rec in recommendations %}
+            <div class="bg-white rounded-lg shadow overflow-hidden hover:shadow-lg transition group">
+                <!-- Header with Type Badge -->
+                <div class="relative bg-gradient-to-r 
+                    {% if rec.type == 'video' %}from-green-400 to-green-600
+                    {% elif rec.type == 'post' %}from-orange-400 to-orange-600
+                    {% elif rec.type == 'document' %}from-purple-400 to-purple-600
+                    {% else %}from-pink-400 to-pink-600{% endif %} p-4 h-24 flex items-center justify-center">
+                    <span class="text-4xl">
+                        {% if rec.type == 'video' %}🎥
+                        {% elif rec.type == 'post' %}📝
+                        {% elif rec.type == 'document' %}📄
+                        {% else %}🖼️{% endif %}
+                    </span>
+                </div>
+
+                <!-- Content -->
+                <div class="p-6">
+                    <!-- Score Bar -->
+                    <div class="mb-4">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-xs font-bold text-gray-600">Match Score</span>
+                            <span class="text-sm font-bold text-gray-900">{{ rec.score|floatformat:0 }}%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-gradient-to-r 
+                                {% if rec.score >= 80 %}from-green-400 to-green-600
+                                {% elif rec.score >= 60 %}from-yellow-400 to-yellow-600
+                                {% else %}from-blue-400 to-blue-600{% endif %} h-2 rounded-full transition-all" 
+                                 style="width: {{ rec.score }}%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Title -->
+                    <h3 class="text-lg font-bold text-gray-900 mb-2 line-clamp-2">{{ rec.title }}</h3>
+
+                    <!-- Reason -->
+                    <p class="text-sm text-gray-600 mb-4 italic">💡 {{ rec.reason }}</p>
+
+                    <!-- Type Badge -->
+                    <div class="mb-4">
+                        <span class="inline-block px-3 py-1 rounded-full text-xs font-bold
+                            {% if rec.type == 'video' %}bg-green-100 text-green-800
+                            {% elif rec.type == 'post' %}bg-orange-100 text-orange-800
+                            {% elif rec.type == 'document' %}bg-purple-100 text-purple-800
+                            {% else %}bg-pink-100 text-pink-800{% endif %}">
+                            {{ rec.type|upper }}
+                        </span>
+                    </div>
+
+                    <!-- View Button -->
+                    {% if rec.type == 'video' %}
+                        <a href="{% url 'video-detail' rec.id %}" class="block w-full text-center bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-2 rounded transition">
+                            View Content →
+                        </a>
+                    {% elif rec.type == 'post' %}
+                        <a href="{% url 'post-detail' rec.id %}" class="block w-full text-center bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold py-2 rounded transition">
+                            View Content →
+                        </a>
+                    {% elif rec.type == 'document' %}
+                        <a href="{% url 'document-detail' rec.id %}" class="block w-full text-center bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-bold py-2 rounded transition">
+                            View Content →
+                        </a>
+                    {% else %}
+                        <a href="{% url 'image-detail' rec.id %}" class="block w-full text-center bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white font-bold py-2 rounded transition">
+                            View Content →
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Insights Section -->
+        <div class="bg-white rounded-lg shadow p-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">📊 Your Recommendation Insights</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="p-4 bg-blue-50 rounded-lg border border-blue-200">
+                    <p class="text-gray-600 text-sm font-semibold mb-2">Total Recommendations</p>
+                    <p class="text-3xl font-bold text-blue-600">{{ recommendations|length }}</p>
+                </div>
+                <div class="p-4 bg-green-50 rounded-lg border border-green-200">
+                    <p class="text-gray-600 text-sm font-semibold mb-2">Average Match Score</p>
+                    <p class="text-3xl font-bold text-green-600">
+                        {% if recommendations %}
+                            {{ recommendations.0.score|floatformat:0 }}%
+                        {% else %}
+                            0%
+                        {% endif %}
+                    </p>
+                </div>
+                <div class="p-4 bg-purple-50 rounded-lg border border-purple-200">
+                    <p class="text-gray-600 text-sm font-semibold mb-2">Top Recommendation</p>
+                    <p class="text-lg font-bold text-purple-600">
+                        {% if recommendations %}
+                            {{ recommendations.0.type|upper }}
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+
+            <div class="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                <p class="text-sm text-blue-900">
+                    <strong>💡 How it works:</strong> Our recommendation engine analyzes your viewing history and suggests content similar to what you've already enjoyed. The match score indicates how relevant each recommendation is for you.
+                </p>
+            </div>
+        </div>
+
+        {% endif %}
+    </div>
+</div>
+
+<style>
+    .line-clamp-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+</style>
+{% endblock %}
