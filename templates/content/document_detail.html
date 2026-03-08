@@ -67,7 +67,7 @@ window.addEventListener('beforeunload', () => {
         content_type: contentType,
         content_title: contentTitle,
         time_spent: timeSpent,
-        completion: 50
+        completion: timeSpent >= 60 ? 100 : Math.round((timeSpent / 60) * 100)
     }));
 });
 </script>
