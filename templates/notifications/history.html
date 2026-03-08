@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block title %}Notification History{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-100 p-8">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-4xl font-bold mb-8">📋 Notification History</h1>
+
+        <!-- Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white rounded-lg shadow p-6 border-l-4 border-blue-500">
+                <h3 class="text-gray-600 text-sm font-semibold">Total</h3>
+                <p class="text-3xl font-bold text-blue-600 mt-2">{{ total }}</p>
+            </div>
+            <div class="bg-white rounded-lg shadow p-6 border-l-4 border-green-500">
+                <h3 class="text-gray-600 text-sm font-semibold">Sent</h3>
+                <p class="text-3xl font-bold text-green-600 mt-2">{{ sent }}</p>
+            </div>
+            <div class="bg-white rounded-lg shadow p-6 border-l-4 border-yellow-500">
+                <h3 class="text-gray-600 text-sm font-semibold">Pending</h3>
+                <p class="text-3xl font-bold text-yellow-600 mt-2">{{ pending }}</p>
+            </div>
+            <div class="bg-white rounded-lg shadow p-6 border-l-4 border-red-500">
+                <h3 class="text-gray-600 text-sm font-semibold">Failed</h3>
+                <p class="text-3xl font-bold text-red-600 mt-2">{{ failed }}</p>
+            </div>
+        </div>
+
+        <!-- Notifications List -->
+        <div class="bg-white rounded-lg shadow overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-gray-50 border-b">
+                        <tr>
+                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Subject</th>
+                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Status</th>
+                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Sent To</th>
+                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Date</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y">
+                        {% for notif in notifications %}
+                        <tr class="hover:bg-gray-50 transition">
+                            <td class="px-6 py-4 text-sm font-semibold text-gray-900">
+                                {{ notif.subject }}
+                            </td>
+                            <td class="px-6 py-4 text-sm">
+                                <span class="px-3 py-1 rounded-full text-xs font-bold
+                                    {% if notif.status == 'sent' %}bg-green-100 text-green-800
+                                    {% elif notif.status == 'pending' %}bg-yellow-100 text-yellow-800
+                                    {% else %}bg-red-100 text-red-800{% endif %}">
+                                    {{ notif.get_status_display }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-600">
+                                {{ notif.recipient_email }}
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-600">
+                                {{ notif.created_at|date:"M d, Y H:i" }}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="px-6 py-12 text-center text-gray-500">
+                                No notifications yet
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
