@@ -79,7 +79,7 @@
         </td>
         <td class="px-6 py-4 text-sm text-gray-600">{{ item.unique_users }}</td>
         <td class="px-6 py-4 text-sm">
-            <button class="text-blue-600 hover:text-blue-900 font-semibold" onclick="viewDetails('{{ item.content_title }}')">View Details</button>
+            <a href="{% url 'analytics-detail' item.content_type item.content_title %}"  class="text-blue-600 hover:text-blue-900 font-semibold" onclick="viewDetails('{{ item.content_title }}')"> View Details </a>
         </td>
     </tr>
     {% empty %}
