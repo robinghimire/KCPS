@@ -1,75 +1,178 @@
 {% extends "base.html" %}
 
-{% block title %}{{ post.title }}{% endblock %}
+{% block title %}{{ post.title }} - KCPS HUB{% endblock %}
 
 {% block content %}
-<div class="min-h-screen bg-gray-100 p-8">
-    <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-8">
-        <h1 class="text-4xl font-bold mb-4">{{ post.title }}</h1>
-        
-        <div class="flex items-center justify-between mb-8 text-gray-600 border-b pb-4">
-            <div>
-                <p class="text-sm">By <strong>{{ post.author.get_full_name|default:post.author.username }}</strong></p>
-                <p class="text-sm">{{ post.created_at|date:"M d, Y" }}</p>
+<div class="min-h-screen bg-gray-100">
+    <!-- Featured Image -->
+    {% if post.featured_image %}
+    <div class="w-full h-96 overflow-hidden bg-gray-300">
+        <img src="{{ post.featured_image.url }}" alt="{{ post.title }}" class="w-full h-full object-cover">
+    </div>
+    {% endif %}
+    
+    <div class="max-w-4xl mx-auto p-8">
+        <!-- Header -->
+        <div class="bg-white rounded-lg shadow p-8 mb-8">
+            <div class="flex justify-between items-start mb-4">
+                <div>
+                    <span class="inline-block px-3 py-1 rounded-full text-xs font-bold
+                        {% if post.category == 'tutorial' %}bg-green-100 text-green-800
+                        {% elif post.category == 'news' %}bg-blue-100 text-blue-800
+                        {% elif post.category == 'faq' %}bg-purple-100 text-purple-800
+                        {% elif post.category == 'announcement' %}bg-red-100 text-red-800
+                        {% else %}bg-gray-100 text-gray-800{% endif %}">
+                        {{ post.get_category_display }}
+                    </span>
+                </div>
+                <span class="text-sm text-gray-600">
+                    ⏱️ {{ post.read_time_minutes }} min read
+                </span>
             </div>
-            <span class="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-sm">{{ post.category }}</span>
-        </div>
-
-        <div class="prose max-w-none mb-8">
-            {{ post.content|linebreaks }}
-        </div>
-
-        {% if post.media.all %}
-        <div class="border-t pt-8 mt-8">
-            <h2 class="text-2xl font-bold mb-6">Media</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {% for media in post.media.all %}
-                    {% if media.media_type == 'image' %}
-                    <img src="{{ media.file.url }}" alt="Post media" class="rounded-lg shadow">
-                    {% elif media.media_type == 'video' %}
-                    <video controls class="rounded-lg shadow w-full">
-                        <source src="{{ media.file.url }}" type="video/mp4">
-                    </video>
-                    {% elif media.media_type == 'document' %}
-                    <a href="{{ media.file.url }}" target="_blank" class="flex items-center justify-center bg-gray-100 p-6 rounded-lg border-2">
-                        <span class="text-gray-700 font-semibold">📄 {{ media.file.name }}</span>
-                    </a>
+            
+            <h1 class="text-4xl font-bold text-gray-900 mb-4">{{ post.title }}</h1>
+            
+            {% if post.excerpt %}
+            <p class="text-lg text-gray-600 mb-6 italic">{{ post.excerpt }}</p>
+            {% endif %}
+            
+            <div class="flex items-center justify-between text-sm text-gray-600 border-t pt-6">
+                <div class="flex items-center gap-4">
+                    <span>👤 By {{ post.author.username }}</span>
+                    <span>📅 {{ post.created_at|date:"F d, Y" }}</span>
+                    {% if post.updated_at != post.created_at %}
+                    <span>✏️ Updated {{ post.updated_at|date:"F d, Y" }}</span>
                     {% endif %}
-                {% endfor %}
+                </div>
             </div>
         </div>
-        {% endif %}
+        
+        <!-- Content section for post -->
+        <div class="bg-white rounded-lg shadow p-8 prose prose-lg max-w-none mb-8">
+        <div class="ck-content">
+        {{ post.content|safe }}
+            </div>
+         </div>
+
+
+
+            
+        </div>
+        
+        <!-- Engagement Section -->
+        <div class="bg-white rounded-lg shadow p-8 mb-8">
+            <div class="flex gap-6 mb-8 pb-8 border-b">
+                <!-- Favorite Button -->
+                <button onclick="toggleFavorite('post', {{ post.id }})"
+                        class="flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-gray-100 transition {% if is_favorited %}text-red-600 font-bold{% else %}text-gray-600{% endif %}">
+                    <span class="text-xl">{% if is_favorited %}❤️{% else %}🤍{% endif %}</span>
+                    <span id="favorite-count-{{ post.id }}">Like</span>
+                </button>
+                
+                <!-- Bookmark Button -->
+                <button onclick="toggleBookmark('post', {{ post.id }})"
+                        class="flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-gray-100 transition {% if is_bookmarked %}text-blue-600 font-bold{% else %}text-gray-600{% endif %}">
+                    <span class="text-xl">{% if is_bookmarked %}🔖{% else %}🔗{% endif %}</span>
+                    <span id="bookmark-count-{{ post.id }}">Save</span>
+                </button>
+                
+                <!-- Share Button -->
+                <button onclick="sharePost()" class="flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-gray-100 transition text-gray-600">
+                    <span class="text-xl">📤</span>
+                    <span>Share</span>
+                </button>
+            </div>
+            
+            {% include "content/comments_section.html" %}
+        </div>
     </div>
 </div>
 
-<script>
-const contentStartTime = Date.now() / 1000;
-const contentType = 'post';
-const contentTitle = '{{ post.title|escapejs }}';
-let videoProgress = 0;
 
-window.addEventListener('beforeunload', () => {
-    const timeSpent = Math.round((Date.now() / 1000) - contentStartTime);
-    
-    const trackingData = JSON.stringify({
-        content_type: contentType,
-        content_title: contentTitle,
-        time_spent: timeSpent,
-        completion: 50
-    });
-    
-    console.log('Sending tracking:', trackingData);
-    
-    fetch('/content/track-view/', {
+<script>
+function toggleFavorite(contentType, contentId) {
+    fetch('{% url "toggle-favorite" %}', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
             'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
         },
-        body: trackingData,
+        body: JSON.stringify({
+            content_type: contentType,
+            content_id: contentId
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        const btn = event.target.closest('button');
+        if (data.added) {
+            btn.classList.add('text-red-600', 'font-bold');
+            btn.innerHTML = '<span class="text-xl">❤️</span><span id="favorite-count-' + contentId + '">Liked</span>';
+        } else {
+            btn.classList.remove('text-red-600', 'font-bold');
+            btn.innerHTML = '<span class="text-xl">🤍</span><span id="favorite-count-' + contentId + '">Like</span>';
+        }
+    });
+}
+
+function toggleBookmark(contentType, contentId) {
+    fetch('{% url "toggle-bookmark" %}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        },
+        body: JSON.stringify({
+            content_type: contentType,
+            content_id: contentId
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        const btn = event.target.closest('button');
+        if (data.added) {
+            btn.classList.add('text-blue-600', 'font-bold');
+            btn.innerHTML = '<span class="text-xl">🔖</span><span id="bookmark-count-' + contentId + '">Saved</span>';
+        } else {
+            btn.classList.remove('text-blue-600', 'font-bold');
+            btn.innerHTML = '<span class="text-xl">🔗</span><span id="bookmark-count-' + contentId + '">Save</span>';
+        }
+    });
+}
+
+function sharePost() {
+    const url = window.location.href;
+    const title = document.querySelector('h1').textContent;
+    
+    if (navigator.share) {
+        navigator.share({
+            title: title,
+            url: url
+        });
+    } else {
+        // Fallback: copy to clipboard
+        navigator.clipboard.writeText(url).then(() => {
+            alert('Post link copied to clipboard!');
+        });
+    }
+}
+
+// Track content view
+document.addEventListener('DOMContentLoaded', function() {
+    fetch('{% url "track-view" %}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        },
+        body: JSON.stringify({
+            content_type: 'post',
+            content_title: '{{ post.title }}',
+            time_spent: 30,
+            completion: 50
+        }),
         keepalive: true
     });
 });
 </script>
-{% include "content/comments_section.html" %}
 {% endblock %}
