@@ -1,73 +1,170 @@
 {% extends "base.html" %}
 
-{% block title %}Notification Preferences{% endblock %}
+{% block title %}Notification Preferences | KCPS HUB{% endblock %}
 
 {% block content %}
-<div class="min-h-screen bg-gray-100 p-8">
-    <div class="max-w-2xl mx-auto">
-        <h1 class="text-4xl font-bold mb-8">🔔 Notification Preferences</h1>
-
-        <form method="post" class="bg-white rounded-lg shadow p-8 space-y-6">
-            {% csrf_token %}
-
-            <!-- New Content -->
-            <div class="border-b pb-6">
-                <h3 class="text-lg font-bold mb-4">📰 New Content</h3>
-                <div class="space-y-3">
-                    <label class="flex items-center">
-                        <input type="radio" name="email_new_content" value="instant" {% if prefs.email_new_content == 'instant' %}checked{% endif %} class="mr-3">
-                        <span>Instant - Notify me immediately</span>
-                    </label>
-                    <label class="flex items-center">
-                        <input type="radio" name="email_new_content" value="daily" {% if prefs.email_new_content == 'daily' %}checked{% endif %} class="mr-3">
-                        <span>Daily Digest - Once per day</span>
-                    </label>
-                    <label class="flex items-center">
-                        <input type="radio" name="email_new_content" value="weekly" {% if prefs.email_new_content == 'weekly' %}checked{% endif %} class="mr-3">
-                        <span>Weekly Digest - Once per week</span>
-                    </label>
-                    <label class="flex items-center">
-                        <input type="radio" name="email_new_content" value="never" {% if prefs.email_new_content == 'never' %}checked{% endif %} class="mr-3">
-                        <span>Never - Turn off notifications</span>
-                    </label>
-                </div>
-            </div>
-
-            <!-- Comments -->
-            <div class="border-b pb-6">
-                <h3 class="text-lg font-bold mb-4">💬 Comments</h3>
-                <label class="flex items-center">
-                    <input type="checkbox" name="email_comments" {% if prefs.email_comments %}checked{% endif %} class="mr-3">
-                    <span>Notify me when someone replies to my content</span>
-                </label>
-            </div>
-
-            <!-- Favorites -->
-            <div class="border-b pb-6">
-                <h3 class="text-lg font-bold mb-4">❤️ Favorites</h3>
-                <label class="flex items-center">
-                    <input type="checkbox" name="email_favorites" {% if prefs.email_favorites %}checked{% endif %} class="mr-3">
-                    <span>Notify me when someone favorites my content</span>
-                </label>
-            </div>
-
-            <!-- Tickets -->
-            <div class="pb-6">
-                <h3 class="text-lg font-bold mb-4">🎫 Support Tickets</h3>
-                <label class="flex items-center">
-                    <input type="checkbox" name="email_ticket_updates" {% if prefs.email_ticket_updates %}checked{% endif %} class="mr-3">
-                    <span>Notify me of ticket updates</span>
-                </label>
-            </div>
-
-            <!-- Submit -->
-            <div class="flex gap-4">
-                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg transition">
-                    💾 Save Preferences
-                </button>
-                <a href="/" class="text-gray-600 hover:text-gray-900 font-semibold py-3 px-8">Cancel</a>
-            </div>
-        </form>
+<div class="space-y-10 pb-10">
+    <!-- Header Section -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mt-8">
+        <div>
+            <h1 class="text-3xl font-black text-kcpsNavy uppercase tracking-tight">🔔 Notification Preferences</h1>
+            <p class="text-gray-500 text-sm mt-1">Customize how and when you receive notifications.</p>
+        </div>
     </div>
+
+    <form method="post" class="space-y-6">
+        {% csrf_token %}
+
+        <!-- New Content Section -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+            <div class="p-8 border-b border-gray-100 bg-gray-50/50">
+                <h3 class="text-xl font-black text-kcpsNavy uppercase">📰 New Content</h3>
+                <p class="text-gray-600 text-sm mt-2">How often would you like to be notified about new posts, videos, and documents?</p>
+            </div>
+
+            <div class="p-8 space-y-4">
+                <!-- Instant -->
+                <label class="flex items-start p-5 bg-gray-50 hover:bg-blue-50/50 rounded-lg border-2 border-gray-200 hover:border-kcpsBlue cursor-pointer transition-all group">
+                    <input 
+                        type="radio" 
+                        name="email_new_content" 
+                        value="instant" 
+                        {% if prefs.email_new_content == 'instant' %}checked{% endif %} 
+                        class="w-5 h-5 text-kcpsBlue border-gray-300 rounded focus:ring-kcpsBlue mt-1 flex-shrink-0">
+                    <div class="ml-4 flex-1">
+                        <p class="font-bold text-gray-900 group-hover:text-kcpsBlue transition-colors">⚡ Instant</p>
+                        <p class="text-sm text-gray-600">Get notified immediately when new content is posted</p>
+                    </div>
+                </label>
+
+                <!-- Daily Digest -->
+                <label class="flex items-start p-5 bg-gray-50 hover:bg-blue-50/50 rounded-lg border-2 border-gray-200 hover:border-kcpsBlue cursor-pointer transition-all group">
+                    <input 
+                        type="radio" 
+                        name="email_new_content" 
+                        value="daily" 
+                        {% if prefs.email_new_content == 'daily' %}checked{% endif %} 
+                        class="w-5 h-5 text-kcpsBlue border-gray-300 rounded focus:ring-kcpsBlue mt-1 flex-shrink-0">
+                    <div class="ml-4 flex-1">
+                        <p class="font-bold text-gray-900 group-hover:text-kcpsBlue transition-colors">📅 Daily Digest</p>
+                        <p class="text-sm text-gray-600">Receive a summary of new content once per day</p>
+                    </div>
+                </label>
+
+                <!-- Weekly Digest -->
+                <label class="flex items-start p-5 bg-gray-50 hover:bg-blue-50/50 rounded-lg border-2 border-gray-200 hover:border-kcpsBlue cursor-pointer transition-all group">
+                    <input 
+                        type="radio" 
+                        name="email_new_content" 
+                        value="weekly" 
+                        {% if prefs.email_new_content == 'weekly' %}checked{% endif %} 
+                        class="w-5 h-5 text-kcpsBlue border-gray-300 rounded focus:ring-kcpsBlue mt-1 flex-shrink-0">
+                    <div class="ml-4 flex-1">
+                        <p class="font-bold text-gray-900 group-hover:text-kcpsBlue transition-colors">📆 Weekly Digest</p>
+                        <p class="text-sm text-gray-600">Get a weekly summary of all new content</p>
+                    </div>
+                </label>
+
+                <!-- Never -->
+                <label class="flex items-start p-5 bg-gray-50 hover:bg-blue-50/50 rounded-lg border-2 border-gray-200 hover:border-kcpsBlue cursor-pointer transition-all group">
+                    <input 
+                        type="radio" 
+                        name="email_new_content" 
+                        value="never" 
+                        {% if prefs.email_new_content == 'never' %}checked{% endif %} 
+                        class="w-5 h-5 text-kcpsBlue border-gray-300 rounded focus:ring-kcpsBlue mt-1 flex-shrink-0">
+                    <div class="ml-4 flex-1">
+                        <p class="font-bold text-gray-900 group-hover:text-kcpsBlue transition-colors">🔇 Turn Off</p>
+                        <p class="text-sm text-gray-600">Disable notifications for new content</p>
+                    </div>
+                </label>
+            </div>
+        </div>
+
+        <!-- Comments Section -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+            <div class="p-8 border-b border-gray-100 bg-gray-50/50">
+                <h3 class="text-xl font-black text-kcpsNavy uppercase">💬 Comments & Replies</h3>
+                <p class="text-gray-600 text-sm mt-2">Get notified when others interact with your content.</p>
+            </div>
+
+            <div class="p-8 space-y-4">
+                <label class="flex items-center p-5 bg-gray-50 hover:bg-blue-50/50 rounded-lg border-2 border-gray-200 hover:border-kcpsBlue cursor-pointer transition-all group">
+                    <input 
+                        type="checkbox" 
+                        name="email_comments" 
+                        {% if prefs.email_comments %}checked{% endif %} 
+                        class="w-5 h-5 text-kcpsBlue border-gray-300 rounded focus:ring-kcpsBlue">
+                    <div class="ml-3 flex-1">
+                        <p class="font-bold text-gray-900 group-hover:text-kcpsBlue transition-colors">Replies to My Comments</p>
+                        <p class="text-sm text-gray-600">Notify me when someone replies to my comments</p>
+                    </div>
+                </label>
+            </div>
+        </div>
+
+        <!-- Favorites Section -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+            <div class="p-8 border-b border-gray-100 bg-gray-50/50">
+                <h3 class="text-xl font-black text-kcpsNavy uppercase">❤️ Favorites & Engagement</h3>
+                <p class="text-gray-600 text-sm mt-2">Be notified when your content gets engagement.</p>
+            </div>
+
+            <div class="p-8 space-y-4">
+                <label class="flex items-center p-5 bg-gray-50 hover:bg-blue-50/50 rounded-lg border-2 border-gray-200 hover:border-kcpsBlue cursor-pointer transition-all group">
+                    <input 
+                        type="checkbox" 
+                        name="email_favorites" 
+                        {% if prefs.email_favorites %}checked{% endif %} 
+                        class="w-5 h-5 text-kcpsBlue border-gray-300 rounded focus:ring-kcpsBlue">
+                    <div class="ml-3 flex-1">
+                        <p class="font-bold text-gray-900 group-hover:text-kcpsBlue transition-colors">Someone Favorites My Content</p>
+                        <p class="text-sm text-gray-600">Get notified when users favorite your posts or videos</p>
+                    </div>
+                </label>
+            </div>
+        </div>
+
+        <!-- Support Tickets Section -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+            <div class="p-8 border-b border-gray-100 bg-gray-50/50">
+                <h3 class="text-xl font-black text-kcpsNavy uppercase">🎫 Support & Tickets</h3>
+                <p class="text-gray-600 text-sm mt-2">Get updates on your support tickets and requests.</p>
+            </div>
+
+            <div class="p-8 space-y-4">
+                <label class="flex items-center p-5 bg-gray-50 hover:bg-blue-50/50 rounded-lg border-2 border-gray-200 hover:border-kcpsBlue cursor-pointer transition-all group">
+                    <input 
+                        type="checkbox" 
+                        name="email_ticket_updates" 
+                        {% if prefs.email_ticket_updates %}checked{% endif %} 
+                        class="w-5 h-5 text-kcpsBlue border-gray-300 rounded focus:ring-kcpsBlue">
+                    <div class="ml-3 flex-1">
+                        <p class="font-bold text-gray-900 group-hover:text-kcpsBlue transition-colors">Ticket Status Updates</p>
+                        <p class="text-sm text-gray-600">Get notified when your support tickets are updated</p>
+                    </div>
+                </label>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex gap-4 pt-6">
+            <button 
+                type="submit" 
+                class="bg-kcpsBlue hover:bg-kcpsNavy text-white font-bold py-3 px-8 rounded-lg transition-all shadow-sm border-b-4 border-kcpsNavy/20 active:border-b-0 active:translate-y-[2px]">
+                💾 Save Preferences
+            </button>
+            <a href="{% url 'user-dashboard' %}" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-3 px-8 rounded-lg transition-all">
+                Cancel
+            </a>
+        </div>
+    </form>
 </div>
+
+<style>
+    input[type="radio"]:checked + div p:first-child,
+    input[type="checkbox"]:checked + div p:first-child {
+        color: #0087be;
+    }
+</style>
 {% endblock %}

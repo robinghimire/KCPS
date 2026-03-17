@@ -3,153 +3,428 @@
 {% block title %}{{ post.title }} - KCPS HUB{% endblock %}
 
 {% block content %}
-<div class="min-h-screen" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);">
-    <!-- Hero Section with Featured Image -->
-    {% if post.featured_image %}
-    <div class="relative h-96 overflow-hidden">
-        <img src="{{ post.featured_image.url }}" alt="{{ post.title }}" class="w-full h-full object-cover">
-        <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
-    </div>
-    {% else %}
-    <div class="h-40 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600"></div>
-    {% endif %}
-    
-    <div class="max-w-4xl mx-auto px-6 py-12">
-        <!-- Main Content Card -->
-        <article class="bg-white rounded-2xl shadow-2xl overflow-hidden">
-            <!-- Header Section -->
-            <div class="px-8 py-10 border-b border-gray-100">
-                <!-- Category Badge -->
-                <div class="flex items-center gap-3 mb-6">
-                    <span class="inline-block px-4 py-2 rounded-full text-xs font-bold tracking-wide
-                        {% if post.category == 'tutorial' %}bg-green-100 text-green-700
-                        {% elif post.category == 'news' %}bg-blue-100 text-blue-700
-                        {% elif post.category == 'faq' %}bg-purple-100 text-purple-700
-                        {% elif post.category == 'announcement' %}bg-red-100 text-red-700
-                        {% else %}bg-gray-100 text-gray-700{% endif %}">
-                        {{ post.category|upper }}
-                    </span>
-                    <span class="text-sm text-gray-500 font-medium">⏱️ {{ post.read_time_minutes|default:"5" }} min read</span>
-                </div>
-                
-                <!-- Title -->
-                <h1 class="text-5xl font-bold text-gray-900 mb-4 leading-tight">{{ post.title }}</h1>
-                
-                <!-- Excerpt -->
-                {% if post.excerpt %}
-                <p class="text-xl text-gray-600 italic font-light">{{ post.excerpt }}</p>
-                {% endif %}
-                
-                <!-- Meta Info -->
-                <div class="flex flex-wrap items-center gap-6 mt-8 text-sm text-gray-600">
-                    <div class="flex items-center gap-2">
-                        <span class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white text-sm font-bold">
-                            {{ post.author.username|first|upper }}
-                        </span>
-                        <span class="font-medium">{{ post.author.get_full_name|default:post.author.username }}</span>
-                    </div>
-                    <span>📅 {{ post.created_at|date:"M d, Y" }}</span>
-                    {% if post.updated_at != post.created_at %}
-                    <span class="text-gray-500">Updated {{ post.updated_at|date:"M d, Y" }}</span>
-                    {% endif %}
-                </div>
-            </div>
-            
-            <!-- Content Section -->
-            <div class="px-8 py-12">
-                <div class="ck-content prose prose-lg max-w-none prose-headings:font-bold prose-headings:text-gray-900 prose-a:text-blue-600 prose-a:no-underline hover:prose-a:underline prose-img:rounded-lg prose-img:shadow-lg">
-                    {{ post.content|safe }}
-                </div>
-            </div>
-            
-            <!-- Media Gallery Section -->
-            {% if post.media.all %}
-            <div class="px-8 py-12 bg-gray-50 border-t border-gray-100">
-                <h2 class="text-3xl font-bold text-gray-900 mb-10 flex items-center gap-3">
-                    <span class="text-2xl">📎</span> Attached Media
-                </h2>
-                
-                <div class="space-y-12">
-                    <!-- Videos -->
-                    {% for media in post.media.all %}
-                        {% if media.media_type == 'video' %}
-                        <div class="group">
-                            <div class="relative overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 bg-black">
-                                <video controls class="w-full h-auto" style="max-height: 600px;">
-                                    <source src="{{ media.file.url }}" type="video/mp4">
-                                    Your browser does not support the video tag.
-                                </video>
-                            </div>
-                        </div>
-                        {% endif %}
-                    {% endfor %}
-                    
-                    <!-- Images Grid -->
-                    {% with images=post.media.all|dictsort:"media_type" %}
-                        {% if images %}
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            {% for media in post.media.all %}
-                                {% if media.media_type == 'image' %}
-                                <div class="group overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300">
-                                    <img src="{{ media.file.url }}" alt="Post image" class="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300">
-                                </div>
-                                {% endif %}
-                            {% endfor %}
-                        </div>
-                        {% endif %}
-                    {% endwith %}
-                    
-                    <!-- Documents -->
-                    {% for media in post.media.all %}
-                        {% if media.media_type == 'document' %}
-                        <div class="flex items-center gap-4 p-6 bg-white rounded-xl border-2 border-purple-200 hover:border-purple-400 hover:shadow-lg transition-all duration-300">
-                            <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center text-white text-xl">
-                                📄
-                            </div>
-                            <div class="flex-1">
-                                <p class="font-semibold text-gray-900">Document</p>
-                                <p class="text-sm text-gray-600">{{ media.file.name|truncatewords:3 }}</p>
-                            </div>
-                            <a href="{{ media.file.url }}" download class="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-semibold transition-all duration-300 flex items-center gap-2">
-                                <span>📥</span> Download
-                            </a>
-                        </div>
-                        {% endif %}
-                    {% endfor %}
-                </div>
-            </div>
+<style>
+    :root {
+        --primary: #003f87;
+        --primary-dark: #002855;
+        --secondary: #0087be;
+        --accent: #00a9ce;
+        --success: #1b7d4d;
+        --bg-dark: #002855;
+        --bg-light: #f5f7fa;
+        --text-dark: #1a1a1a;
+        --text-light: #666666;
+        --border: #d0d8e0;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        background: linear-gradient(135deg, var(--bg-light) 0%, #f0f3f7 100%);
+        font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        color: var(--text-dark);
+    }
+
+    .post-container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 2rem 1.5rem;
+    }
+
+    /* Hero Section */
+    .post-hero {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        border-radius: 16px;
+        padding: 4rem 2rem;
+        color: white;
+        margin-bottom: 3rem;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 20px 60px rgba(0, 63, 135, 0.2);
+    }
+
+    .post-hero::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -10%;
+        width: 500px;
+        height: 500px;
+        background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
+        border-radius: 50%;
+    }
+
+    .post-hero-content {
+        position: relative;
+        z-index: 1;
+    }
+
+    .category-badge {
+        display: inline-block;
+        padding: 0.5rem 1.2rem;
+        background: rgba(255,255,255,0.25);
+        border-radius: 50px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-bottom: 1rem;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.3);
+    }
+
+    .post-title {
+        font-size: 3.5rem;
+        font-weight: 800;
+        line-height: 1.1;
+        margin-bottom: 1rem;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.15);
+    }
+
+    .post-excerpt {
+        font-size: 1.25rem;
+        opacity: 0.95;
+        line-height: 1.6;
+        max-width: 600px;
+        font-weight: 300;
+    }
+
+    .post-meta {
+        display: flex;
+        gap: 2rem;
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 1px solid rgba(255,255,255,0.25);
+        flex-wrap: wrap;
+        font-size: 0.95rem;
+    }
+
+    .meta-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 500;
+    }
+
+    /* Content Section */
+    .post-content-wrapper {
+        background: white;
+        border-radius: 12px;
+        padding: 3rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 2px 16px rgba(0, 63, 135, 0.08);
+        line-height: 1.8;
+    }
+
+    .ck-content {
+        font-size: 1.1rem;
+        color: var(--text-dark);
+    }
+
+    .ck-content h1, .ck-content h2, .ck-content h3 {
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+        font-weight: 700;
+        color: var(--primary);
+    }
+
+    .ck-content h1 { font-size: 2rem; }
+    .ck-content h2 { font-size: 1.75rem; }
+    .ck-content h3 { font-size: 1.5rem; }
+
+    .ck-content p {
+        margin-bottom: 1.25rem;
+        color: var(--text-light);
+    }
+
+    .ck-content a {
+        color: var(--secondary);
+        text-decoration: none;
+        font-weight: 600;
+        border-bottom: 2px solid transparent;
+        transition: all 0.3s ease;
+    }
+
+    .ck-content a:hover {
+        border-bottom-color: var(--secondary);
+        color: var(--primary);
+    }
+
+    .ck-content blockquote {
+        border-left: 4px solid var(--secondary);
+        padding-left: 1.5rem;
+        margin: 2rem 0;
+        opacity: 0.9;
+        font-style: italic;
+        color: var(--text-light);
+    }
+
+    .ck-content ul, .ck-content ol {
+        margin-left: 2rem;
+        margin-bottom: 1.25rem;
+    }
+
+    .ck-content li {
+        margin-bottom: 0.5rem;
+        color: var(--text-light);
+    }
+
+    /* Media Section */
+    .media-section {
+        background: white;
+        border-radius: 12px;
+        padding: 3rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 2px 16px rgba(0, 63, 135, 0.08);
+    }
+
+    .media-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        color: var(--primary);
+    }
+
+    .media-grid {
+        display: grid;
+        gap: 2rem;
+    }
+
+    .media-item {
+        border-radius: 12px;
+        overflow: hidden;
+        background: var(--bg-light);
+        box-shadow: 0 2px 8px rgba(0, 63, 135, 0.1);
+    }
+
+    .media-item video,
+    .media-item img {
+        width: 100%;
+        height: auto;
+        display: block;
+        border-radius: 12px;
+        transition: transform 0.3s ease;
+    }
+
+    .media-item:hover video,
+    .media-item:hover img {
+        transform: scale(1.02);
+    }
+
+    .document-item {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        padding: 1.5rem;
+        background: linear-gradient(135deg, #e8f1f9 0%, #f0f7fc 100%);
+        border-radius: 12px;
+        border: 2px solid var(--accent);
+        transition: all 0.3s ease;
+    }
+
+    .document-item:hover {
+        transform: translateX(4px);
+        box-shadow: 0 8px 20px rgba(0, 135, 190, 0.15);
+    }
+
+    .doc-icon {
+        font-size: 3rem;
+    }
+
+    .doc-info {
+        flex: 1;
+    }
+
+    .doc-name {
+        font-weight: 700;
+        color: var(--primary);
+        margin-bottom: 0.5rem;
+    }
+
+    .download-btn {
+        padding: 0.75rem 1.5rem;
+        background: linear-gradient(135deg, var(--secondary) 0%, var(--accent) 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .download-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(0, 135, 190, 0.3);
+    }
+
+    /* Engagement Section */
+    .engagement-section {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        box-shadow: 0 2px 16px rgba(0, 63, 135, 0.08);
+        margin-bottom: 2rem;
+    }
+
+    .engagement-buttons {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        padding-bottom: 2rem;
+        border-bottom: 2px solid var(--border);
+        flex-wrap: wrap;
+    }
+
+    .engagement-btn {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.75rem 1.5rem;
+        border: 2px solid var(--border);
+        background: white;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 700;
+        transition: all 0.3s ease;
+        font-size: 1rem;
+        color: var(--text-dark);
+    }
+
+    .engagement-btn:hover {
+        background: var(--bg-light);
+        border-color: var(--secondary);
+        color: var(--secondary);
+    }
+
+    .engagement-btn.active {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        color: white;
+        border-color: transparent;
+    }
+
+    .engagement-btn .icon {
+        font-size: 1.25rem;
+    }
+
+    @media (max-width: 768px) {
+        .post-title {
+            font-size: 2rem;
+        }
+
+        .post-content-wrapper {
+            padding: 1.5rem;
+        }
+
+        .post-meta {
+            gap: 1rem;
+        }
+
+        .media-section {
+            padding: 1.5rem;
+        }
+    }
+</style>
+
+<div class="post-container">
+    <!-- Hero Section -->
+    <div class="post-hero">
+        <div class="post-hero-content">
+            <span class="category-badge">{{ post.category }}</span>
+            <h1 class="post-title">{{ post.title }}</h1>
+            {% if post.excerpt %}
+            <p class="post-excerpt">{{ post.excerpt }}</p>
             {% endif %}
             
-            <!-- Engagement Section -->
-            <div class="px-8 py-10 bg-white border-t border-gray-100">
-                <div class="flex flex-wrap gap-4 mb-10">
-                    <!-- Like Button -->
-                    <button onclick="toggleFavorite('post', {{ post.id }})" 
-                            class="flex items-center gap-2 px-6 py-3 rounded-lg font-semibold transition-all duration-300 
-                            {% if is_favorited %}bg-red-100 text-red-600 shadow-md{% else %}bg-gray-100 hover:bg-gray-200 text-gray-700{% endif %}">
-                        <span class="text-xl">{% if is_favorited %}❤️{% else %}🤍{% endif %}</span>
-                        <span>Like</span>
-                    </button>
-                    
-                    <!-- Bookmark Button -->
-                    <button onclick="toggleBookmark('post', {{ post.id }})"
-                            class="flex items-center gap-2 px-6 py-3 rounded-lg font-semibold transition-all duration-300 
-                            {% if is_bookmarked %}bg-blue-100 text-blue-600 shadow-md{% else %}bg-gray-100 hover:bg-gray-200 text-gray-700{% endif %}">
-                        <span class="text-xl">{% if is_bookmarked %}🔖{% else %}📌{% endif %}</span>
-                        <span>Save</span>
-                    </button>
-                    
-                    <!-- Share Button -->
-                    <button onclick="sharePost()" class="flex items-center gap-2 px-6 py-3 rounded-lg font-semibold bg-gray-100 hover:bg-gray-200 text-gray-700 transition-all duration-300">
-                        <span class="text-xl">🔗</span>
-                        <span>Share</span>
-                    </button>
+            <div class="post-meta">
+                <div class="meta-item">
+                    <span>👤</span>
+                    <span>{{ post.author.username }}</span>
                 </div>
-                
-                <!-- Comments Section -->
-                {% include "content/comments_section.html" %}
+                <div class="meta-item">
+                    <span>📅</span>
+                    <span>{{ post.created_at|date:"M d, Y" }}</span>
+                </div>
+                <div class="meta-item">
+                    <span>⏱️</span>
+                    <span>5 min read</span>
+                </div>
+                {% if post.updated_at != post.created_at %}
+                <div class="meta-item">
+                    <span>✏️</span>
+                    <span>Updated {{ post.updated_at|date:"M d, Y" }}</span>
+                </div>
+                {% endif %}
             </div>
-        </article>
+        </div>
+    </div>
+
+    <!-- Content -->
+    <div class="post-content-wrapper">
+        <div class="ck-content">
+            {{ post.content|safe }}
+        </div>
+    </div>
+
+    <!-- Media Section -->
+    {% if post.media.all %}
+    <div class="media-section">
+        <div class="media-title">📎 Attached Media</div>
+        <div class="media-grid">
+            {% for media in post.media.all %}
+                {% if media.media_type == 'video' %}
+                    <div class="media-item">
+                        <video controls style="width: 100%; border-radius: 12px;">
+                            <source src="{{ media.file.url }}" type="video/mp4">
+                            Your browser does not support video.
+                        </video>
+                    </div>
+                {% elif media.media_type == 'image' %}
+                    <div class="media-item">
+                        <img src="{{ media.file.url }}" alt="Post image">
+                    </div>
+                {% elif media.media_type == 'document' %}
+                    <div class="document-item">
+                        <div class="doc-icon">📄</div>
+                        <div class="doc-info">
+                            <div class="doc-name">Document</div>
+                        </div>
+                        <a href="{{ media.file.url }}" target="_blank" class="download-btn">Download</a>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Engagement Section -->
+    <div class="engagement-section">
+        <div class="engagement-buttons">
+            <button onclick="toggleFavorite('post', {{ post.id }})" class="engagement-btn {% if is_favorited %}active{% endif %}">
+                <span class="icon">{% if is_favorited %}❤️{% else %}🤍{% endif %}</span>
+                <span>Like</span>
+            </button>
+            
+            <button onclick="toggleBookmark('post', {{ post.id }})" class="engagement-btn {% if is_bookmarked %}active{% endif %}">
+                <span class="icon">{% if is_bookmarked %}🔖{% else %}🔗{% endif %}</span>
+                <span>Save</span>
+            </button>
+            
+            <button onclick="sharePost()" class="engagement-btn">
+                <span class="icon">📤</span>
+                <span>Share</span>
+            </button>
+        </div>
+
+        {% include "content/comments_section.html" %}
     </div>
 </div>
 
@@ -169,15 +444,9 @@ function toggleFavorite(contentType, contentId) {
     .then(response => response.json())
     .then(data => {
         const btn = event.target.closest('button');
-        if (data.favorited) {
-            btn.classList.add('bg-red-100', 'text-red-600', 'shadow-md');
-            btn.classList.remove('bg-gray-100', 'text-gray-700');
-            btn.innerHTML = '<span class="text-xl">❤️</span><span>Like</span>';
-        } else {
-            btn.classList.remove('bg-red-100', 'text-red-600', 'shadow-md');
-            btn.classList.add('bg-gray-100', 'text-gray-700');
-            btn.innerHTML = '<span class="text-xl">🤍</span><span>Like</span>';
-        }
+        btn.classList.toggle('active');
+        const icon = btn.querySelector('.icon');
+        icon.textContent = data.favorited ? '❤️' : '🤍';
     });
 }
 
@@ -196,21 +465,15 @@ function toggleBookmark(contentType, contentId) {
     .then(response => response.json())
     .then(data => {
         const btn = event.target.closest('button');
-        if (data.bookmarked) {
-            btn.classList.add('bg-blue-100', 'text-blue-600', 'shadow-md');
-            btn.classList.remove('bg-gray-100', 'text-gray-700');
-            btn.innerHTML = '<span class="text-xl">🔖</span><span>Save</span>';
-        } else {
-            btn.classList.remove('bg-blue-100', 'text-blue-600', 'shadow-md');
-            btn.classList.add('bg-gray-100', 'text-gray-700');
-            btn.innerHTML = '<span class="text-xl">📌</span><span>Save</span>';
-        }
+        btn.classList.toggle('active');
+        const icon = btn.querySelector('.icon');
+        icon.textContent = data.bookmarked ? '🔖' : '🔗';
     });
 }
 
 function sharePost() {
     const url = window.location.href;
-    const title = document.querySelector('h1').textContent;
+    const title = '{{ post.title }}';
     
     if (navigator.share) {
         navigator.share({
@@ -218,13 +481,11 @@ function sharePost() {
             url: url
         });
     } else {
-        navigator.clipboard.writeText(url).then(() => {
-            alert('Post link copied to clipboard!');
-        });
+        navigator.clipboard.writeText(url);
+        alert('Link copied!');
     }
 }
 
-// Track content view
 document.addEventListener('DOMContentLoaded', function() {
     fetch('{% url "track-view" %}', {
         method: 'POST',

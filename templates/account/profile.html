@@ -1,0 +1,195 @@
+{% extends "base.html" %}
+
+{% block title %}My Profile | KCPS HUB{% endblock %}
+
+{% block content %}
+<div class="space-y-10 pb-10">
+    <!-- Header Section -->
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mt-8">
+        <div>
+            <h1 class="text-3xl font-black text-kcpsNavy uppercase tracking-tight">My Profile</h1>
+            <p class="text-gray-500 text-sm mt-1">Manage your account and preferences.</p>
+        </div>
+      
+    </div>
+
+    <!-- Profile Header Card -->
+    <div class="bg-gradient-to-r from-kcpsNavy to-kcpsBlue rounded-2xl shadow-sm overflow-hidden border border-kcpsBlue/20">
+        <div class="p-8 md:p-12">
+            <div class="flex flex-col md:flex-row items-start md:items-center gap-8">
+                <!-- Avatar -->
+                <div class="flex-shrink-0">
+                    <div class="w-28 h-28 bg-white/20 backdrop-blur-xl rounded-2xl border-4 border-white/30 flex items-center justify-center text-6xl shadow-lg">
+                        👤
+                    </div>
+                </div>
+
+                <!-- User Info -->
+                <div class="flex-1 text-white">
+                    <h2 class="text-4xl font-black mb-2 uppercase tracking-tight">{{ user.get_full_name|default:user.username }}</h2>
+                    <p class="text-white/80 text-lg font-semibold mb-6">@{{ user.username }}</p>
+                    
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div class="bg-white/10 backdrop-blur-xl rounded-lg p-4 border border-white/20">
+                            <p class="text-white/70 text-xs font-black uppercase tracking-widest">Member Since</p>
+                            <p class="text-white font-bold mt-1">{{ user.date_joined|date:"M Y" }}</p>
+                        </div>
+                        <div class="bg-white/10 backdrop-blur-xl rounded-lg p-4 border border-white/20">
+                            <p class="text-white/70 text-xs font-black uppercase tracking-widest">Last Active</p>
+                            <p class="text-white font-bold mt-1">{{ user.last_login|date:"M d" }}</p>
+                        </div>
+                        <div class="bg-white/10 backdrop-blur-xl rounded-lg p-4 border border-white/20">
+                            <p class="text-white/70 text-xs font-black uppercase tracking-widest">Status</p>
+                            <p class="text-white font-bold mt-1">
+                                {% if user.is_active %}
+                                <span class="text-green-300">Active</span>
+                                {% else %}
+                                <span class="text-red-300">Inactive</span>
+                                {% endif %}
+                            </p>
+                        </div>
+                        <div class="bg-white/10 backdrop-blur-xl rounded-lg p-4 border border-white/20">
+                            <p class="text-white/70 text-xs font-black uppercase tracking-widest">Account Type</p>
+                            <p class="text-white font-bold mt-1">
+                                {% if user.is_staff %}Admin{% else %}User{% endif %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Account Information Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Main Info -->
+        <div class="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+            <h3 class="text-xl font-black text-kcpsNavy mb-8 uppercase">Account Information</h3>
+            
+            <div class="space-y-6">
+                <!-- Username -->
+                <div class="pb-6 border-b border-gray-100">
+                    <label class="text-xs font-black text-gray-400 uppercase tracking-widest block mb-2">Username</label>
+                    <p class="text-lg font-semibold text-gray-900">{{ user.username }}</p>
+                </div>
+
+                <!-- Email -->
+                <div class="pb-6 border-b border-gray-100">
+                    <label class="text-xs font-black text-gray-400 uppercase tracking-widest block mb-2">Email Address</label>
+                    <p class="text-lg font-semibold text-gray-900">{{ user.email }}</p>
+                </div>
+
+                <!-- First Name -->
+                <div class="pb-6 border-b border-gray-100">
+                    <label class="text-xs font-black text-gray-400 uppercase tracking-widest block mb-2">First Name</label>
+                    <p class="text-lg font-semibold text-gray-900">{{ user.first_name|default:"Not set" }}</p>
+                </div>
+
+                <!-- Last Name -->
+                <div class="pb-6 border-b border-gray-100">
+                    <label class="text-xs font-black text-gray-400 uppercase tracking-widest block mb-2">Last Name</label>
+                    <p class="text-lg font-semibold text-gray-900">{{ user.last_name|default:"Not set" }}</p>
+                </div>
+
+                <!-- Member Since -->
+                <div>
+                    <label class="text-xs font-black text-gray-400 uppercase tracking-widest block mb-2">Member Since</label>
+                    <p class="text-lg font-semibold text-gray-900">{{ user.date_joined|date:"F d, Y" }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Card -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+            <h3 class="text-xl font-black text-kcpsNavy mb-8 uppercase">Activity</h3>
+            
+            <div class="space-y-6">
+                <div class="text-center py-6 bg-kcpsBlue/5 rounded-xl border border-kcpsBlue/20">
+                    <p class="text-3xl font-black text-kcpsBlue">{{ user_views|length }}</p>
+                    <p class="text-xs font-black text-gray-500 uppercase tracking-widest mt-2">Content Views</p>
+                </div>
+
+                <div class="text-center py-6 bg-green-50 rounded-xl border border-green-200">
+                    <p class="text-3xl font-black text-green-700">{{ saved_posts|length }}</p>
+                    <p class="text-xs font-black text-gray-500 uppercase tracking-widest mt-2">Saved Posts</p>
+                </div>
+
+                <div class="text-center py-6 bg-orange-50 rounded-xl border border-orange-200">
+                    <p class="text-3xl font-black text-orange-700">{{ liked_posts|length }}</p>
+                    <p class="text-xs font-black text-gray-500 uppercase tracking-widest mt-2">Liked Posts</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Security & Settings Section -->
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="p-8 border-b border-gray-100 bg-gray-50/50">
+            <h3 class="text-xl font-black text-kcpsNavy uppercase">Security & Settings</h3>
+        </div>
+
+        <div class="p-8">
+            <div class="space-y-4">
+                <!-- Change Password -->
+               
+
+                <!-- Two-Factor Authentication -->
+                <a href="{% url 'notification-preferences' %}" class="flex items-center justify-between p-5 bg-gray-50 hover:bg-blue-50/50 rounded-lg border border-gray-200 hover:border-kcpsBlue transition-all group">
+                    <div>
+                        <p class="font-bold text-gray-900 group-hover:text-kcpsBlue transition-colors">Notification Settings</p>
+                        <p class="text-sm text-gray-600">Manage email and push notifications</p>
+                    </div>
+                    <span class="text-2xl">🔔</span>
+                </a>
+
+                <!-- Sessions -->
+                <div class="flex items-center justify-between p-5 bg-gray-50 rounded-lg border border-gray-200">
+                    <div>
+                        <p class="font-bold text-gray-900">Active Sessions</p>
+                        <p class="text-sm text-gray-600">Manage your login sessions</p>
+                    </div>
+                    <span class="text-2xl">💻</span>
+                </div>
+
+                <!-- Account Deletion -->
+              <form method="post" action="{% url 'logout' %}" class="block">
+    {% csrf_token %}
+    <button type="submit" class="w-full flex items-center justify-between p-5 bg-red-50 hover:bg-red-100 rounded-lg border border-red-200 hover:border-red-400 transition-all group text-left">
+        <div>
+            <p class="font-bold text-red-900 group-hover:text-red-700 transition-colors">Logout</p>
+            <p class="text-sm text-red-600">Sign out from your account</p>
+        </div>
+        <!-- Optional: Add the exit icon back here if you want it on the right -->
+        <span class="text-xl">🚪</span>
+    </button>
+</form>
+        </div>
+    </div>
+
+    <!-- Danger Zone -->
+    <div class="bg-white rounded-2xl shadow-sm border-2 border-red-200 overflow-hidden">
+        <div class="p-8 border-b border-red-200 bg-red-50">
+            <h3 class="text-xl font-black text-red-700 uppercase">⚠️ Danger Zone</h3>
+        </div>
+
+        <div class="p-8">
+            <p class="text-gray-600 mb-6">Once you delete your account, there is no going back. Please be certain.</p>
+            
+            <button 
+                onclick="if(confirm('Are you sure? This action cannot be undone.')) { document.getElementById('deleteForm').submit(); }"
+                class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg transition-all">
+                Delete Account
+            </button>
+        </div>
+    </div>
+
+    <!-- Hidden Delete Form -->
+</div>
+
+<style>
+    /* Smooth transitions for interactive elements */
+    a:active {
+        transition: all 0.1s ease;
+    }
+</style>
+{% endblock %}

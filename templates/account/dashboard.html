@@ -1,369 +1,400 @@
 {% extends "base.html" %}
 
-{% block title %}Admin Dashboard{% endblock %}
+{% block title %}Admin Dashboard | KCPS HUB{% endblock %}
 
 {% block content %}
-<div class="min-h-screen bg-gray-100 p-8">
-    <div class="max-w-7xl mx-auto">
-        <h1 class="text-4xl font-bold mb-8">Admin Dashboard</h1>
+<div class="space-y-10">
+    <!-- Header Section -->
+    <div class="flex flex-col md:flex-row md:items-center place-items-center gap-4">
+        <div>
+            <h1 class="text-3xl font-black text-kcpsNavy justify-center uppercase tracking-tight ">Admin Dashboard</h1>
+            <p class="text-gray-500 text-sm mt-1">Institutional oversight and engagement metrics.</p>
+        </div>
+      
+    </div>
 
-        <!-- Content Engagement Analytics -->
-        <div class="bg-white rounded-lg shadow mb-8 p-8">
-            <h2 class="text-2xl font-bold mb-6">Content Engagement Analytics</h2>
-            
-            <!-- Filter Section -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-                <div>
-                    <label class="block text-gray-700 font-semibold mb-2">Content Type</label>
-                    <select name="category" class="w-full p-2 border rounded-lg">
-                        <option value="">All Types</option>
-                        <option value="video">Videos</option>
-                        <option value="post">Posts</option>
-                        <option value="document">Documents</option>
-                        <option value="image">Images</option>
-                    </select>
+    <!-- Content Engagement Analytics Section -->
+    <section class="bg-white rounded-2xl shadow-sm overflow-hidden border border-gray-100">
+    <div class="p-6 md:p-8 border-b border-gray-100 bg-gray-50/50">
+        <h2 class="text-xl font-black text-kcpsNavy mb-6">Engagement Analytics</h2>
+        
+        <!-- Modern Filter Grid -->
+        <form method="GET" class="grid grid-cols-1 md:grid-cols-5 gap-4">
+            <div class="space-y-1">
+                <label class="text-[10px] font-black text-gray-400 uppercase ml-1">Content Type</label>
+                <select name="category" class="w-full bg-white border border-gray-200 rounded-lg p-2.5 text-sm focus:ring-4 focus:ring-kcpsBlue/10 outline-none transition-all">
+                    <option value="">All Types</option>
+                    <option value="video" {% if selected_category == 'video' %}selected{% endif %}>Videos</option>
+                    <option value="post" {% if selected_category == 'post' %}selected{% endif %}>Posts</option>
+                    <option value="document" {% if selected_category == 'document' %}selected{% endif %}>Documents</option>
+                    <option value="image" {% if selected_category == 'image' %}selected{% endif %}>Images</option>
+                </select>
+            </div>
+
+            <div class="space-y-1">
+                <label class="text-[10px] font-black text-gray-400 uppercase ml-1">Sort By</label>
+                <select name="sort_by" class="w-full bg-white border border-gray-200 rounded-lg p-2.5 text-sm focus:ring-4 focus:ring-kcpsBlue/10 outline-none transition-all">
+                    <option value="views" {% if selected_sort == 'views' %}selected{% endif %}>Most Viewed</option>
+                    <option value="time" {% if selected_sort == 'time' %}selected{% endif %}>Most Time Spent</option>
+                    <option value="uniques" {% if selected_sort == 'uniques' %}selected{% endif %}>Most Unique Users</option>
+                    <option value="recent" {% if selected_sort == 'recent' %}selected{% endif %}>Most Recent</option>
+                    <option value="oldest" {% if selected_sort == 'oldest' %}selected{% endif %}>Oldest</option>
+                    <option value="most watched" {% if selected_sort == 'most watched' %}selected{% endif %}>Most Watched</option>
+                </select>
+            </div>
+
+            <div class="space-y-1">
+                <label class="text-[10px] font-black text-gray-400 uppercase ml-1">Per Page</label>
+                <select name="per_page" class="w-full bg-white border border-gray-200 rounded-lg p-2.5 text-sm focus:ring-4 focus:ring-kcpsBlue/10 outline-none transition-all">
+                    <option value="10" {% if selected_per_page == 10 %}selected{% endif %}>10 Items</option>
+                    <option value="20" {% if selected_per_page == 20 %}selected{% endif %}>20 Items</option>
+                    <option value="30" {% if selected_per_page == 30 %}selected{% endif %}>30 Items</option>
+                </select>
+            </div>
+
+            <div class="flex items-end col-span-1 md:col-span-2">
+                <button type="submit" class="w-full bg-kcpsNavy text-white font-bold py-2.5 rounded-lg hover:bg-kcpsBlue transition-all text-sm shadow-md">
+                    🔍 Filter Results
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Analytics Table -->
+    <div class="overflow-x-auto">
+        <table class="w-full text-left">
+            <thead>
+                <tr class="text-[11px] font-black text-gray-400 uppercase tracking-widest bg-gray-50/50">
+                    <th class="px-8 py-4">Content Title</th>
+                    <th class="px-6 py-4">Type</th>
+                    <th class="px-6 py-4 text-center">Views</th>
+                    <th class="px-6 py-4">Avg. Time</th>
+                    <th class="px-6 py-4">Uniques</th>
+                    <th class="px-8 py-4">Action</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-50">
+                {% for item in analytics %}
+                <tr class="hover:bg-blue-50/30 transition-colors group">
+                    <td class="px-8 py-5">
+                        <span class="font-bold text-gray-900 group-hover:text-kcpsBlue transition-colors">{{ item.content_title }}</span>
+                    </td>
+                    <td class="px-6 py-5">
+                        <span class="text-[10px] font-black uppercase px-2.5 py-1 rounded-md border
+                            {% if item.content_type == 'video' %}bg-green-50 text-green-700 border-green-200
+                            {% elif item.content_type == 'post' %}bg-orange-50 text-orange-700 border-orange-200
+                            {% elif item.content_type == 'document' %}bg-purple-50 text-purple-700 border-purple-200
+                            {% else %}bg-pink-50 text-pink-700 border-pink-200{% endif %}">
+                            {{ item.content_type }}
+                        </span>
+                    </td>
+                    <td class="px-6 py-5 text-sm font-semibold text-gray-600 text-center">{{ item.views }}</td>
+                    <td class="px-6 py-5 text-sm font-semibold text-gray-600">
+                        {% if item.avg_time %}{{ item.avg_time|floatformat:0 }}s{% else %}--{% endif %}
+                    </td>
+                    <td class="px-6 py-5 text-sm font-semibold text-gray-600">{{ item.unique_users }}</td>
+                    <td class="px-8 py-5">
+                        <a href="{% url 'analytics-detail' item.content_type item.content_title %}" class="text-xs font-black text-kcpsBlue hover:text-kcpsNavy underline decoration-kcpsGold decoration-2 underline-offset-4 transition-all">
+                            VIEW DETAILS
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="px-8 py-12 text-center text-gray-400 italic">No engagement data recorded.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
+    {% if paginator.num_pages > 1 %}
+    <div class="p-6 border-t border-gray-100 flex items-center justify-center gap-2">
+        {% if analytics.has_previous %}
+        <a href="?page=1&category={{ selected_category }}&sort_by={{ selected_sort }}&per_page={{ per_page }}" class="px-3 py-2 bg-gray-100 hover:bg-kcpsBlue/10 rounded-lg text-sm font-bold">« First</a>
+        <a href="?page={{ analytics.previous_page_number }}&category={{ selected_category }}&sort_by={{ selected_sort }}&per_page={{ per_page }}" class="px-3 py-2 bg-gray-100 hover:bg-kcpsBlue/10 rounded-lg text-sm font-bold">‹ Prev</a>
+        {% endif %}
+
+        <span class="px-4 py-2 text-sm font-bold text-gray-700">
+            Page {{ analytics.number }} of {{ paginator.num_pages }}
+        </span>
+
+        {% if analytics.has_next %}
+        <a href="?page={{ analytics.next_page_number }}&category={{ selected_category }}&sort_by={{ selected_sort }}&per_page={{ per_page }}" class="px-3 py-2 bg-gray-100 hover:bg-kcpsBlue/10 rounded-lg text-sm font-bold">Next ›</a>
+        <a href="?page={{ paginator.num_pages }}&category={{ selected_category }}&sort_by={{ selected_sort }}&per_page={{ per_page }}" class="px-3 py-2 bg-gray-100 hover:bg-kcpsBlue/10 rounded-lg text-sm font-bold">Last »</a>
+        {% endif %}
+    </div>
+    {% endif %}
+    </section>
+
+    <!-- Stats Cards Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+        <div class="bg-white p-6 rounded-2xl shadow-sm border-l-4 border-kcpsBlue group hover:shadow-md transition-shadow">
+            <h3 class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Total Users</h3>
+            <p class="text-3xl font-black text-kcpsNavy mt-1">{{ total_users }}</p>
+        </div>
+        <div class="bg-white p-6 rounded-2xl shadow-sm border-l-4 border-green-500 group hover:shadow-md transition-shadow">
+            <h3 class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Videos</h3>
+            <p class="text-3xl font-black text-kcpsNavy mt-1">{{ total_videos }}</p>
+        </div>
+        <div class="bg-white p-6 rounded-2xl shadow-sm border-l-4 border-purple-500 group hover:shadow-md transition-shadow">
+            <h3 class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Documents</h3>
+            <p class="text-3xl font-black text-kcpsNavy mt-1">{{ total_documents }}</p>
+        </div>
+        <div class="bg-white p-6 rounded-2xl shadow-sm border-l-4 border-orange-500 group hover:shadow-md transition-shadow">
+            <h3 class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Posts</h3>
+            <p class="text-3xl font-black text-kcpsNavy mt-1">{{ total_posts }}</p>
+        </div>
+        <a href="{% url 'ticket-list' %}" class="group bg-kcpsNavy p-6 rounded-2xl shadow-lg border-l-4 border-kcpsGold hover:scale-[1.02] transition-all">
+            <h3 class="text-[10px] font-black text-kcpsGold uppercase tracking-widest">Total Tickets</h3>
+            <p class="text-3xl font-black text-white mt-1 group-hover:text-kcpsGold transition-colors">{{ total_tickets }}</p>
+        </a>
+    </div>
+
+    <!-- Content Management Section -->
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="flex bg-gray-50 border-b overflow-x-auto scrollbar-hide">
+            <button onclick="showContentTab('videos')" class="content-tab-btn active px-8 py-5 font-black text-[11px] uppercase tracking-widest border-b-4 border-kcpsBlue text-kcpsBlue whitespace-nowrap transition-all">📹 Videos</button>
+            <button onclick="showContentTab('posts')" class="content-tab-btn px-8 py-5 font-black text-[11px] uppercase tracking-widest border-b-4 border-transparent text-gray-400 hover:text-gray-600 whitespace-nowrap transition-all">📝 Posts</button>
+            <button onclick="showContentTab('documents')" class="content-tab-btn px-8 py-5 font-black text-[11px] uppercase tracking-widest border-b-4 border-transparent text-gray-400 hover:text-gray-600 whitespace-nowrap transition-all">📄 Documents</button>
+            <button onclick="showContentTab('images')" class="content-tab-btn px-8 py-5 font-black text-[11px] uppercase tracking-widest border-b-4 border-transparent text-gray-400 hover:text-gray-600 whitespace-nowrap transition-all">🖼️ Images</button>
+        </div>
+
+        <div class="p-8">
+            <!-- Videos Tab -->
+            <div id="videos" class="content-tab">
+                <h3 class="text-xl font-bold text-kcpsNavy mb-6">📹 Videos</h3>
+                <div class="space-y-3">
+                    {% for video in videos %}
+                    <div class="flex justify-between items-center bg-gray-50 hover:bg-blue-50/50 p-4 rounded-lg border border-gray-100 transition-colors group">
+                        <span class="font-semibold text-gray-900 group-hover:text-kcpsBlue transition-colors">{{ video.title }}</span>
+                        <div class="flex gap-3">
+                            <a href="{% url 'video-detail' video.id %}" class="text-xs font-bold text-kcpsBlue hover:text-kcpsNavy">VIEW</a>
+                            <form method="post" action="{% url 'delete-video' video.id %}" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="text-xs font-bold text-red-600 hover:text-red-800" onclick="return confirm('Delete this video?')">DELETE</button>
+                            </form>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <p class="text-gray-400 italic py-8 text-center">No videos uploaded yet</p>
+                    {% endfor %}
                 </div>
-                <div>
-                    <label class="block text-gray-700 font-semibold mb-2">Date Range</label>
-                    <select id="dateRange" class="w-full p-2 border rounded-lg">
-                        <option>Last 7 Days</option>
-                        <option>Last 30 Days</option>
-                        <option>Last 3 Months</option>
-                        <option>All Time</option>
-                    </select>
+            </div>
+
+            <!-- Posts Tab -->
+            <div id="posts" class="content-tab hidden">
+                <h3 class="text-xl font-bold text-kcpsNavy mb-6">📝 Posts</h3>
+                <div class="space-y-3">
+                    {% for post in posts %}
+                    <div class="flex justify-between items-center bg-gray-50 hover:bg-blue-50/50 p-4 rounded-lg border border-gray-100 transition-colors group">
+                        <span class="font-semibold text-gray-900 group-hover:text-kcpsBlue transition-colors">{{ post.title }}</span>
+                        <div class="flex gap-3">
+                            <a href="{% url 'post-detail' post.id %}" class="text-xs font-bold text-kcpsBlue hover:text-kcpsNavy">VIEW</a>
+                            <form method="post" action="{% url 'delete-post' post.id %}" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="text-xs font-bold text-red-600 hover:text-red-800" onclick="return confirm('Delete this post?')">DELETE</button>
+                            </form>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <p class="text-gray-400 italic py-8 text-center">No posts created yet</p>
+                    {% endfor %}
                 </div>
-                <div>
-                    <label class="block text-gray-700 font-semibold mb-2">Sort By</label>
-                    <select id="sortBy" class="w-full p-2 border rounded-lg">
-                        <option>Most Viewed</option>
-                        <option>Most Time Spent</option>
-                        <option>Recently Added</option>
-                    </select>
+            </div>
+
+            <!-- Documents Tab -->
+            <div id="documents" class="content-tab hidden">
+                <h3 class="text-xl font-bold text-kcpsNavy mb-6">📄 Documents</h3>
+                <div class="space-y-3">
+                    {% for doc in documents %}
+                    <div class="flex justify-between items-center bg-gray-50 hover:bg-blue-50/50 p-4 rounded-lg border border-gray-100 transition-colors group">
+                        <span class="font-semibold text-gray-900 group-hover:text-kcpsBlue transition-colors">{{ doc.title }}</span>
+                        <div class="flex gap-3">
+                            <a href="{% url 'document-detail' doc.id %}" class="text-xs font-bold text-kcpsBlue hover:text-kcpsNavy">VIEW</a>
+                            <form method="post" action="{% url 'delete-document' doc.id %}" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="text-xs font-bold text-red-600 hover:text-red-800" onclick="return confirm('Delete this document?')">DELETE</button>
+                            </form>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <p class="text-gray-400 italic py-8 text-center">No documents uploaded yet</p>
+                    {% endfor %}
                 </div>
-                <div class="flex items-end">
-                    <button class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition">
-                        Filter
+            </div>
+
+            <!-- Images Tab -->
+            <div id="images" class="content-tab hidden">
+                <h3 class="text-xl font-bold text-kcpsNavy mb-6">🖼️ Images</h3>
+                <div class="space-y-3">
+                    {% for image in images %}
+                    <div class="flex justify-between items-center bg-gray-50 hover:bg-blue-50/50 p-4 rounded-lg border border-gray-100 transition-colors group">
+                        <span class="font-semibold text-gray-900 group-hover:text-kcpsBlue transition-colors">{{ image.title }}</span>
+                        <div class="flex gap-3">
+                            <a href="{% url 'image-detail' image.id %}" class="text-xs font-bold text-kcpsBlue hover:text-kcpsNavy">VIEW</a>
+                            <form method="post" action="{% url 'delete-image' image.id %}" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="text-xs font-bold text-red-600 hover:text-red-800" onclick="return confirm('Delete this image?')">DELETE</button>
+                            </form>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <p class="text-gray-400 italic py-8 text-center">No images uploaded yet</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upload Section -->
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="flex bg-gray-50 border-b overflow-x-auto scrollbar-hide">
+            <button onclick="showTab('post')" class="tab-btn active px-8 py-5 font-black text-[11px] uppercase tracking-widest border-b-4 border-kcpsBlue text-kcpsBlue whitespace-nowrap transition-all">✍️ Create Post</button>
+            <button onclick="showTab('video')" class="tab-btn px-8 py-5 font-black text-[11px] uppercase tracking-widest border-b-4 border-transparent text-gray-400 hover:text-gray-600 whitespace-nowrap transition-all">📹 Upload Video</button>
+            <button onclick="showTab('document')" class="tab-btn px-8 py-5 font-black text-[11px] uppercase tracking-widest border-b-4 border-transparent text-gray-400 hover:text-gray-600 whitespace-nowrap transition-all">📄 Upload Document</button>
+            <button onclick="showTab('image')" class="tab-btn px-8 py-5 font-black text-[11px] uppercase tracking-widest border-b-4 border-transparent text-gray-400 hover:text-gray-600 whitespace-nowrap transition-all">🖼️ Upload Image</button>
+        </div>
+
+        <div class="p-8">
+            <!-- Create Post Tab -->
+            <div id="post" class="tab-content">
+                <h2 class="text-2xl font-black text-kcpsNavy mb-8">✍️ Create New Post</h2>
+                <form method="post" action="{% url 'create-post' %}" enctype="multipart/form-data" class="space-y-6">
+                    {% csrf_token %}
+                    
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Title *</label>
+                        <input type="text" name="title" class="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-kcpsBlue focus:outline-none" placeholder="Enter post title" required>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Category *</label>
+                        <select name="category" class="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-kcpsBlue focus:outline-none">
+                            <option value="general">General</option>
+                            <option value="tutorial">Tutorial</option>
+                            <option value="news">News</option>
+                            <option value="faq">FAQ</option>
+                            <option value="announcement">Announcement</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Content *</label>
+                        <textarea name="content" rows="10" class="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-kcpsBlue focus:outline-none" placeholder="Write your post content here..." required></textarea>
+                    </div>
+
+                    <!-- Videos Upload -->
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">📹 Attach Videos (Optional)</label>
+                        <input type="file" name="post_videos" accept="video/*" multiple class="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-kcpsBlue">
+                        <p class="text-xs text-gray-500 mt-2">You can select multiple videos</p>
+                    </div>
+
+                    <!-- Images Upload -->
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">📸 Attach Images (Optional)</label>
+                        <input type="file" name="post_images" accept="image/*" multiple class="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-kcpsBlue">
+                        <p class="text-xs text-gray-500 mt-2">You can select multiple images</p>
+                    </div>
+
+                    <!-- Documents Upload -->
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">📄 Attach Documents (Optional)</label>
+                        <input type="file" name="post_documents" accept=".pdf,.doc,.docx" multiple class="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-kcpsBlue">
+                        <p class="text-xs text-gray-500 mt-2">PDF, DOC, DOCX files only</p>
+                    </div>
+                    
+                    <div class="flex gap-4 pt-6 border-t">
+                        <button type="submit" class="bg-kcpsBlue hover:bg-kcpsNavy text-white font-bold py-3 px-8 rounded-lg transition-all shadow-sm">
+                            📝 Publish Post
+                        </button>
+                        <button type="reset" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-3 px-8 rounded-lg transition-all">
+                            Clear
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Video Tab -->
+            <div id="video" class="tab-content hidden">
+                <h2 class="text-2xl font-black text-kcpsNavy mb-8">📹 Upload Video</h2>
+                <form method="post" action="{% url 'upload-video' %}" enctype="multipart/form-data" class="space-y-4">
+                    {% csrf_token %}
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Title *</label>
+                        <input type="text" name="title" class="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-kcpsBlue focus:outline-none" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Description</label>
+                        <textarea name="description" rows="4" class="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-kcpsBlue focus:outline-none"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Video File *</label>
+                        <input type="file" name="video" accept="video/*" class="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-kcpsBlue" required>
+                    </div>
+                    <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg transition-all">
+                        Upload Video
                     </button>
-                </div>
+                </form>
             </div>
 
-            <!-- Analytics Table -->
-            <div class="overflow-x-auto">
-                <table class="w-full">
-                    <thead class="bg-gray-50 border-b">
-                        <tr>
-                            <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Content Title</th>
-                            <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Type</th>
-                            <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Views</th>
-                            <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Avg. Time Spent</th>
-                            <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Unique Users</th>
-                            <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y">
-                        {% for item in analytics %}
-                        <tr class="hover:bg-gray-50">
-                            <td class="px-6 py-4 text-sm text-gray-900 font-semibold">{{ item.content_title }}</td>
-                            <td class="px-6 py-4 text-sm">
-                                <span class="{% if item.content_type == 'video' %}bg-green-100 text-green-800{% elif item.content_type == 'post' %}bg-orange-100 text-orange-800{% elif item.content_type == 'document' %}bg-purple-100 text-purple-800{% else %}bg-pink-100 text-pink-800{% endif %} px-3 py-1 rounded-full text-xs font-semibold">
-                                    {{ item.content_type|title }}
-                                </span>
-                            </td>
-                            <td class="px-6 py-4 text-sm text-gray-600">{{ item.views }}</td>
-                            <td class="px-6 py-4 text-sm text-gray-600">
-                                {% if item.avg_time %}
-                                    {{ item.avg_time|floatformat:0 }}s
-                                {% else %}
-                                    N/A
-                                {% endif %}
-                            </td>
-                            <td class="px-6 py-4 text-sm text-gray-600">{{ item.unique_users }}</td>
-                            <td class="px-6 py-4 text-sm">
-                                <a href="{% url 'analytics-detail' item.content_type item.content_title %}" class="text-blue-600 hover:text-blue-900 font-semibold">
-                                    View Details
-                                </a>
-                            </td>
-                        </tr>
-                        {% empty %}
-                        <tr>
-                            <td colspan="6" class="px-6 py-4 text-center text-gray-500">No engagement data yet</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- Stats Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
-            <div class="bg-white rounded-lg shadow p-6">
-                <h3 class="text-gray-600 text-sm font-semibold">Total Users</h3>
-                <p class="text-3xl font-bold text-blue-600 mt-2">{{ total_users }}</p>
-            </div>
-            <div class="bg-white rounded-lg shadow p-6">
-                <h3 class="text-gray-600 text-sm font-semibold">Videos Uploaded</h3>
-                <p class="text-3xl font-bold text-green-600 mt-2">{{ total_videos }}</p>
-            </div>
-            <div class="bg-white rounded-lg shadow p-6">
-                <h3 class="text-gray-600 text-sm font-semibold">Documents</h3>
-                <p class="text-3xl font-bold text-purple-600 mt-2">{{ total_documents }}</p>
-            </div>
-            <div class="bg-white rounded-lg shadow p-6">
-                <h3 class="text-gray-600 text-sm font-semibold">Posts</h3>
-                <p class="text-3xl font-bold text-orange-600 mt-2">{{ total_posts }}</p>
-            </div>
-            <div class="bg-white rounded-lg shadow p-6 border-l-4 border-green-500">
-                <a href="{% url 'ticket-list' %}" class="block">
-                    <h3 class="text-gray-600 text-sm font-semibold">Total Tickets</h3>
-                    <p class="text-4xl font-bold text-green-600 mt-2">{{ total_tickets }}</p>
-                </a>
-            </div>
-        </div>
-
-        <!-- Content Management Section -->
-        <div class="bg-white rounded-lg shadow mb-8">
-            <div class="flex border-b">
-                <button onclick="showContentTab('videos')" class="content-tab-btn active flex-1 py-4 px-6 text-center font-semibold border-b-4 border-blue-600">📹 Videos</button>
-                <button onclick="showContentTab('posts')" class="content-tab-btn flex-1 py-4 px-6 text-center font-semibold border-b-4 border-transparent hover:border-gray-300">📝 Posts</button>
-                <button onclick="showContentTab('documents')" class="content-tab-btn flex-1 py-4 px-6 text-center font-semibold border-b-4 border-transparent hover:border-gray-300">📄 Documents</button>
-                <button onclick="showContentTab('images')" class="content-tab-btn flex-1 py-4 px-6 text-center font-semibold border-b-4 border-transparent hover:border-gray-300">🖼️ Images</button>
-            </div>
-
-            <div class="p-8">
-                <!-- Videos Tab -->
-                <div id="videos" class="content-tab">
-                    <h3 class="text-xl font-bold mb-4">Videos</h3>
-                    <div class="space-y-2">
-                        {% for video in videos %}
-                        <div class="flex justify-between items-center bg-gray-50 p-4 rounded">
-                            <span>{{ video.title }}</span>
-                            <div class="flex gap-2">
-                                <a href="{% url 'video-detail' video.id %}" class="text-blue-600 hover:text-blue-900 font-semibold">View</a>
-                                <form method="post" action="{% url 'delete-video' video.id %}" style="display:inline;">
-                                    {% csrf_token %}
-                                    <button type="submit" class="text-red-600 hover:text-red-900 font-semibold" onclick="return confirm('Delete?')">Delete</button>
-                                </form>
-                            </div>
-                        </div>
-                        {% empty %}
-                        <p class="text-gray-500">No videos</p>
-                        {% endfor %}
+            <!-- Document Tab -->
+            <div id="document" class="tab-content hidden">
+                <h2 class="text-2xl font-black text-kcpsNavy mb-8">📄 Upload Document</h2>
+                <form method="post" action="{% url 'upload-document' %}" enctype="multipart/form-data" class="space-y-4">
+                    {% csrf_token %}
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Title *</label>
+                        <input type="text" name="title" class="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-kcpsBlue focus:outline-none" required>
                     </div>
-                </div>
-
-                <!-- Posts Tab -->
-                <div id="posts" class="content-tab hidden">
-                    <h3 class="text-xl font-bold mb-4">Posts</h3>
-                    <div class="space-y-2">
-                        {% for post in posts %}
-                        <div class="flex justify-between items-center bg-gray-50 p-4 rounded">
-                            <span>{{ post.title }}</span>
-                            <div class="flex gap-2">
-                                <a href="{% url 'post-detail' post.id %}" class="text-blue-600 hover:text-blue-900 font-semibold">View</a>
-                                <form method="post" action="{% url 'delete-post' post.id %}" style="display:inline;">
-                                    {% csrf_token %}
-                                    <button type="submit" class="text-red-600 hover:text-red-900 font-semibold" onclick="return confirm('Delete?')">Delete</button>
-                                </form>
-                            </div>
-                        </div>
-                        {% empty %}
-                        <p class="text-gray-500">No posts</p>
-                        {% endfor %}
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Description</label>
+                        <textarea name="description" rows="4" class="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-kcpsBlue focus:outline-none"></textarea>
                     </div>
-                </div>
-
-                <!-- Documents Tab -->
-                <div id="documents" class="content-tab hidden">
-                    <h3 class="text-xl font-bold mb-4">Documents</h3>
-                    <div class="space-y-2">
-                        {% for doc in documents %}
-                        <div class="flex justify-between items-center bg-gray-50 p-4 rounded">
-                            <span>{{ doc.title }}</span>
-                            <div class="flex gap-2">
-                                <a href="{% url 'document-detail' doc.id %}" class="text-blue-600 hover:text-blue-900 font-semibold">View</a>
-                                <form method="post" action="{% url 'delete-document' doc.id %}" style="display:inline;">
-                                    {% csrf_token %}
-                                    <button type="submit" class="text-red-600 hover:text-red-900 font-semibold" onclick="return confirm('Delete?')">Delete</button>
-                                </form>
-                            </div>
-                        </div>
-                        {% empty %}
-                        <p class="text-gray-500">No documents</p>
-                        {% endfor %}
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Document File *</label>
+                        <input type="file" name="file" accept=".pdf,.doc,.docx" class="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-kcpsBlue" required>
                     </div>
-                </div>
+                    <button type="submit" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 rounded-lg transition-all">
+                        Upload Document
+                    </button>
+                </form>
+            </div>
 
-                <!-- Images Tab -->
-                <div id="images" class="content-tab hidden">
-                    <h3 class="text-xl font-bold mb-4">Images</h3>
-                    <div class="space-y-2">
-                        {% for image in images %}
-                        <div class="flex justify-between items-center bg-gray-50 p-4 rounded">
-                            <span>{{ image.title }}</span>
-                            <div class="flex gap-2">
-                                <a href="{% url 'image-detail' image.id %}" class="text-blue-600 hover:text-blue-900 font-semibold">View</a>
-                                <form method="post" action="{% url 'delete-image' image.id %}" style="display:inline;">
-                                    {% csrf_token %}
-                                    <button type="submit" class="text-red-600 hover:text-red-900 font-semibold" onclick="return confirm('Delete?')">Delete</button>
-                                </form>
-                            </div>
-                        </div>
-                        {% empty %}
-                        <p class="text-gray-500">No images</p>
-                        {% endfor %}
+            <!-- Image Tab -->
+            <div id="image" class="tab-content hidden">
+                <h2 class="text-2xl font-black text-kcpsNavy mb-8">🖼️ Upload Image</h2>
+                <form method="post" action="{% url 'upload-image' %}" enctype="multipart/form-data" class="space-y-4">
+                    {% csrf_token %}
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Title *</label>
+                        <input type="text" name="title" class="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-kcpsBlue focus:outline-none" required>
                     </div>
-                </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Description</label>
+                        <textarea name="description" rows="4" class="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-kcpsBlue focus:outline-none"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Image File *</label>
+                        <input type="file" name="image_file" accept="image/*" class="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-kcpsBlue" required>
+                    </div>
+                    <button type="submit" class="w-full bg-pink-600 hover:bg-pink-700 text-white font-bold py-3 rounded-lg transition-all">
+                        Upload Image
+                    </button>
+                </form>
             </div>
         </div>
+    </div>
 
-        <!-- Upload Section -->
-        <div class="bg-white rounded-lg shadow mb-8">
-            <div class="flex border-b">
-                <button onclick="showTab('post')" class="tab-btn flex-1 py-4 px-6 text-center font-semibold border-b-4 border-blue-600">✍️ Create Post</button>
-                <button onclick="showTab('video')" class="tab-btn flex-1 py-4 px-6 text-center font-semibold border-b-4 border-transparent hover:border-gray-300">📹 Upload Video</button>
-                <button onclick="showTab('document')" class="tab-btn flex-1 py-4 px-6 text-center font-semibold border-b-4 border-transparent hover:border-gray-300">📄 Upload Document</button>
-                <button onclick="showTab('image')" class="tab-btn flex-1 py-4 px-6 text-center font-semibold border-b-4 border-transparent hover:border-gray-300">🖼️ Upload Image</button>
-            </div>
-
-            <div class="p-8">
-                <!-- Create Post Tab with quill -->
-                <div id="post" class="tab-content">
-                     <h2 class="text-2xl font-bold mb-6">✍️ Create New Post</h2>
-                    <form method="post" action="{% url 'create-post' %}" enctype="multipart/form-data" class="space-y-6">
-        {% csrf_token %}
-        
-        <div>
-            <label class="block text-gray-700 font-semibold mb-2">Post Title *</label>
-            <input type="text" name="title" class="w-full p-4 border-2 border-gray-300 rounded-lg" placeholder="Enter post title" required>
-        </div>
-        
-        <div>
-            <label class="block text-gray-700 font-semibold mb-2">Category *</label>
-            <select name="category" class="w-full p-4 border-2 border-gray-300 rounded-lg">
-                <option value="general">General</option>
-                <option value="tutorial">Tutorial</option>
-                <option value="news">News</option>
-                <option value="faq">FAQ</option>
-                <option value="announcement">Announcement</option>
-            </select>
-        </div>
-        
-        <div>
-            <label class="block text-gray-700 font-semibold mb-2">Content *</label>
-            <textarea name="content" rows="10" class="w-full p-4 border-2 border-gray-300 rounded-lg" placeholder="Write your post content here..." required></textarea>
-        </div>
-        <!-- Video Upload -->
-         <div class="mb-6">
-            <label class="block text-sm font-bold text-gray-700 mb-2">📹 Attach Videos (Optional)</label>
-            <input type="file" name="post_videos" accept="video/*" multiple class="w-full p-3 border-2 border-gray-300 rounded-lg">
-            <p class="text-xs text-gray-500 mt-1">You can select multiple videos</p>
-        </div>
-
-        <!-- Images Upload -->
-        <div>
-                    <label class="block text-gray-700 font-semibold mb-2">📸 Attach Images (Optional)</label>
-                    <input type="file" name="post_images" accept="image/*" multiple class="w-full p-3 border-2 border-gray-300 rounded-lg">
-                    <p class="text-xs text-gray-500 mt-1">You can select multiple images</p>
-                </div>
-
-                <!-- Documents Upload -->
-                <div>
-                    <label class="block text-gray-700 font-semibold mb-2">📄 Attach Documents (Optional)</label>
-                    <input type="file" name="post_documents" accept=".pdf,.doc,.docx" multiple class="w-full p-3 border-2 border-gray-300 rounded-lg">
-                    <p class="text-xs text-gray-500 mt-1">PDF, DOC, DOCX files only</p>
-                </div>
-                
-        
-        <div class="flex gap-4 pt-6 border-t">
-            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg">
-                📝 Publish Post
-            </button>
-            <button type="reset" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-3 px-8 rounded-lg">
-                Clear
-            </button>
-        </div>
-                    </form>
-                </div>
-
-                <!-- Video Tab -->
-                <div id="video" class="tab-content hidden">
-                    <h2 class="text-2xl font-bold mb-6">📹 Upload Video</h2>
-                    <form method="post" action="{% url 'upload-video' %}" enctype="multipart/form-data" class="space-y-4">
-                        {% csrf_token %}
-                        <div>
-                            <label class="block text-gray-700 font-semibold mb-2">Title</label>
-                            <input type="text" name="title" class="w-full p-3 border rounded-lg" required>
-                        </div>
-                        <div>
-                            <label class="block text-gray-700 font-semibold mb-2">Description</label>
-                            <textarea name="description" rows="4" class="w-full p-3 border rounded-lg"></textarea>
-                        </div>
-                        <div>
-                            <label class="block text-gray-700 font-semibold mb-2">Video File</label>
-                            <input type="file" name="video" accept="video/*" class="w-full p-3 border rounded-lg" required>
-                        </div>
-                        <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg transition">
-                            Upload Video
-                        </button>
-                    </form>
-                </div>
-
-                <!-- Document Tab -->
-                <div id="document" class="tab-content hidden">
-                    <h2 class="text-2xl font-bold mb-6">📄 Upload Document</h2>
-                    <form method="post" action="{% url 'upload-document' %}" enctype="multipart/form-data" class="space-y-4">
-                        {% csrf_token %}
-                        <div>
-                            <label class="block text-gray-700 font-semibold mb-2">Title</label>
-                            <input type="text" name="title" class="w-full p-3 border rounded-lg" required>
-                        </div>
-                        <div>
-                            <label class="block text-gray-700 font-semibold mb-2">Description</label>
-                            <textarea name="description" rows="4" class="w-full p-3 border rounded-lg"></textarea>
-                        </div>
-                        <div>
-                            <label class="block text-gray-700 font-semibold mb-2">Document File</label>
-                            <input type="file" name="file" accept=".pdf,.doc,.docx" class="w-full p-3 border rounded-lg" required>
-                        </div>
-                        <button type="submit" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 rounded-lg transition">
-                            Upload Document
-                        </button>
-                    </form>
-                </div>
-
-                <!-- Image Tab -->
-                <div id="image" class="tab-content hidden">
-                    <h2 class="text-2xl font-bold mb-6">🖼️ Upload Image</h2>
-                    <form method="post" action="{% url 'upload-image' %}" enctype="multipart/form-data" class="space-y-4">
-                        {% csrf_token %}
-                        <div>
-                            <label class="block text-gray-700 font-semibold mb-2">Title</label>
-                            <input type="text" name="title" class="w-full p-3 border rounded-lg" required>
-                        </div>
-                        <div>
-                            <label class="block text-gray-700 font-semibold mb-2">Description</label>
-                            <textarea name="description" rows="4" class="w-full p-3 border rounded-lg"></textarea>
-                        </div>
-                        <div>
-                            <label class="block text-gray-700 font-semibold mb-2">Image File</label>
-                            <input type="file" name="image_file" accept="image/*" class="w-full p-3 border rounded-lg" required>
-                        </div>
-                        <button type="submit" class="w-full bg-pink-600 hover:bg-pink-700 text-white font-bold py-3 rounded-lg transition">
-                            Upload Image
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <!-- Settings Section -->
-        <div class="bg-linear-to-r from-blue-50 to-indigo-50 rounded-lg shadow p-6 border border-blue-200 mt-8">
-            <h2 class="text-xl font-bold mb-4">⚙️ Settings</h2>
-            <div class="flex flex-wrap gap-4">
-                <a href="{% url 'notification-preferences' %}" class="inline-block bg-white hover:bg-gray-50 text-gray-900 font-semibold py-2 px-6 rounded-lg transition border border-gray-300">
-                    🔔 Notification Preferences
-                </a>
-            </div>
+    <!-- Settings Section -->
+    <div class="bg-gradient-to-r from-kcpsBlue/5 to-kcpsNavy/5 rounded-2xl shadow-sm p-8 border border-kcpsBlue/20">
+        <h2 class="text-xl font-black text-kcpsNavy mb-6">⚙️ Settings</h2>
+        <div class="flex flex-wrap gap-4">
+            <a href="{% url 'notification-preferences' %}" class="inline-block bg-white hover:bg-gray-50 text-kcpsNavy font-bold py-3 px-6 rounded-lg transition-all border-2 border-kcpsBlue hover:border-kcpsNavy">
+                🔔 Notification Preferences
+            </a>
         </div>
     </div>
 </div>
@@ -375,13 +406,13 @@ function showTab(tabName) {
     
     const buttons = document.querySelectorAll('.tab-btn');
     buttons.forEach(btn => {
-        btn.classList.remove('border-blue-600');
-        btn.classList.add('border-transparent');
+        btn.classList.remove('border-kcpsBlue', 'text-kcpsBlue');
+        btn.classList.add('border-transparent', 'text-gray-400');
     });
     
     document.getElementById(tabName).classList.remove('hidden');
-    event.target.classList.remove('border-transparent');
-    event.target.classList.add('border-blue-600');
+    event.target.classList.add('border-kcpsBlue', 'text-kcpsBlue');
+    event.target.classList.remove('border-transparent', 'text-gray-400');
 }
 
 function showContentTab(tabName) {
@@ -390,42 +421,13 @@ function showContentTab(tabName) {
     
     const buttons = document.querySelectorAll('.content-tab-btn');
     buttons.forEach(btn => {
-        btn.classList.remove('border-blue-600');
-        btn.classList.add('border-transparent');
+        btn.classList.remove('border-kcpsBlue', 'text-kcpsBlue');
+        btn.classList.add('border-transparent', 'text-gray-400');
     });
     
     document.getElementById(tabName).classList.remove('hidden');
-    event.target.classList.remove('border-transparent');
-    event.target.classList.add('border-blue-600');
-}   
-
-function showTab(tabName) {
-    const tabs = document.querySelectorAll('.tab-content');
-    tabs.forEach(tab => tab.classList.add('hidden'));
-    
-    const buttons = document.querySelectorAll('.tab-btn');
-    buttons.forEach(btn => {
-        btn.classList.remove('border-blue-600');
-        btn.classList.add('border-transparent');
-    });
-    
-    document.getElementById(tabName).classList.remove('hidden');
-    event.target.classList.remove('border-transparent');
-    event.target.classList.add('border-blue-600');
+    event.target.classList.add('border-kcpsBlue', 'text-kcpsBlue');
+    event.target.classList.remove('border-transparent', 'text-gray-400');
 }
-
-function showContentTab(tabName) {
-    const tabs = document.querySelectorAll('.content-tab');
-    tabs.forEach(tab => tab.classList.add('hidden'));
-    
-    const buttons = document.querySelectorAll('.content-tab-btn');
-    buttons.forEach(btn => {
-        btn.classList.remove('border-blue-600');
-        btn.classList.add('border-transparent');
-    });
-    
-    document.getElementById(tabName).classList.remove('hidden');
-    event.target.classList.remove('border-transparent');
-    event.target.classList.add('border-blue-600');
-}
-</script>{% endblock %}
+</script>
+{% endblock %}

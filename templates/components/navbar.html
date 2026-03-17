@@ -53,6 +53,9 @@
                         <a href="{% url 'user-dashboard' %}" class="block px-4 py-3 text-sm text-gray-700 hover:bg-kcpsLight border-b border-gray-50">
                             📊 Dashboard
                         </a>
+                        <a href="{% url 'profile' %}" class="block px-4 py-3 text-sm text-gray-700 hover:bg-kcpsLight border-b border-gray-50"">
+                        👤 Profile
+                        </a>
                         {% if user.is_staff %}
                         <a href="{% url 'dashboard' %}" class="block px-4 py-3 text-sm text-kcpsBlue font-semibold hover:bg-blue-50 border-b border-gray-50">
                             👨‍💼 Admin Panel
