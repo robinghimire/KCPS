@@ -23,37 +23,38 @@
 
                 <!-- Category -->
                 <div>
-                    <label class="block text-gray-700 font-semibold mb-3">Category *</label>
-                    <select name="category" class="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none" required>
-                        <option value="">Select a category</option>
-                        {% for cat in categories %}
-                        <option value="{{ cat.id }}">{{ cat.name }}</option>
-                        {% endfor %}
-                    </select>
+                     <label class="block text-gray-700 font-semibold mb-3">Category *</label>
+                         {{ form.category }}
                 </div>
 
                 <!-- Priority -->
-                <div>
-                    <label class="block text-gray-700 font-semibold mb-3">Priority</label>
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-                        <label class="relative flex items-center p-3 border-2 border-gray-300 rounded-lg cursor-pointer hover:border-green-500 transition">
-                            <input type="radio" name="priority" value="low" class="mr-2" checked>
-                            <span class="font-semibold text-green-600">🟢 Low</span>
-                        </label>
-                        <label class="relative flex items-center p-3 border-2 border-gray-300 rounded-lg cursor-pointer hover:border-yellow-500 transition">
-                            <input type="radio" name="priority" value="medium" class="mr-2">
-                            <span class="font-semibold text-yellow-600">🟡 Medium</span>
-                        </label>
-                        <label class="relative flex items-center p-3 border-2 border-gray-300 rounded-lg cursor-pointer hover:border-orange-500 transition">
-                            <input type="radio" name="priority" value="high" class="mr-2">
-                            <span class="font-semibold text-orange-600">🟠 High</span>
-                        </label>
-                        <label class="relative flex items-center p-3 border-2 border-gray-300 rounded-lg cursor-pointer hover:border-red-500 transition">
-                            <input type="radio" name="priority" value="urgent" class="mr-2">
-                            <span class="font-semibold text-red-600">🔴 Urgent</span>
-                        </label>
-                    </div>
-                </div>
+        <label class="block text-gray-700 font-semibold mb-3">Priority</label>
+         <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <!-- Low Priority -->
+         <label class="relative flex items-center p-3 border-2 border-gray-300 rounded-lg cursor-pointer hover:border-green-500 transition has-[:checked]:border-green-500 has-[:checked]:bg-green-50">
+            <input type="radio" name="priority" value="low" class="mr-2" {% if form.priority.value == 'low' %}checked{% endif %}>
+            <span class="font-semibold text-green-600">🟢 Low</span>
+         </label>
+
+        <!-- Medium Priority -->
+        <label class="relative flex items-center p-3 border-2 border-gray-300 rounded-lg cursor-pointer hover:border-yellow-500 transition has-[:checked]:border-yellow-500 has-[:checked]:bg-yellow-50">
+            <input type="radio" name="priority" value="medium" class="mr-2" {% if form.priority.value == 'medium' %}checked{% endif %}>
+            <span class="font-semibold text-yellow-600">🟡 Medium</span>
+        </label>
+
+        <!-- High Priority -->
+        <label class="relative flex items-center p-3 border-2 border-gray-300 rounded-lg cursor-pointer hover:border-orange-500 transition has-[:checked]:border-orange-500 has-[:checked]:bg-orange-50">
+            <input type="radio" name="priority" value="high" class="mr-2" {% if form.priority.value == 'high' %}checked{% endif %}>
+            <span class="font-semibold text-orange-600">🟠 High</span>
+        </label>
+
+        <!-- Urgent Priority -->
+        <label class="relative flex items-center p-3 border-2 border-gray-300 rounded-lg cursor-pointer hover:border-red-500 transition has-[:checked]:border-red-500 has-[:checked]:bg-red-50">
+            <input type="radio" name="priority" value="urgent" class="mr-2" {% if form.priority.value == 'urgent' %}checked{% endif %}>
+            <span class="font-semibold text-red-600">🔴 Urgent</span>
+        </label>
+    </div>
+</div>
 
                 <!-- Description -->
                 <div>

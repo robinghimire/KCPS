@@ -1,85 +1,113 @@
-<nav class="bg-white shadow">
-    <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-        <a href="/" class="text-2xl font-bold text-blue-600">KCPS HUB</a>
+<nav class="bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+        <!-- Logo Section -->
+        <a href="/" class="flex items-center gap-2 group">
+            <span class="text-2xl font-black text-kcpsBlue group-hover:text-kcpsNavy transition-colors">
+                KCPS <span class="text-kcpsGold">HUB</span>
+            </span>
+        </a>
         
-        <!-- Search Bar -->
-        <div class="flex-1 max-w-md mx-8">
-            <button onclick="openSearchModal()" class="w-full p-3 border-2 border-gray-300 rounded-lg bg-gray-50 hover:bg-gray-100 text-gray-600 text-left transition">
-                🔍 Search content...
+        <!-- Modern Search Bar -->
+        <div class="hidden md:flex flex-1 max-w-lg mx-10">
+            <button onclick="openSearchModal()" 
+                    class="w-full flex items-center gap-3 px-4 py-2.5 border border-gray-200 rounded-full bg-gray-50 hover:bg-white hover:border-kcpsBlue/30 hover:shadow-sm text-gray-400 transition-all text-sm group">
+                <span class="text-kcpsBlue group-hover:scale-110 transition-transform">🔍</span>
+                <span>Search knowledge base, documents, videos...</span>
+                <kbd class="ml-auto hidden lg:inline-block px-1.5 py-0.5 border border-gray-200 rounded bg-white text-[10px] font-sans">ESC</kbd>
             </button>
         </div>
         
-        <div class="flex gap-6 items-center">
+        <!-- Action Icons & Profile -->
+        <div class="flex gap-5 items-center">
             {% if user.is_authenticated %}
                 <!-- Notification Bell -->
                 <div class="relative group">
-                    <button class="text-gray-600 hover:text-blue-600 text-2xl transition">
-                        🔔
+                    <button class="p-2 text-gray-500 hover:text-kcpsBlue hover:bg-blue-50 rounded-full transition-all relative">
+                        <span class="text-xl">🔔</span>
+                        <!-- Active Indicator dot -->
+                        <span class="absolute top-2 right-2 w-2 h-2 bg-kcpsGold rounded-full border-2 border-white"></span>
                     </button>
-                    <div class="hidden group-hover:block absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg z-50 border border-gray-200">
-                        <a href="{% url 'notification-preferences' %}" class="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 border-b">
-                            ⚙️ Notification Settings
+                    <!-- Dropdown -->
+                    <div class="invisible group-hover:visible opacity-0 group-hover:opacity-100 absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-xl z-50 border border-gray-100 transition-all transform origin-top-right scale-95 group-hover:scale-100">
+                        <div class="p-3 border-b border-gray-50 text-xs font-bold text-gray-400 uppercase tracking-wider">Notifications</div>
+                        <a href="{% url 'notification-preferences' %}" class="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 hover:bg-kcpsLight hover:text-kcpsBlue">
+                            <span>⚙️</span> Settings
                         </a>
-                        <a href="{% url 'notification-history' %}" class="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50">
-                            📋 Notification History
+                        <a href="{% url 'notification-history' %}" class="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 hover:bg-kcpsLight hover:text-kcpsBlue">
+                            <span>📋</span> View History
                         </a>
                     </div>
                 </div>
 
-                <!-- User Menu -->
+                <!-- User Profile Menu -->
                 <div class="relative group">
-                    <button class="flex items-center gap-2 text-gray-600 hover:text-gray-900">
-                        <span>{{ user.username }}</span>
-                        <span>▼</span>
+                    <button class="flex items-center gap-3 pl-1 pr-3 py-1 border border-transparent hover:border-gray-200 hover:bg-gray-50 rounded-full transition-all">
+                        <div class="w-8 h-8 bg-kcpsBlue text-white rounded-full flex items-center justify-center font-bold text-xs">
+                            {{ user.username|first|upper }}
+                        </div>
+                        <span class="hidden sm:inline text-sm font-semibold text-gray-700">{{ user.username }}</span>
+                        <span class="text-[10px] text-gray-400">▼</span>
                     </button>
-                    <div class="hidden group-hover:block absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg z-50 border border-gray-200">
-                        <a href="{% url 'user-dashboard' %}" class="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 border-b">
+                    <!-- Dropdown -->
+                    <div class="invisible group-hover:visible opacity-0 group-hover:opacity-100 absolute right-0 mt-2 w-52 bg-white rounded-xl shadow-xl z-50 border border-gray-100 transition-all transform origin-top-right scale-95 group-hover:scale-100 overflow-hidden">
+                        <a href="{% url 'user-dashboard' %}" class="block px-4 py-3 text-sm text-gray-700 hover:bg-kcpsLight border-b border-gray-50">
                             📊 Dashboard
                         </a>
-                        <a href="{% url 'notification-preferences' %}" class="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 border-b">
-                            🔔 Notifications
-                        </a>
                         {% if user.is_staff %}
-                        <a href="{% url 'dashboard' %}" class="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 border-b">
+                        <a href="{% url 'dashboard' %}" class="block px-4 py-3 text-sm text-kcpsBlue font-semibold hover:bg-blue-50 border-b border-gray-50">
                             👨‍💼 Admin Panel
                         </a>
                         {% endif %}
-                        <form method="post" action="{% url 'logout' %}" style="display:block;">
+                        <form method="post" action="{% url 'logout' %}" class="block">
                             {% csrf_token %}
-                            <button type="submit" class="w-full text-left px-4 py-3 text-sm text-red-600 hover:bg-red-50">
+                            <button type="submit" class="w-full text-left px-4 py-3 text-sm text-red-600 hover:bg-red-50 font-medium">
                                 🚪 Logout
                             </button>
                         </form>
                     </div>
                 </div>
             {% else %}
-                <a href="{% url 'login' %}" class="text-blue-600 hover:text-blue-900 font-semibold">Login</a>
+                <a href="{% url 'login' %}" class="px-5 py-2 rounded-full border-2 border-kcpsBlue text-kcpsBlue font-bold hover:bg-kcpsBlue hover:text-white transition-all text-sm">
+                    Login
+                </a>
             {% endif %}
         </div>
     </div>
 </nav>
 
-<!-- Search Modal -->
-<div id="searchModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-start justify-center pt-20">
-    <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl mx-4">
+<!-- Enhanced Search Modal -->
+<div id="searchModal" class="hidden fixed inset-0 bg-kcpsNavy/60 backdrop-blur-sm z-[100] flex items-start justify-center pt-20 transition-all">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl mx-4 overflow-hidden border border-white/20">
         <!-- Search Input -->
-        <div class="p-6 border-b">
-            <div class="relative">
+        <div class="p-6 bg-gray-50 border-b relative">
+            <div class="relative flex items-center">
+                <span class="absolute left-4 text-2xl">🔍</span>
                 <input type="text" id="searchInput" 
-                       class="w-full p-4 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none text-lg"
-                       placeholder="Search posts, videos, documents, images..."
+                       class="w-full pl-14 pr-12 py-4 bg-white border-2 border-gray-200 rounded-xl focus:border-kcpsBlue focus:ring-4 focus:ring-kcpsBlue/10 focus:outline-none text-lg transition-all"
+                       placeholder="What can we help you find?"
                        onkeyup="performSearch(this.value)">
-                <button onclick="closeSearchModal()" class="absolute right-4 top-4 text-gray-500 hover:text-gray-900 text-2xl">
+                <button onclick="closeSearchModal()" class="absolute right-4 p-2 text-gray-400 hover:text-gray-900 transition-colors">
                     ✕
                 </button>
             </div>
         </div>
 
-        <!-- Results -->
-        <div id="searchResults" class="max-h-96 overflow-y-auto">
-            <div class="p-6 text-center text-gray-500">
-                Start typing to search...
+        <!-- Results Area -->
+        <div id="searchResults" class="max-h-[60vh] overflow-y-auto">
+            <div class="p-12 text-center">
+                <div class="text-4xl mb-4 opacity-20">🔎</div>
+                <p class="text-gray-500 font-medium">Start typing to search the KCPS Hub...</p>
+                <p class="text-xs text-gray-400 mt-2 italic">Search videos, policy docs, and staff posts</p>
             </div>
+        </div>
+        
+        <!-- Footer info for Search -->
+        <div class="px-6 py-3 bg-kcpsLight border-t flex justify-between items-center text-[10px] text-gray-500 font-bold uppercase tracking-widest">
+            <span>KCPS Internal Hub</span>
+            <span class="flex gap-3">
+                <span>Enter to select</span>
+                <span>ESC to close</span>
+            </span>
         </div>
     </div>
 </div>

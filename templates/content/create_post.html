@@ -2,16 +2,12 @@
 
 {% block title %}Create Post{% endblock %}
 
-{% block extra_head %}
-    {{ form.media }}
-{% endblock %}
-
 {% block content %}
 <div class="min-h-screen bg-gray-100 p-8">
     <div class="max-w-4xl mx-auto">
         <h1 class="text-4xl font-bold text-gray-900 mb-8">✍️ Create New Post</h1>
         
-        <form method="post" class="bg-white rounded-lg shadow p-8">
+        <form method="post" enctype="multipart/form-data" class="bg-white rounded-lg shadow p-8">
             {% csrf_token %}
             
             <div class="mb-6">
@@ -28,7 +24,21 @@
                 <label class="block text-sm font-bold text-gray-700 mb-2">Content</label>
                 {{ form.content }}
             </div>
-            
+
+            <!-- Images Upload -->
+            <div class="mb-6">
+                <label class="block text-sm font-bold text-gray-700 mb-2">📸 Attach Images (Optional)</label>
+                <input type="file" name="post_images" accept="image/*" multiple class="w-full p-3 border-2 border-gray-300 rounded-lg">
+                <p class="text-xs text-gray-500 mt-1">You can select multiple images</p>
+            </div>
+
+            <!-- Documents Upload -->
+            <div class="mb-6">
+                <label class="block text-sm font-bold text-gray-700 mb-2">📄 Attach Documents (Optional)</label>
+                <input type="file" name="post_documents" accept=".pdf,.doc,.docx" multiple class="w-full p-3 border-2 border-gray-300 rounded-lg">
+                <p class="text-xs text-gray-500 mt-1">PDF, DOC, DOCX files only</p>
+            </div>
+
             <div class="flex gap-4">
                 <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg">
                     📝 Publish
@@ -40,4 +50,5 @@
         </form>
     </div>
 </div>
+{{ form.media }}
 {% endblock %}

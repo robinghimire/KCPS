@@ -3,72 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}KCPS HUB{% endblock %} </title>
-     <link rel="icon" type="image/x-icon" href="media\images\favicon.ico">
+    <title>{% block title %}KCPS HUB{% endblock %}</title>
+    <link rel="icon" type="image/x-icon" href="media/images/favicon.ico">
 
+    <!-- Tailwind Configuration for KCPS Colors -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        kcpsBlue: '#005596',   /* Primary Blue */
+                        kcpsGold: '#FDB913',   /* Primary Yellow/Gold */
+                        kcpsNavy: '#003359',   /* Darker accent */
+                        kcpsLight: '#F3F4F6'   /* Soft Background */
+                    }
+                }
+            }
+        }
+    </script>
     
-    <!-- HTMX for dynamic interactions -->
-
-    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
-     <style>
-        [hx-indicator] {
-            display: none;
-        }
-        .htmx-indicator.loading {
-            display: inline;
-        }
-        .htmx-swapping {
-            opacity: 0;
-            transition: opacity 0.3s ease-out;
-        }
-        .htmx-settling {
-            opacity: 1;
-            transition: opacity 0.3s ease-in;
-        }
+    <script src="https://unpkg.com"></script>
+    
+    <style>
+        /* Modern HTMX Loading Indicators */
+        [hx-indicator] { display: none; }
+        .htmx-indicator.loading { display: inline; }
+        .htmx-swapping { opacity: 0; transition: opacity 0.3s ease-out; }
+        .htmx-settling { opacity: 1; transition: opacity 0.3s ease-in; }
+        
+        /* Smooth transitions for links and buttons */
+        a, button { transition: all 0.2s ease-in-out; }
     </style>
-        {% block extra_css %}{% endblock %}
-
+    {% block extra_css %}{% endblock %}
 </head>
-    <body class="bg-blue-50">
-        <!-- navbar component -->
-        {% include "components/navbar.html" %}
 
-        <main class="max-w-7xl mx-auto px-4 py-8">
-        {% block content %}
-        <!-- Main content will be injected here -->
-        {% endblock %}
-        </main>
-        {% block extra_js %}{% endblock %}
+<body class="bg-kcpsLight font-sans text-gray-900 flex flex-col min-h-screen">
     
-        <footer class="bg-gray-900 text-gray-100 mt-12 py-8">
+    <!-- Navbar (Ensure components/navbar.html uses bg-white or bg-kcpsBlue) -->
+    <header class="shadow-sm border-b-4 border-kcpsGold bg-white sticky top-0 z-50">
+        {% include "components/navbar.html" %}
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div class="bg-white rounded-xl shadow-md p-6 md:p-10 border-t-8 border-kcpsBlue">
+            {% block content %}
+            <!-- Main content injected here -->
+            {% endblock %}
+        </div>
+    </main>
+
+    {% block extra_js %}{% endblock %}
+
+    <!-- Footer with KCPS Navy and Gold Accent -->
+    <footer class="bg-kcpsNavy text-white mt-auto border-t-4 border-kcpsGold py-12">
         <div class="max-w-7xl mx-auto px-4">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div>
-                    <h3 class="font-bold text-lg mb-4">KCPS HUB</h3>
-                    <p class="text-gray-400 text-sm">Internal KCPS knowledge hub to reduce support tickets.</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+                <div class="space-y-4">
+                    <h3 class="font-black text-2xl tracking-tight text-kcpsGold">KCPS HUB</h3>
+                    <p class="text-gray-300 text-sm leading-relaxed">
+                        The internal knowledge hub for KCPS staff and families. Reducing barriers and streamlining support.
+                    </p>
                 </div>
                 <div>
-                    <h4 class="font-bold mb-4">Quick Links</h4>
-                    <ul class="space-y-2 text-sm text-gray-400">
-                        <li><a href="/" class="hover:text-gray-100">Home</a></li>
-                        <li><a href="#about" class="hover:text-gray-100">About</a></li>
-                        <li><a href="#support" class="hover:text-gray-100">Support</a></li>
+                    <h4 class="font-bold text-lg mb-6 border-b border-kcpsGold/30 pb-2 inline-block">Resources</h4>
+                    <ul class="space-y-3 text-sm">
+                        <li><a href="/" class="text-gray-300 hover:text-kcpsGold flex items-center">Home</a></li>
+                        <li><a href="#about" class="text-gray-300 hover:text-kcpsGold flex items-center">About KCPS</a></li>
+                        <li><a href="#support" class="text-gray-300 hover:text-kcpsGold flex items-center">Support Center</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h4 class="font-bold mb-4">Legal</h4>
-                    <ul class="space-y-2 text-sm text-gray-400">
-                        <li><a href="#privacy" class="hover:text-gray-100">Privacy</a></li>
-                        <li><a href="#terms" class="hover:text-gray-100">Terms</a></li>
+                    <h4 class="font-bold text-lg mb-6 border-b border-kcpsGold/30 pb-2 inline-block">Connect</h4>
+                    <ul class="space-y-3 text-sm">
+                        <li><a href="#privacy" class="text-gray-300 hover:text-kcpsGold">Privacy Policy</a></li>
+                        <li><a href="#terms" class="text-gray-300 hover:text-kcpsGold">Terms of Service</a></li>
+                        <li class="pt-4">
+                            <span class="bg-kcpsGold text-kcpsNavy px-4 py-2 rounded-full font-bold text-xs uppercase tracking-widest">
+                                Internal Use Only
+                            </span>
+                        </li>
                     </ul>
                 </div>
             </div>
-            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-sm text-gray-400">
-                <p>&copy; 2026 KCPS HUB. All rights reserved.</p>
+            <div class="border-t border-white/10 mt-10 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-gray-400">
+                <p>&copy; 2026 Kansas City Public Schools HUB.</p>
+                <p class="mt-4 md:mt-0">Ensuring excellence for every student.</p>
             </div>
         </div>
-        </footer>
-    </body>
-
+    </footer>
+</body>
 </html>
