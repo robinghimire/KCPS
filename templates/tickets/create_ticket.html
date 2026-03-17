@@ -1,88 +1,133 @@
 {% extends "base.html" %}
 
-{% block title %}Create Ticket{% endblock %}
+{% block title %}Create Support Ticket | KCPS HUB{% endblock %}
 
 {% block content %}
-<div class="min-h-screen bg-gray-100 p-8">
-    <div class="max-w-2xl mx-auto">
-        <div class="bg-white rounded-lg shadow p-8">
-            <h1 class="text-3xl font-bold mb-2 text-gray-900">🎫 Create New Ticket</h1>
-            <p class="text-gray-600 mb-8">Describe your issue and we'll help you as soon as possible</p>
+<div class="space-y-10 pb-10">
+    <div class="max-w-3xl mx-auto px-6 py-12">
+        <!-- Header Section -->
+        <div class="mb-12">
+            <a href="javascript:history.back()" class="inline-flex items-center gap-2 text-kcpsBlue hover:text-kcpsNavy font-bold mb-6 transition-colors">
+                <span>←</span> Go Back
+            </a>
+            <h1 class="text-4xl font-black text-kcpsNavy uppercase tracking-tight mb-3">🎫 Create New Ticket</h1>
+            <p class="text-gray-600 text-lg">Describe your issue and we'll help you as soon as possible.</p>
+        </div>
 
-            <form method="post" class="space-y-6">
+        <!-- Main Form Card -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+            <form method="post" class="p-8 md:p-12 space-y-8">
                 {% csrf_token %}
 
-                <!-- Title -->
+                <!-- Subject Field -->
                 <div>
-                    <label class="block text-gray-700 font-semibold mb-3">Subject *</label>
-                    <input type="text" name="title" 
-                           class="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none"
-                           placeholder="Brief description of your issue"
-                           required>
+                    <label class="block text-sm font-bold text-gray-700 mb-3">Subject *</label>
+                    <input 
+                        type="text" 
+                        name="title" 
+                        class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-kcpsBlue focus:ring-4 focus:ring-kcpsBlue/10 outline-none transition-all"
+                        placeholder="Brief description of your issue"
+                        required>
                 </div>
 
-                <!-- Category -->
+                <!-- Category Field -->
                 <div>
-                     <label class="block text-gray-700 font-semibold mb-3">Category *</label>
-                         {{ form.category }}
+                    <label class="block text-sm font-bold text-gray-700 mb-3">Category *</label>
+                    <select 
+                        name="category"
+                        class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-kcpsBlue focus:ring-4 focus:ring-kcpsBlue/10 outline-none transition-all"
+                        required>
+                        <option value="">Select a category</option>
+                        {% if form.category.field.choices %}
+                            {% for value, label in form.category.field.choices %}
+                                {% if value %}
+                                    <option value="{{ value }}">{{ label }}</option>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    </select>
                 </div>
 
-                <!-- Priority -->
-        <label class="block text-gray-700 font-semibold mb-3">Priority</label>
-         <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <!-- Low Priority -->
-         <label class="relative flex items-center p-3 border-2 border-gray-300 rounded-lg cursor-pointer hover:border-green-500 transition has-[:checked]:border-green-500 has-[:checked]:bg-green-50">
-            <input type="radio" name="priority" value="low" class="mr-2" {% if form.priority.value == 'low' %}checked{% endif %}>
-            <span class="font-semibold text-green-600">🟢 Low</span>
-         </label>
-
-        <!-- Medium Priority -->
-        <label class="relative flex items-center p-3 border-2 border-gray-300 rounded-lg cursor-pointer hover:border-yellow-500 transition has-[:checked]:border-yellow-500 has-[:checked]:bg-yellow-50">
-            <input type="radio" name="priority" value="medium" class="mr-2" {% if form.priority.value == 'medium' %}checked{% endif %}>
-            <span class="font-semibold text-yellow-600">🟡 Medium</span>
-        </label>
-
-        <!-- High Priority -->
-        <label class="relative flex items-center p-3 border-2 border-gray-300 rounded-lg cursor-pointer hover:border-orange-500 transition has-[:checked]:border-orange-500 has-[:checked]:bg-orange-50">
-            <input type="radio" name="priority" value="high" class="mr-2" {% if form.priority.value == 'high' %}checked{% endif %}>
-            <span class="font-semibold text-orange-600">🟠 High</span>
-        </label>
-
-        <!-- Urgent Priority -->
-        <label class="relative flex items-center p-3 border-2 border-gray-300 rounded-lg cursor-pointer hover:border-red-500 transition has-[:checked]:border-red-500 has-[:checked]:bg-red-50">
-            <input type="radio" name="priority" value="urgent" class="mr-2" {% if form.priority.value == 'urgent' %}checked{% endif %}>
-            <span class="font-semibold text-red-600">🔴 Urgent</span>
-        </label>
-    </div>
-</div>
-
-                <!-- Description -->
+                <!-- Priority Selection -->
                 <div>
-                    <label class="block text-gray-700 font-semibold mb-3">Description *</label>
-                    <textarea name="description" 
-                              class="w-full p-4 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none resize-none"
-                              rows="8"
-                              placeholder="Please provide as much detail as possible:
+                    <label class="block text-sm font-bold text-gray-700 mb-4">Priority</label>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                        <!-- Low Priority -->
+                        <label class="relative flex items-center p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-green-400 transition-all has-[:checked]:border-green-500 has-[:checked]:bg-green-50">
+                            <input 
+                                type="radio" 
+                                name="priority" 
+                                value="low" 
+                                class="w-4 h-4 text-green-600 mr-3"
+                                {% if form.priority.value == 'low' %}checked{% endif %}>
+                            <span class="font-bold text-green-700">🟢 Low</span>
+                        </label>
+
+                        <!-- Medium Priority -->
+                        <label class="relative flex items-center p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-yellow-400 transition-all has-[:checked]:border-yellow-500 has-[:checked]:bg-yellow-50">
+                            <input 
+                                type="radio" 
+                                name="priority" 
+                                value="medium" 
+                                class="w-4 h-4 text-yellow-600 mr-3"
+                                {% if form.priority.value == 'medium' %}checked{% endif %}>
+                            <span class="font-bold text-yellow-700">🟡 Medium</span>
+                        </label>
+
+                        <!-- High Priority -->
+                        <label class="relative flex items-center p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-orange-400 transition-all has-[:checked]:border-orange-500 has-[:checked]:bg-orange-50">
+                            <input 
+                                type="radio" 
+                                name="priority" 
+                                value="high" 
+                                class="w-4 h-4 text-orange-600 mr-3"
+                                {% if form.priority.value == 'high' %}checked{% endif %}>
+                            <span class="font-bold text-orange-700">🟠 High</span>
+                        </label>
+
+                        <!-- Urgent Priority -->
+                        <label class="relative flex items-center p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-red-400 transition-all has-[:checked]:border-red-500 has-[:checked]:bg-red-50">
+                            <input 
+                                type="radio" 
+                                name="priority" 
+                                value="urgent" 
+                                class="w-4 h-4 text-red-600 mr-3"
+                                {% if form.priority.value == 'urgent' %}checked{% endif %}>
+                            <span class="font-bold text-red-700">🔴 Urgent</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Description Field -->
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-3">Description *</label>
+                    <textarea 
+                        name="description" 
+                        class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-kcpsBlue focus:ring-4 focus:ring-kcpsBlue/10 outline-none transition-all resize-none"
+                        rows="8"
+                        placeholder="Please provide as much detail as possible:
 - What is the issue?
 - When did it start?
 - What have you already tried?
 - Any error messages?"
-                              required></textarea>
+                        required></textarea>
                 </div>
 
-                <!-- Info Box -->
-                <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded">
-                    <p class="text-blue-900 text-sm">
-                        <strong>Tip:</strong> The more details you provide, the faster we can help you. Include any error messages, screenshots, or steps to reproduce the issue.
+                <!-- Info Tip -->
+                <div class="p-5 bg-kcpsBlue/5 border-l-4 border-kcpsBlue rounded-lg">
+                    <p class="text-sm text-gray-900">
+                        <span class="font-bold text-kcpsBlue">💡 Pro Tip:</span> The more details you provide, the faster we can help you. Include any error messages, screenshots, or steps to reproduce the issue.
                     </p>
                 </div>
 
-                <!-- Submit -->
-                <div class="flex gap-4">
-                    <button type="submit" class="flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-3 rounded-lg transition">
+                <!-- Submit Buttons -->
+                <div class="flex gap-4 pt-6 border-t border-gray-100">
+                    <button 
+                        type="submit" 
+                        class="flex-1 bg-gradient-to-r from-kcpsBlue to-kcpsTeal hover:from-kcpsNavy hover:to-kcpsBlue text-white font-bold py-3 px-6 rounded-lg transition-all shadow-sm border-b-4 border-kcpsNavy/20 active:border-b-0 active:translate-y-[2px]">
                         📤 Submit Ticket
                     </button>
-                    <a href="{% url 'user-tickets' %}" class="flex-1 text-center bg-gray-200 hover:bg-gray-300 text-gray-900 font-bold py-3 rounded-lg transition">
+                    <a href="{% url 'user-tickets' %}" class="flex-1 text-center bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-3 px-6 rounded-lg transition-all">
                         Cancel
                     </a>
                 </div>
@@ -90,21 +135,66 @@
         </div>
 
         <!-- FAQ Section -->
-        <div class="mt-12 bg-white rounded-lg shadow p-8">
-            <h2 class="text-2xl font-bold mb-6 text-gray-900">❓ Common Questions</h2>
-            <div class="space-y-4">
-                <details class="border-b pb-4">
-                    <summary class="font-semibold text-gray-900 cursor-pointer hover:text-blue-600">How long does it take to get a response?</summary>
-                    <p class="text-gray-700 mt-3">Response times depend on priority: Urgent (1-2 hours), High (4-6 hours), Medium (1 day), Low (2-3 days).</p>
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden mt-12">
+            <div class="p-8 border-b border-gray-100 bg-gray-50/50">
+                <h2 class="text-xl font-black text-kcpsNavy uppercase">❓ Common Questions</h2>
+            </div>
+
+            <div class="p-8 space-y-4">
+                <!-- FAQ Item 1 -->
+                <details class="group border-b border-gray-100 pb-6 last:border-0">
+                    <summary class="font-bold text-gray-900 cursor-pointer hover:text-kcpsBlue transition-colors flex items-center gap-2">
+                        <span class="text-lg group-open:rotate-90 transition-transform">▶</span>
+                        How long does it take to get a response?
+                    </summary>
+                    <p class="text-gray-700 mt-4 ml-6">Response times depend on priority: <strong>Urgent</strong> (1-2 hours), <strong>High</strong> (4-6 hours), <strong>Medium</strong> (1 day), <strong>Low</strong> (2-3 days).</p>
                 </details>
-                <details class="border-b pb-4">
-                    <summary class="font-semibold text-gray-900 cursor-pointer hover:text-blue-600">Can I update my ticket after creating it?</summary>
-                    <p class="text-gray-700 mt-3">Yes, you can view and add notes to your ticket anytime from your tickets page.</p>
+
+                <!-- FAQ Item 2 -->
+                <details class="group border-b border-gray-100 pb-6 last:border-0">
+                    <summary class="font-bold text-gray-900 cursor-pointer hover:text-kcpsBlue transition-colors flex items-center gap-2">
+                        <span class="text-lg group-open:rotate-90 transition-transform">▶</span>
+                        Can I update my ticket after creating it?
+                    </summary>
+                    <p class="text-gray-700 mt-4 ml-6">Yes! You can view and add notes to your ticket anytime from your tickets page. Just click on the ticket to view its details and add updates.</p>
                 </details>
-                <details class="border-b pb-4">
-                    <summary class="font-semibold text-gray-900 cursor-pointer hover:text-blue-600">What information should I include?</summary>
-                    <p class="text-gray-700 mt-3">Include a clear description, error messages, steps to reproduce, what you've already tried, and any relevant attachments or screenshots.</p>
+
+                <!-- FAQ Item 3 -->
+                <details class="group border-b border-gray-100 pb-6 last:border-0">
+                    <summary class="font-bold text-gray-900 cursor-pointer hover:text-kcpsBlue transition-colors flex items-center gap-2">
+                        <span class="text-lg group-open:rotate-90 transition-transform">▶</span>
+                        What information should I include?
+                    </summary>
+                    <p class="text-gray-700 mt-4 ml-6">Include a clear description, error messages, steps to reproduce, what you've already tried, and any relevant attachments or screenshots. The more context you provide, the better we can assist you.</p>
                 </details>
+
+                <!-- FAQ Item 4 -->
+                <details class="group">
+                    <summary class="font-bold text-gray-900 cursor-pointer hover:text-kcpsBlue transition-colors flex items-center gap-2">
+                        <span class="text-lg group-open:rotate-90 transition-transform">▶</span>
+                        How do I track my ticket status?
+                    </summary>
+                    <p class="text-gray-700 mt-4 ml-6">After submitting your ticket, you'll be able to track its status in real-time. You'll receive email updates whenever there's progress on your ticket.</p>
+                </details>
+            </div>
+        </div>
+
+        <!-- Help Section -->
+        <div class="bg-gradient-to-r from-kcpsBlue/5 to-kcpsNavy/5 rounded-2xl shadow-sm p-8 border border-kcpsBlue/20 mt-12">
+            <h3 class="text-xl font-black text-kcpsNavy mb-6 uppercase">🆘 Need Immediate Help?</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div>
+                    <p class="font-bold text-gray-900 mb-2">📧 Email Support</p>
+                    <p class="text-sm text-gray-600">support@kcps.edu</p>
+                </div>
+                <div>
+                    <p class="font-bold text-gray-900 mb-2">💬 Live Chat</p>
+                    <p class="text-sm text-gray-600">Available 9 AM - 5 PM EST</p>
+                </div>
+                <div>
+                    <p class="font-bold text-gray-900 mb-2">📞 Phone Support</p>
+                    <p class="text-sm text-gray-600">1-800-KCPS-HUB</p>
+                </div>
             </div>
         </div>
     </div>
@@ -115,15 +205,19 @@
 document.querySelectorAll('input[name="priority"]').forEach(radio => {
     radio.addEventListener('change', function() {
         document.querySelectorAll('label:has(input[name="priority"])').forEach(label => {
-            label.classList.remove('border-2', 'border-green-500', 'border-yellow-500', 'border-orange-500', 'border-red-500', 'bg-opacity-10');
-            label.classList.add('border-gray-300');
+            label.classList.remove('border-green-500', 'border-yellow-500', 'border-orange-500', 'border-red-500', 'bg-green-50', 'bg-yellow-50', 'bg-orange-50', 'bg-red-50');
+            label.classList.add('border-gray-200', 'bg-white');
         });
-        this.parentElement.classList.add('border-2');
-        this.parentElement.classList.remove('border-gray-300');
-        if (this.value === 'low') this.parentElement.classList.add('border-green-500');
-        else if (this.value === 'medium') this.parentElement.classList.add('border-yellow-500');
-        else if (this.value === 'high') this.parentElement.classList.add('border-orange-500');
-        else if (this.value === 'urgent') this.parentElement.classList.add('border-red-500');
+        this.closest('label').classList.remove('border-gray-200', 'bg-white');
+        if (this.value === 'low') {
+            this.closest('label').classList.add('border-green-500', 'bg-green-50');
+        } else if (this.value === 'medium') {
+            this.closest('label').classList.add('border-yellow-500', 'bg-yellow-50');
+        } else if (this.value === 'high') {
+            this.closest('label').classList.add('border-orange-500', 'bg-orange-50');
+        } else if (this.value === 'urgent') {
+            this.closest('label').classList.add('border-red-500', 'bg-red-50');
+        }
     });
 });
 </script>

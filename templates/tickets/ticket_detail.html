@@ -1,138 +1,181 @@
 {% extends "base.html" %}
 
-{% block title %}{{ ticket.ticket_id }} - {{ ticket.title }}{% endblock %}
+{% block title %}{{ ticket.ticket_id }} - {{ ticket.title }} | KCPS HUB{% endblock %}
 
 {% block content %}
-<div class="min-h-screen bg-gray-100 p-8">
-    <div class="max-w-6xl mx-auto">
-        <!-- Header -->
-        <div class="bg-white rounded-lg shadow p-8 mb-8">
-            <div class="flex justify-between items-start mb-6">
-                <div>
-                    <h1 class="text-3xl font-bold text-gray-900 mb-2">{{ ticket.ticket_id }}</h1>
-                    <h2 class="text-2xl font-bold text-gray-700">{{ ticket.title }}</h2>
-                </div>
-                <div class="flex gap-3">
+<div class="space-y-10 pb-10">
+    <div class="max-w-6xl mx-auto px-6 py-12">
+        <!-- Back Link -->
+        <a href="javascript:history.back()" class="inline-flex items-center gap-2 text-kcpsBlue hover:text-kcpsNavy font-bold mb-8 transition-colors">
+            <span>←</span> Go Back
+        </a>
+
+        <!-- Header Card -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+            <div class="p-8 md:p-12">
+                <!-- Title Section -->
+                <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-6 mb-8">
+                    <div class="flex-1 min-w-0">
+                        <p class="text-sm font-black text-gray-400 uppercase tracking-widest mb-2">{{ ticket.ticket_id }}</p>
+                        <h1 class="text-4xl md:text-5xl font-black text-kcpsNavy uppercase tracking-tight break-words">
+                            {{ ticket.title }}
+                        </h1>
+                    </div>
+
+                    <!-- Admin Actions -->
                     {% if is_admin %}
-                    <a href="{% url 'update-ticket' ticket.id %}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition">
-                        ✏️ Edit
-                    </a>
-                    <a href="{% url 'delete-ticket' ticket.id %}" onclick="return confirm('Delete this ticket?')" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition">
-                        🗑️ Delete
-                    </a>
+                    <div class="flex gap-3 flex-shrink-0">
+                        <a href="{% url 'update-ticket' ticket.id %}" class="flex items-center gap-2 px-4 py-3 bg-kcpsBlue hover:bg-kcpsNavy text-white font-bold rounded-lg transition-all text-sm">
+                            ✏️ Edit
+                        </a>
+                        <a href="{% url 'delete-ticket' ticket.id %}" onclick="return confirm('Delete this ticket?')" class="flex items-center gap-2 px-4 py-3 bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg transition-all text-sm">
+                            🗑️ Delete
+                        </a>
+                    </div>
                     {% endif %}
                 </div>
-            </div>
 
-            <!-- Status & Priority -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div>
-                    <p class="text-sm text-gray-600 font-semibold mb-1">Status</p>
-                    <p class="px-3 py-2 rounded-full text-sm font-bold w-fit
-                        {% if ticket.status == 'open' %}bg-blue-100 text-blue-800
-                        {% elif ticket.status == 'in_progress' %}bg-yellow-100 text-yellow-800
-                        {% elif ticket.status == 'waiting' %}bg-purple-100 text-purple-800
-                        {% elif ticket.status == 'resolved' %}bg-green-100 text-green-800
-                        {% else %}bg-gray-100 text-gray-800{% endif %}">
-                        {{ ticket.get_status_display }}
-                    </p>
-                </div>
-                <div>
-                    <p class="text-sm text-gray-600 font-semibold mb-1">Priority</p>
-                    <p class="px-3 py-2 rounded-full text-sm font-bold w-fit
-                        {% if ticket.priority == 'urgent' %}bg-red-100 text-red-800
-                        {% elif ticket.priority == 'high' %}bg-orange-100 text-orange-800
-                        {% elif ticket.priority == 'medium' %}bg-yellow-100 text-yellow-800
-                        {% else %}bg-green-100 text-green-800{% endif %}">
-                        {{ ticket.get_priority_display }}
-                    </p>
-                </div>
-                <div>
-                    <p class="text-sm text-gray-600 font-semibold mb-1">Assigned To</p>
-                    <p class="text-gray-900 font-semibold">
-                        {% if ticket.assigned_to %}
-                            {{ ticket.assigned_to.get_full_name|default:ticket.assigned_to.username }}
-                        {% else %}
-                            <span class="text-gray-400">Unassigned</span>
-                        {% endif %}
-                    </p>
-                </div>
-                <div>
-                    <p class="text-sm text-gray-600 font-semibold mb-1">Category</p>
-                    <p class="text-gray-900 font-semibold">
-                        {% if ticket.category %}{{ ticket.category.name }}{% else %}General{% endif %}
-                    </p>
+                <!-- Status Grid -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 pt-8 border-t border-gray-100">
+                    <!-- Status -->
+                    <div>
+                        <p class="text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Status</p>
+                        <span class="inline-block px-3 py-2 rounded-lg text-xs font-black uppercase
+                            {% if ticket.status == 'open' %}bg-blue-100 text-blue-700
+                            {% elif ticket.status == 'in_progress' %}bg-yellow-100 text-yellow-700
+                            {% elif ticket.status == 'waiting' %}bg-purple-100 text-purple-700
+                            {% elif ticket.status == 'resolved' %}bg-green-100 text-green-700
+                            {% else %}bg-gray-100 text-gray-700{% endif %}">
+                            {{ ticket.get_status_display }}
+                        </span>
+                    </div>
+
+                    <!-- Priority -->
+                    <div>
+                        <p class="text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Priority</p>
+                        <span class="inline-block px-3 py-2 rounded-lg text-xs font-black uppercase
+                            {% if ticket.priority == 'urgent' %}bg-red-100 text-red-700
+                            {% elif ticket.priority == 'high' %}bg-orange-100 text-orange-700
+                            {% elif ticket.priority == 'medium' %}bg-yellow-100 text-yellow-700
+                            {% else %}bg-green-100 text-green-700{% endif %}">
+                            {{ ticket.get_priority_display }}
+                        </span>
+                    </div>
+
+                    <!-- Assigned To -->
+                    <div>
+                        <p class="text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Assigned To</p>
+                        <p class="text-sm font-bold text-gray-900">
+                            {% if ticket.assigned_to %}
+                                {{ ticket.assigned_to.get_full_name|default:ticket.assigned_to.username }}
+                            {% else %}
+                                <span class="text-gray-500 italic">Unassigned</span>
+                            {% endif %}
+                        </p>
+                    </div>
+
+                    <!-- Category -->
+                    <div>
+                        <p class="text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Category</p>
+                        <p class="text-sm font-bold text-gray-900">
+                            {% if ticket.category %}{{ ticket.category.name }}{% else %}General{% endif %}
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
 
         <!-- Content Grid -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <!-- Description -->
-            <div class="lg:col-span-2">
-                <div class="bg-white rounded-lg shadow p-8 mb-8">
-                    <h3 class="text-xl font-bold mb-4 text-gray-900">Description</h3>
-                    <p class="text-gray-700 leading-relaxed whitespace-pre-wrap">{{ ticket.description }}</p>
+            <!-- Main Content -->
+            <div class="lg:col-span-2 space-y-6">
+                <!-- Description Card -->
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="p-8 border-b border-gray-100 bg-gray-50/50">
+                        <h3 class="text-xl font-black text-kcpsNavy uppercase">Description</h3>
+                    </div>
+                    <div class="p-8">
+                        <p class="text-gray-700 leading-relaxed whitespace-pre-wrap">{{ ticket.description }}</p>
+                    </div>
                 </div>
 
                 <!-- Notes Section -->
-                <div class="bg-white rounded-lg shadow p-8">
-                    <h3 class="text-xl font-bold mb-6 text-gray-900">💬 Notes & Updates</h3>
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="p-8 border-b border-gray-100 bg-gray-50/50">
+                        <h3 class="text-xl font-black text-kcpsNavy uppercase">💬 Notes & Updates</h3>
+                    </div>
 
-                    <!-- Add Note (Admin) -->
-                    {% if is_admin %}
-                    <form method="post" action="{% url 'add-note' ticket.id %}" class="mb-8 pb-8 border-b">
-                        {% csrf_token %}
-                        <textarea name="text" 
-                                  class="w-full p-4 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none resize-none" 
-                                  rows="4"
-                                  placeholder="Add a note..."
-                                  required></textarea>
-                        <button type="submit" class="mt-3 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg transition">
-                            Post Note
-                        </button>
-                    </form>
-                    {% endif %}
+                    <div class="p-8 space-y-6">
+                        <!-- Add Note Form (Admin) -->
+                        {% if is_admin %}
+                        <form method="post" action="{% url 'add-note' ticket.id %}" class="pb-8 border-b border-gray-100">
+                            {% csrf_token %}
+                            <label class="block text-sm font-bold text-gray-700 mb-3">Add a Note</label>
+                            <textarea 
+                                name="text" 
+                                class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-kcpsBlue focus:ring-4 focus:ring-kcpsBlue/10 outline-none transition-all resize-none" 
+                                rows="4"
+                                placeholder="Add a note or update..."
+                                required></textarea>
+                            <button type="submit" class="mt-4 bg-kcpsBlue hover:bg-kcpsNavy text-white font-bold py-2 px-6 rounded-lg transition-all text-sm">
+                                Post Note
+                            </button>
+                        </form>
+                        {% endif %}
 
-                    <!-- Notes List -->
-                    <div class="space-y-4">
-                        {% for note in notes %}
-                        <div class="bg-gray-50 p-4 rounded-lg border-l-4 border-blue-500">
-                            <div class="flex justify-between items-start mb-2">
-                                <p class="font-bold text-gray-900">{{ note.author.get_full_name|default:note.author.username }}</p>
-                                <p class="text-sm text-gray-500">{{ note.created_at|timesince }} ago</p>
+                        <!-- Notes List -->
+                        <div class="space-y-4">
+                            {% for note in notes %}
+                            <div class="p-5 bg-gray-50 rounded-lg border-l-4 border-kcpsBlue hover:bg-blue-50/50 transition-colors">
+                                <div class="flex justify-between items-start mb-3">
+                                    <div>
+                                        <p class="font-bold text-gray-900">{{ note.author.get_full_name|default:note.author.username }}</p>
+                                        <p class="text-xs text-gray-500">@{{ note.author.username }}</p>
+                                    </div>
+                                    <p class="text-xs text-gray-500 font-semibold">{{ note.created_at|timesince }} ago</p>
+                                </div>
+                                <p class="text-gray-700 whitespace-pre-wrap leading-relaxed">{{ note.text }}</p>
                             </div>
-                            <p class="text-gray-700 whitespace-pre-wrap">{{ note.text }}</p>
+                            {% empty %}
+                            <p class="text-gray-400 italic text-center py-10">No notes yet</p>
+                            {% endfor %}
                         </div>
-                        {% empty %}
-                        <p class="text-gray-500 text-center py-6">No notes yet</p>
-                        {% endfor %}
                     </div>
                 </div>
             </div>
 
             <!-- Sidebar -->
-            <div>
-                <!-- Info Card -->
-                <div class="bg-white rounded-lg shadow p-6 mb-6">
-                    <h3 class="text-lg font-bold mb-4 text-gray-900">ℹ️ Details</h3>
-                    <div class="space-y-4">
+            <div class="space-y-6">
+                <!-- Details Card -->
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="p-8 border-b border-gray-100 bg-gray-50/50">
+                        <h3 class="text-lg font-black text-kcpsNavy uppercase">ℹ️ Details</h3>
+                    </div>
+
+                    <div class="p-8 space-y-5">
+                        <!-- Created By -->
                         <div>
-                            <p class="text-sm text-gray-600 font-semibold">Created By</p>
-                            <p class="text-gray-900">{{ ticket.created_by.get_full_name|default:ticket.created_by.username }}</p>
+                            <p class="text-xs font-black text-gray-400 uppercase tracking-widest mb-1">Created By</p>
+                            <p class="text-sm font-semibold text-gray-900">{{ ticket.created_by.get_full_name|default:ticket.created_by.username }}</p>
                         </div>
+
+                        <!-- Created Date -->
                         <div>
-                            <p class="text-sm text-gray-600 font-semibold">Created</p>
-                            <p class="text-gray-900">{{ ticket.created_at|date:"M d, Y H:i" }}</p>
+                            <p class="text-xs font-black text-gray-400 uppercase tracking-widest mb-1">Created</p>
+                            <p class="text-sm font-semibold text-gray-900">{{ ticket.created_at|date:"M d, Y \a\t H:i" }}</p>
                         </div>
+
+                        <!-- Last Updated -->
                         <div>
-                            <p class="text-sm text-gray-600 font-semibold">Last Updated</p>
-                            <p class="text-gray-900">{{ ticket.updated_at|date:"M d, Y H:i" }}</p>
+                            <p class="text-xs font-black text-gray-400 uppercase tracking-widest mb-1">Last Updated</p>
+                            <p class="text-sm font-semibold text-gray-900">{{ ticket.updated_at|date:"M d, Y \a\t H:i" }}</p>
                         </div>
+
+                        <!-- Resolved Date -->
                         {% if ticket.resolved_at %}
-                        <div>
-                            <p class="text-sm text-gray-600 font-semibold">Resolved</p>
-                            <p class="text-gray-900">{{ ticket.resolved_at|date:"M d, Y H:i" }}</p>
+                        <div class="pt-4 border-t border-gray-100">
+                            <p class="text-xs font-black text-green-600 uppercase tracking-widest mb-1">✅ Resolved</p>
+                            <p class="text-sm font-semibold text-gray-900">{{ ticket.resolved_at|date:"M d, Y \a\t H:i" }}</p>
                         </div>
                         {% endif %}
                     </div>
@@ -140,18 +183,29 @@
 
                 <!-- Quick Actions (Admin) -->
                 {% if is_admin %}
-                <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg shadow p-6 border border-blue-200">
-                    <h3 class="text-lg font-bold mb-4 text-gray-900">⚡ Quick Actions</h3>
-                    <div class="space-y-2">
-                        <a href="{% url 'update-ticket' ticket.id %}" class="block w-full text-center bg-white hover:bg-gray-50 text-gray-900 font-semibold py-2 px-4 rounded-lg transition border border-gray-300">
+                <div class="bg-gradient-to-br from-kcpsBlue/10 to-kcpsNavy/10 rounded-2xl shadow-sm p-8 border border-kcpsBlue/20">
+                    <h3 class="text-lg font-black text-kcpsNavy mb-6 uppercase">⚡ Quick Actions</h3>
+                    <div class="space-y-3">
+                        <a href="{% url 'update-ticket' ticket.id %}" class="block w-full text-center bg-white hover:bg-gray-50 text-kcpsNavy font-bold py-3 px-4 rounded-lg transition-all border-2 border-kcpsBlue hover:border-kcpsNavy">
                             Edit Ticket
                         </a>
-                        <a href="{% url 'ticket-list' %}" class="block w-full text-center bg-white hover:bg-gray-50 text-gray-900 font-semibold py-2 px-4 rounded-lg transition border border-gray-300">
+                        <a href="{% url 'ticket-list' %}" class="block w-full text-center bg-kcpsBlue hover:bg-kcpsNavy text-white font-bold py-3 px-4 rounded-lg transition-all">
                             Back to List
                         </a>
                     </div>
                 </div>
                 {% endif %}
+
+                <!-- Status Badge Card -->
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+                    <h3 class="text-sm font-black text-gray-400 uppercase tracking-widest mb-4">Current Status</h3>
+                    <div class="text-center py-4 px-4 bg-gradient-to-r from-kcpsBlue/10 to-kcpsNavy/10 rounded-xl border border-kcpsBlue/20">
+                        <p class="text-2xl font-black text-kcpsNavy">
+                            {% if ticket.status == 'resolved' %}✅{% elif ticket.status == 'in_progress' %}⏳{% elif ticket.status == 'waiting' %}⏸️{% else %}🔵{% endif %}
+                        </p>
+                        <p class="text-sm font-bold text-gray-700 mt-2">{{ ticket.get_status_display }}</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

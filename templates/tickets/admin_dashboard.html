@@ -1,114 +1,144 @@
 {% extends "base.html" %}
 
-{% block title %}Ticket Admin Dashboard{% endblock %}
+{% block title %}Ticket Admin Dashboard | KCPS HUB{% endblock %}
 
 {% block content %}
-<div class="min-h-screen bg-gray-100 p-8">
-    <div class="max-w-7xl mx-auto">
-        <h1 class="text-4xl font-bold mb-8 text-gray-900">🎫 Support Tickets Dashboard</h1>
+<div class="space-y-10 pb-10">
+    <!-- Header Section -->
+    <div class="mt-8">
+        <h1 class="text-3xl font-black text-kcpsNavy uppercase tracking-tight">🎫 Support Tickets Dashboard</h1>
+        <p class="text-gray-500 text-sm mt-2">Manage and track all support requests.</p>
+    </div>
 
-        <!-- Stats Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-            <div class="bg-white rounded-lg shadow p-6 border-l-4 border-red-500">
-                <h3 class="text-gray-600 text-sm font-semibold">Unassigned</h3>
-                <p class="text-4xl font-bold text-red-600 mt-2">{{ unassigned_count }}</p>
+    <!-- Stats Cards Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="bg-white p-6 rounded-2xl shadow-sm border-l-4 border-red-500 group hover:shadow-md transition-shadow">
+            <h3 class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Unassigned</h3>
+            <p class="text-4xl font-black text-red-600 mt-2">{{ unassigned_count }}</p>
+        </div>
+        <div class="bg-white p-6 rounded-2xl shadow-sm border-l-4 border-kcpsBlue group hover:shadow-md transition-shadow">
+            <h3 class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Assigned to You</h3>
+            <p class="text-4xl font-black text-kcpsBlue mt-2">{{ assigned_count }}</p>
+        </div>
+        <div class="bg-white p-6 rounded-2xl shadow-sm border-l-4 border-orange-500 group hover:shadow-md transition-shadow">
+            <h3 class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Open Tickets</h3>
+            <p class="text-4xl font-black text-orange-600 mt-2">{{ open_count }}</p>
+        </div>
+        <a href="{% url 'ticket-list' %}" class="group bg-kcpsNavy p-6 rounded-2xl shadow-lg border-l-4 border-kcpsGold hover:scale-[1.02] transition-all">
+            <h3 class="text-[10px] font-black text-kcpsGold uppercase tracking-widest">Total Tickets</h3>
+            <p class="text-4xl font-black text-white mt-2">View All →</p>
+        </a>
+    </div>
+
+    <!-- Quick Actions Section -->
+    <div class="bg-gradient-to-r from-kcpsBlue/5 to-kcpsNavy/5 rounded-2xl shadow-sm p-8 border border-kcpsBlue/20">
+        <h2 class="text-xl font-black text-kcpsNavy mb-8 uppercase">⚡ Quick Actions</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <a href="{% url 'ticket-list' %}" class="group p-6 bg-white rounded-xl hover:shadow-lg hover:border-kcpsBlue transition-all border border-gray-100">
+                <span class="text-3xl mb-3 block">📋</span>
+                <p class="font-bold text-gray-900 group-hover:text-kcpsBlue transition-colors">All Tickets</p>
+            </a>
+            <a href="{% url 'create-ticket' %}" class="group p-6 bg-white rounded-xl hover:shadow-lg hover:border-kcpsBlue transition-all border border-gray-100">
+                <span class="text-3xl mb-3 block">➕</span>
+                <p class="font-bold text-gray-900 group-hover:text-kcpsBlue transition-colors">New Ticket</p>
+            </a>
+            <a href="{% url 'ticket-list' %}?status=in_progress" class="group p-6 bg-white rounded-xl hover:shadow-lg hover:border-kcpsBlue transition-all border border-gray-100">
+                <span class="text-3xl mb-3 block">⏳</span>
+                <p class="font-bold text-gray-900 group-hover:text-kcpsBlue transition-colors">In Progress</p>
+            </a>
+            <a href="{% url 'ticket-list' %}?status=resolved" class="group p-6 bg-white rounded-xl hover:shadow-lg hover:border-kcpsBlue transition-all border border-gray-100">
+                <span class="text-3xl mb-3 block">✅</span>
+                <p class="font-bold text-gray-900 group-hover:text-kcpsBlue transition-colors">Resolved</p>
+            </a>
+        </div>
+    </div>
+
+    <!-- Tickets Sections Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Unassigned Tickets -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+            <div class="p-8 border-b border-gray-100 bg-gray-50/50">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-xl font-black text-kcpsNavy uppercase">🚨 Unassigned Tickets</h2>
+                    <a href="{% url 'ticket-list' %}?status=open" class="text-xs font-bold text-kcpsBlue hover:text-kcpsNavy uppercase tracking-widest">View All →</a>
+                </div>
             </div>
-            <div class="bg-white rounded-lg shadow p-6 border-l-4 border-blue-500">
-                <h3 class="text-gray-600 text-sm font-semibold">Assigned to You</h3>
-                <p class="text-4xl font-bold text-blue-600 mt-2">{{ assigned_count }}</p>
-            </div>
-            <div class="bg-white rounded-lg shadow p-6 border-l-4 border-yellow-500">
-                <h3 class="text-gray-600 text-sm font-semibold">Open Tickets</h3>
-                <p class="text-4xl font-bold text-yellow-600 mt-2">{{ open_count }}</p>
-            </div>
-            <div class="bg-white rounded-lg shadow p-6 border-l-4 border-green-500">
-                <a href="{% url 'ticket-list' %}" class="block">
-                    <h3 class="text-gray-600 text-sm font-semibold">View All</h3>
-                    <p class="text-3xl font-bold text-green-600 mt-2">→</p>
+
+            <div class="p-8 space-y-3">
+                {% for ticket in unassigned_tickets %}
+                <a href="{% url 'ticket-detail' ticket.id %}" class="group block p-4 bg-gray-50 hover:bg-red-50/50 rounded-lg border-2 border-gray-100 hover:border-red-300 transition-all">
+                    <div class="flex justify-between items-start gap-4">
+                        <div class="flex-1 min-w-0">
+                            <p class="font-bold text-gray-900 group-hover:text-red-700 transition-colors">{{ ticket.ticket_id }}</p>
+                            <p class="text-sm text-gray-600 mt-1 truncate">{{ ticket.title|truncatewords:8 }}</p>
+                        </div>
+                        <span class="text-xs font-black uppercase px-3 py-1 rounded-md whitespace-nowrap
+                            {% if ticket.priority == 'urgent' %}bg-red-100 text-red-700
+                            {% elif ticket.priority == 'high' %}bg-orange-100 text-orange-700
+                            {% else %}bg-yellow-100 text-yellow-700{% endif %}">
+                            {{ ticket.get_priority_display }}
+                        </span>
+                    </div>
                 </a>
+                {% empty %}
+                <p class="text-gray-400 italic text-center py-8">✓ All tickets assigned!</p>
+                {% endfor %}
             </div>
         </div>
 
-        <!-- Quick Actions -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-            <!-- Unassigned Tickets -->
-            <div class="bg-white rounded-lg shadow p-6">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-xl font-bold">🚨 Unassigned Tickets</h2>
-                    <a href="{% url 'ticket-list' %}?status=open" class="text-blue-600 hover:text-blue-900 text-sm font-semibold">View All</a>
-                </div>
-                <div class="space-y-3">
-                    {% for ticket in unassigned_tickets %}
-                    <a href="{% url 'ticket-detail' ticket.id %}" class="block p-4 bg-gray-50 rounded-lg hover:bg-red-50 transition border-l-4 border-red-500">
-                        <div class="flex justify-between items-start">
-                            <div>
-                                <p class="font-semibold text-gray-900">{{ ticket.ticket_id }}</p>
-                                <p class="text-sm text-gray-600 mt-1">{{ ticket.title|truncatewords:8 }}</p>
-                            </div>
-                            <span class="text-xs font-bold px-3 py-1 rounded-full 
-                                {% if ticket.priority == 'urgent' %}bg-red-100 text-red-800
-                                {% elif ticket.priority == 'high' %}bg-orange-100 text-orange-800
-                                {% else %}bg-yellow-100 text-yellow-800{% endif %}">
-                                {{ ticket.get_priority_display }}
-                            </span>
-                        </div>
-                    </a>
-                    {% empty %}
-                    <p class="text-gray-500 text-center py-4">✓ All tickets assigned!</p>
-                    {% endfor %}
+        <!-- Assigned to You -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+            <div class="p-8 border-b border-gray-100 bg-gray-50/50">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-xl font-black text-kcpsNavy uppercase">👤 Assigned to You</h2>
+                    <a href="{% url 'ticket-list' %}" class="text-xs font-bold text-kcpsBlue hover:text-kcpsNavy uppercase tracking-widest">View All →</a>
                 </div>
             </div>
 
-            <!-- Assigned to You -->
-            <div class="bg-white rounded-lg shadow p-6">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-xl font-bold">👤 Assigned to You</h2>
-                    <a href="{% url 'ticket-list' %}" class="text-blue-600 hover:text-blue-900 text-sm font-semibold">View All</a>
-                </div>
-                <div class="space-y-3">
-                    {% for ticket in assigned_tickets %}
-                    <a href="{% url 'ticket-detail' ticket.id %}" class="block p-4 bg-gray-50 rounded-lg hover:bg-blue-50 transition border-l-4 border-blue-500">
-                        <div class="flex justify-between items-start">
-                            <div>
-                                <p class="font-semibold text-gray-900">{{ ticket.ticket_id }}</p>
-                                <p class="text-sm text-gray-600 mt-1">{{ ticket.title|truncatewords:8 }}</p>
-                            </div>
-                            <span class="text-xs font-bold px-3 py-1 rounded-full
-                                {% if ticket.status == 'open' %}bg-blue-100 text-blue-800
-                                {% elif ticket.status == 'in_progress' %}bg-yellow-100 text-yellow-800
-                                {% elif ticket.status == 'resolved' %}bg-green-100 text-green-800
-                                {% else %}bg-gray-100 text-gray-800{% endif %}">
-                                {{ ticket.get_status_display }}
-                            </span>
+            <div class="p-8 space-y-3">
+                {% for ticket in assigned_tickets %}
+                <a href="{% url 'ticket-detail' ticket.id %}" class="group block p-4 bg-gray-50 hover:bg-blue-50/50 rounded-lg border-2 border-gray-100 hover:border-kcpsBlue transition-all">
+                    <div class="flex justify-between items-start gap-4">
+                        <div class="flex-1 min-w-0">
+                            <p class="font-bold text-gray-900 group-hover:text-kcpsBlue transition-colors">{{ ticket.ticket_id }}</p>
+                            <p class="text-sm text-gray-600 mt-1 truncate">{{ ticket.title|truncatewords:8 }}</p>
                         </div>
-                    </a>
-                    {% empty %}
-                    <p class="text-gray-500 text-center py-4">No tickets assigned yet</p>
-                    {% endfor %}
-                </div>
+                        <span class="text-xs font-black uppercase px-3 py-1 rounded-md whitespace-nowrap
+                            {% if ticket.status == 'open' %}bg-blue-100 text-blue-700
+                            {% elif ticket.status == 'in_progress' %}bg-yellow-100 text-yellow-700
+                            {% elif ticket.status == 'resolved' %}bg-green-100 text-green-700
+                            {% else %}bg-gray-100 text-gray-700{% endif %}">
+                            {{ ticket.get_status_display }}
+                        </span>
+                    </div>
+                </a>
+                {% empty %}
+                <p class="text-gray-400 italic text-center py-8">No tickets assigned yet</p>
+                {% endfor %}
             </div>
         </div>
+    </div>
 
-        <!-- Quick Links -->
-        <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg shadow p-8 border border-blue-200">
-            <h2 class="text-xl font-bold mb-6">Quick Actions</h2>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <a href="{% url 'ticket-list' %}" class="p-4 bg-white rounded-lg hover:shadow-lg transition text-center">
-                    <span class="text-2xl mb-2 block">📋</span>
-                    <p class="font-semibold text-gray-900">All Tickets</p>
-                </a>
-                <a href="{% url 'create-ticket' %}" class="p-4 bg-white rounded-lg hover:shadow-lg transition text-center">
-                    <span class="text-2xl mb-2 block">➕</span>
-                    <p class="font-semibold text-gray-900">New Ticket</p>
-                </a>
-                <a href="{% url 'ticket-list' %}?status=in_progress" class="p-4 bg-white rounded-lg hover:shadow-lg transition text-center">
-                    <span class="text-2xl mb-2 block">⏳</span>
-                    <p class="font-semibold text-gray-900">In Progress</p>
-                </a>
-                <a href="{% url 'ticket-list' %}?status=resolved" class="p-4 bg-white rounded-lg hover:shadow-lg transition text-center">
-                    <span class="text-2xl mb-2 block">✅</span>
-                    <p class="font-semibold text-gray-900">Resolved</p>
-                </a>
+    <!-- Recent Activity / Tips Section -->
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="p-8 border-b border-gray-100 bg-gray-50/50">
+            <h2 class="text-xl font-black text-kcpsNavy uppercase">💡 Pro Tips</h2>
+        </div>
+
+        <div class="p-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="p-4 bg-kcpsBlue/5 rounded-lg border border-kcpsBlue/20">
+                    <p class="text-sm font-bold text-kcpsNavy mb-2">📌 Priority Management</p>
+                    <p class="text-xs text-gray-600">Handle urgent tickets first to ensure faster resolution times.</p>
+                </div>
+                <div class="p-4 bg-green-50 rounded-lg border border-green-200">
+                    <p class="text-sm font-bold text-green-700 mb-2">✅ Status Updates</p>
+                    <p class="text-xs text-gray-600">Keep ticket status updated to inform users of progress.</p>
+                </div>
+                <div class="p-4 bg-orange-50 rounded-lg border border-orange-200">
+                    <p class="text-sm font-bold text-orange-700 mb-2">💬 Communication</p>
+                    <p class="text-xs text-gray-600">Add notes to tickets for better team collaboration.</p>
+                </div>
             </div>
         </div>
     </div>

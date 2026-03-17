@@ -1,55 +1,173 @@
 {% extends "base.html" %}
 
-{% block title %}{{ image.title }}{% endblock %}
+{% block title %}{{ image.title }} | KCPS HUB{% endblock %}
 
 {% block content %}
-<div class="min-h-screen bg-gray-100 p-8">
-    <div class="max-w-4xl mx-auto">
-        <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-            <img src="{{ image.image_file.url }}" alt="{{ image.title }}" class="w-full h-auto">
+<div class="min-h-screen bg-gray-50">
+    <div class="max-w-5xl mx-auto px-6 py-12">
+        <!-- Back Link -->
+        <a href="javascript:history.back()" class="inline-flex items-center gap-2 text-kcpsBlue hover:text-kcpsNavy font-bold mb-8 transition-colors">
+            <span>←</span> Go Back
+        </a>
+
+        <!-- Main Image Card -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+            <!-- Image Section -->
+            <div class="relative bg-black/5">
+                <img src="{{ image.image_file.url }}" alt="{{ image.title }}" class="w-full h-auto max-h-[600px] object-cover">
+            </div>
             
-            <div class="p-8">
-                <h1 class="text-3xl font-bold mb-4">{{ image.title }}</h1>
-                
-                <div class="flex items-center justify-between mb-6 text-gray-600">
-                    <div>
-                        <p class="text-sm">Uploaded by <strong>{{ image.uploaded_by.get_full_name|default:image.uploaded_by.username }}</strong></p>
-                        <p class="text-sm">{{ image.created_at|date:"M d, Y" }}</p>
+            <!-- Content Section -->
+            <div class="p-8 md:p-12 space-y-8">
+                <!-- Title -->
+                <div>
+                    <h1 class="text-4xl md:text-5xl font-black text-kcpsNavy mb-4 uppercase tracking-tight">
+                        {{ image.title }}
+                    </h1>
+                </div>
+
+                <!-- Meta Information -->
+                <div class="flex flex-col md:flex-row items-start md:items-center gap-6 pb-8 border-b border-gray-100">
+                    <!-- Uploader Info -->
+                    <div class="flex items-center gap-4 flex-1">
+                        <div class="w-12 h-12 rounded-full bg-gradient-to-br from-kcpsBlue to-kcpsNavy flex items-center justify-center text-white font-black text-sm">
+                            {{ image.uploaded_by.username|first|upper }}
+                        </div>
+                        <div>
+                            <p class="font-bold text-gray-900">{{ image.uploaded_by.get_full_name|default:image.uploaded_by.username }}</p>
+                            <p class="text-sm text-gray-500">@{{ image.uploaded_by.username }}</p>
+                        </div>
+                    </div>
+
+                    <!-- Date -->
+                    <div class="flex items-center gap-2 text-gray-600 font-semibold">
+                        <span>📅</span>
+                        <span>{{ image.created_at|date:"M d, Y" }}</span>
                     </div>
                 </div>
 
-                <p class="text-gray-700">{{ image.description }}</p>
+                <!-- Description -->
+                {% if image.description %}
+                <div class="py-6 border-b border-gray-100">
+                    <h2 class="text-sm font-black text-gray-400 uppercase tracking-widest mb-3">Description</h2>
+                    <p class="text-lg text-gray-700 leading-relaxed">{{ image.description }}</p>
+                </div>
+                {% endif %}
+
+                <!-- Engagement Buttons -->
+                <div class="flex flex-wrap gap-3 pt-6">
+                    <!-- Download Button -->
+                    <a href="{{ image.image_file.url }}" download class="flex items-center gap-2 px-6 py-3 rounded-lg font-bold text-sm uppercase tracking-widest bg-kcpsBlue hover:bg-kcpsNavy text-white transition-all shadow-sm border-b-4 border-kcpsNavy/20 active:border-b-0 active:translate-y-[2px]">
+                        <span>📥</span>
+                        <span>Download</span>
+                    </a>
+
+                    <!-- Share Button -->
+                    <button onclick="shareImage()" class="flex items-center gap-2 px-6 py-3 rounded-lg font-bold text-sm uppercase tracking-widest bg-gray-100 hover:bg-kcpsBlue/10 text-gray-700 hover:text-kcpsBlue transition-all border-2 border-transparent hover:border-kcpsBlue">
+                        <span>🔗</span>
+                        <span>Share</span>
+                    </button>
+                </div>
             </div>
+        </div>
+
+        <!-- Image Info Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+            <!-- File Info Card -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                <h3 class="text-sm font-black text-gray-400 uppercase tracking-widest mb-4">File Information</h3>
+                <div class="space-y-3">
+                    <div>
+                        <p class="text-xs text-gray-500 uppercase tracking-widest font-bold">Filename</p>
+                        <p class="text-sm font-semibold text-gray-900 truncate">{{ image.image_file.name }}</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500 uppercase tracking-widest font-bold">Format</p>
+                        <p class="text-sm font-semibold text-gray-900">{{ image.image_file.name|slice:"-4:" }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Upload Info Card -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                <h3 class="text-sm font-black text-gray-400 uppercase tracking-widest mb-4">Upload Details</h3>
+                <div class="space-y-3">
+                    <div>
+                        <p class="text-xs text-gray-500 uppercase tracking-widest font-bold">Uploaded By</p>
+                        <p class="text-sm font-semibold text-gray-900">{{ image.uploaded_by.get_full_name|default:image.uploaded_by.username }}</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500 uppercase tracking-widest font-bold">Date</p>
+                        <p class="text-sm font-semibold text-gray-900">{{ image.created_at|date:"M d, Y \a\t H:i" }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Card -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                <h3 class="text-sm font-black text-gray-400 uppercase tracking-widest mb-4">Stats</h3>
+                <div class="space-y-3">
+                    <div class="text-center py-3 bg-kcpsBlue/5 rounded-lg border border-kcpsBlue/20">
+                        <p class="text-2xl font-black text-kcpsBlue">👁️</p>
+                        <p class="text-xs text-gray-500 uppercase tracking-widest font-bold mt-1">Public Image</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Comments Section -->
+        <div class="mt-12">
+            {% include "content/comments_section.html" %}
         </div>
     </div>
 </div>
 
-<!-- Tracking Script -->
 <script>
+// Track image view
 const contentStartTime = Date.now() / 1000;
 const contentType = 'image';
 const contentTitle = '{{ image.title|escapejs }}';
 
-window.addEventListener('beforeunload', () => {
+function trackImageView() {
     const timeSpent = Math.round((Date.now() / 1000) - contentStartTime);
     
     const trackingData = JSON.stringify({
         content_type: contentType,
         content_title: contentTitle,
         time_spent: timeSpent,
-        completion: 50
+        completion: 100
     });
     
-    fetch('/content/track-view/', {
+    fetch('{% url "track-view" %}', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value || ''
         },
         body: trackingData,
         keepalive: true
-    });
-});
+    }).catch(err => console.log('View tracked'));
+}
+
+window.addEventListener('beforeunload', trackImageView);
+
+// Share function
+function shareImage() {
+    const url = window.location.href;
+    const title = document.querySelector('h1').textContent;
+    
+    if (navigator.share) {
+        navigator.share({
+            title: title,
+            url: url
+        });
+    } else {
+        navigator.clipboard.writeText(url).then(() => {
+            alert('Image link copied to clipboard!');
+        }).catch(() => {
+            alert('Copy the link: ' + url);
+        });
+    }
+}
 </script>
-{% include "content/comments_section.html" %}
 {% endblock %}

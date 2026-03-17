@@ -1,153 +1,183 @@
 {% extends "base.html" %}
 
-{% block title %}Analytics - {{ content_title }}{% endblock %}
+{% block title %}Analytics - {{ content_title }} | KCPS HUB{% endblock %}
 
 {% block content %}
-<div class="min-h-screen bg-gray-100 p-8">
-    <div class="max-w-6xl mx-auto">
-        <!-- Header -->
-        <div class="mb-8">
-            <a href="{% url 'dashboard' %}" class="text-blue-600 hover:text-blue-900 font-semibold mb-4 inline-block">← Back to Dashboard</a>
-            <h1 class="text-4xl font-bold text-gray-900">📊 Analytics</h1>
-            <p class="text-xl text-gray-600 mt-2">{{ content_title }}</p>
+<div class="space-y-10 pb-10">
+    <!-- Header Section -->
+    <div class="mt-8">
+        <a href="{% url 'dashboard' %}" class="inline-flex items-center gap-2 text-kcpsBlue hover:text-kcpsNavy font-bold mb-6 transition-colors">
+            <span>←</span> Back to Dashboard
+        </a>
+        <h1 class="text-3xl font-black text-kcpsNavy uppercase tracking-tight">📊 Analytics</h1>
+        <p class="text-gray-600 text-lg font-semibold mt-2">{{ content_title }}</p>
+    </div>
+
+    <!-- Content Type Badge -->
+    <div>
+        <span class="text-xs font-black uppercase tracking-widest px-4 py-2 rounded-lg
+            {% if content_type == 'video' %}bg-green-100 text-green-700
+            {% elif content_type == 'post' %}bg-orange-100 text-orange-700
+            {% elif content_type == 'document' %}bg-purple-100 text-purple-700
+            {% else %}bg-pink-100 text-pink-700{% endif %}">
+            {{ content_type|upper }}
+        </span>
+    </div>
+
+    <!-- Stats Cards Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="bg-white p-6 rounded-2xl shadow-sm border-l-4 border-kcpsBlue group hover:shadow-md transition-shadow">
+            <h3 class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Total Views</h3>
+            <p class="text-4xl font-black text-kcpsNavy mt-2">{{ total_views }}</p>
+        </div>
+        <div class="bg-white p-6 rounded-2xl shadow-sm border-l-4 border-green-500 group hover:shadow-md transition-shadow">
+            <h3 class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Unique Users</h3>
+            <p class="text-4xl font-black text-kcpsNavy mt-2">{{ unique_users }}</p>
+        </div>
+        <div class="bg-white p-6 rounded-2xl shadow-sm border-l-4 border-orange-500 group hover:shadow-md transition-shadow">
+            <h3 class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Avg. Time Spent</h3>
+            <p class="text-3xl font-black text-kcpsNavy mt-2">{{ avg_time|floatformat:0 }}<span class="text-lg">s</span></p>
+        </div>
+        <div class="bg-white p-6 rounded-2xl shadow-sm border-l-4 border-purple-500 group hover:shadow-md transition-shadow">
+            <h3 class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Avg. Completion</h3>
+            <p class="text-3xl font-black text-kcpsNavy mt-2">{{ avg_completion|floatformat:0 }}<span class="text-lg">%</span></p>
+        </div>
+    </div>
+
+    <!-- Detailed Views Table -->
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="p-8 border-b border-gray-100 bg-gray-50/50">
+            <h2 class="text-xl font-black text-kcpsNavy uppercase">👥 User Views</h2>
         </div>
 
-        <!-- Stats Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-            <div class="bg-white rounded-lg shadow p-6 border-l-4 border-blue-500">
-                <h3 class="text-gray-600 text-sm font-semibold mb-2">Total Views</h3>
-                <p class="text-4xl font-bold text-blue-600">{{ total_views }}</p>
-            </div>
-            <div class="bg-white rounded-lg shadow p-6 border-l-4 border-green-500">
-                <h3 class="text-gray-600 text-sm font-semibold mb-2">Unique Users</h3>
-                <p class="text-4xl font-bold text-green-600">{{ unique_users }}</p>
-            </div>
-            <div class="bg-white rounded-lg shadow p-6 border-l-4 border-orange-500">
-                <h3 class="text-gray-600 text-sm font-semibold mb-2">Avg. Time Spent</h3>
-                <p class="text-3xl font-bold text-orange-600">{{ avg_time|floatformat:0 }}s</p>
-            </div>
-            <div class="bg-white rounded-lg shadow p-6 border-l-4 border-purple-500">
-                <h3 class="text-gray-600 text-sm font-semibold mb-2">Avg. Completion</h3>
-                <p class="text-3xl font-bold text-purple-600">{{ avg_completion|floatformat:0 }}%</p>
-            </div>
-        </div>
-
-        <!-- Content Type Badge -->
-        <div class="mb-8">
-            <span class="text-xs font-bold px-4 py-2 rounded-full
-                {% if content_type == 'video' %}bg-green-100 text-green-800
-                {% elif content_type == 'post' %}bg-orange-100 text-orange-800
-                {% elif content_type == 'document' %}bg-purple-100 text-purple-800
-                {% else %}bg-pink-100 text-pink-800{% endif %}">
-                {{ content_type|upper }}
-            </span>
-        </div>
-
-        <!-- Detailed Views Table -->
-        <div class="bg-white rounded-lg shadow overflow-hidden">
-            <div class="p-6 border-b border-gray-200">
-                <h2 class="text-2xl font-bold text-gray-900">👥 User Views</h2>
-            </div>
-
-            {% if views %}
-            <div class="overflow-x-auto">
-                <table class="w-full">
-                    <thead class="bg-gray-50 border-b">
-                        <tr>
-                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">User</th>
-                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Viewed At</th>
-                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Time Spent</th>
-                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Completion</th>
-                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Progress</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y">
-                        {% for view in views %}
-                        <tr class="hover:bg-gray-50 transition">
-                            <td class="px-6 py-4 text-sm font-semibold text-gray-900">
-                                <div class="flex items-center gap-2">
-                                    <div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white text-xs font-bold">
-                                        {{ view.user.username|slice:":1"|upper }}
-                                    </div>
-                                    {{ view.user.get_full_name|default:view.user.username }}
+        {% if views %}
+        <div class="overflow-x-auto">
+            <table class="w-full text-left">
+                <thead>
+                    <tr class="text-[11px] font-black text-gray-400 uppercase tracking-widest bg-gray-50/50 border-b border-gray-100">
+                        <th class="px-8 py-4">User</th>
+                        <th class="px-6 py-4">Viewed At</th>
+                        <th class="px-6 py-4">Time Spent</th>
+                        <th class="px-6 py-4">Completion</th>
+                        <th class="px-8 py-4">Progress</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-50">
+                    {% for view in views %}
+                    <tr class="hover:bg-blue-50/30 transition-colors group">
+                        <td class="px-8 py-5">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-kcpsBlue to-kcpsNavy flex items-center justify-center text-white text-xs font-black">
+                                    {{ view.user.username|slice:":1"|upper }}
                                 </div>
-                            </td>
-                            <td class="px-6 py-4 text-sm text-gray-600">
-                                {{ view.viewed_at|date:"M d, Y H:i" }}
-                            </td>
-                            <td class="px-6 py-4 text-sm font-semibold text-gray-900">
-                                ⏱️ {{ view.time_spent_seconds }}s
-                            </td>
-                            <td class="px-6 py-4 text-sm font-semibold text-gray-900">
-                                {{ view.completion_percentage }}%
-                            </td>
-                            <td class="px-6 py-4">
-                                <div class="w-32 bg-gray-200 rounded-full h-2">
-                                    <div class="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full transition-all" 
-                                         style="width: {{ view.completion_percentage }}%"></div>
+                                <div>
+                                    <p class="font-semibold text-gray-900 group-hover:text-kcpsBlue transition-colors">
+                                        {{ view.user.get_full_name|default:view.user.username }}
+                                    </p>
+                                    <p class="text-xs text-gray-500">@{{ view.user.username }}</p>
                                 </div>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-            {% else %}
-            <div class="p-8 text-center">
-                <p class="text-gray-500 text-lg">No views recorded yet</p>
-            </div>
-            {% endif %}
+                            </div>
+                        </td>
+                        <td class="px-6 py-5 text-sm font-semibold text-gray-600">
+                            {{ view.viewed_at|date:"M d, Y H:i" }}
+                        </td>
+                        <td class="px-6 py-5 text-sm font-semibold text-gray-600">
+                            ⏱️ {{ view.time_spent_seconds }}s
+                        </td>
+                        <td class="px-6 py-5 text-sm font-semibold text-gray-600">
+                            {{ view.completion_percentage }}%
+                        </td>
+                        <td class="px-8 py-5">
+                            <div class="w-32 bg-gray-200 rounded-full h-2">
+                                <div class="bg-gradient-to-r from-kcpsBlue to-kcpsTeal h-2 rounded-full transition-all" 
+                                     style="width: {{ view.completion_percentage }}%"></div>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
+        {% else %}
+        <div class="p-12 text-center">
+            <p class="text-gray-400 italic">No views recorded yet</p>
+        </div>
+        {% endif %}
+    </div>
 
-        <!-- Summary Stats -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
-            <!-- Top Viewers -->
-            <div class="bg-white rounded-lg shadow p-6">
-                <h3 class="text-lg font-bold text-gray-900 mb-4">🏆 Top Viewers</h3>
+    <!-- Summary Stats Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Top Viewers -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+            <div class="p-8 border-b border-gray-100 bg-gray-50/50">
+                <h3 class="text-xl font-black text-kcpsNavy uppercase">🏆 Top Viewers</h3>
+            </div>
+            
+            <div class="p-8">
+                {% regroup views by user as views_by_user %}
+                {% if views_by_user %}
                 <div class="space-y-3">
-                    {% regroup views by user as views_by_user %}
                     {% for user_group in views_by_user|slice:":5" %}
-                    <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                        <span class="font-semibold text-gray-900">{{ user_group.grouper.get_full_name|default:user_group.grouper.username }}</span>
-                        <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs font-bold">{{ user_group.list|length }} views</span>
+                    <div class="flex justify-between items-center p-4 bg-gray-50 hover:bg-blue-50/50 rounded-lg border border-gray-100 hover:border-kcpsBlue transition-all group">
+                        <span class="font-semibold text-gray-900 group-hover:text-kcpsBlue transition-colors">
+                            {{ user_group.grouper.get_full_name|default:user_group.grouper.username }}
+                        </span>
+                        <span class="bg-kcpsBlue/10 text-kcpsBlue px-3 py-1 rounded-lg text-xs font-black uppercase">{{ user_group.list|length }} views</span>
                     </div>
                     {% endfor %}
                 </div>
-            </div>
-
-            <!-- Engagement Insights -->
-            <div class="bg-white rounded-lg shadow p-6">
-    <h3 class="text-lg font-bold text-gray-900 mb-4">💡 Insights</h3>
-    <div class="space-y-3">
-        <div class="p-3 bg-blue-50 border-l-4 border-blue-500 rounded">
-            <p class="text-sm text-blue-900">
-                <strong>Engagement Rate:</strong> {{ unique_users }} user{{ unique_users|pluralize }} viewed this content
-            </p>
-        </div>
-        <div class="p-3 bg-green-50 border-l-4 border-green-500 rounded">
-            <p class="text-sm text-green-900">
-                <strong>Average Session:</strong> {{ avg_time|floatformat:0 }} seconds per user
-            </p>
-        </div>
-        <div class="p-3 bg-purple-50 border-l-4 border-purple-500 rounded">
-            <p class="text-sm text-purple-900">
-                <strong>Completion Rate:</strong> {{ avg_completion|floatformat:1 }}% average completion
-            </p>
-        </div>
-        <div class="p-3 bg-orange-50 border-l-4 border-orange-500 rounded">
-            <p class="text-sm text-orange-900">
-                {% if views %}
-                <strong>Last Viewed:</strong> {{ views.0.viewed_at|timesince }} ago
                 {% else %}
-                <strong>Last Viewed:</strong> Never
+                <p class="text-gray-400 italic text-center py-8">No viewer data available</p>
                 {% endif %}
-            </p>
+            </div>
         </div>
-    </div>
+
+        <!-- Engagement Insights -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+            <div class="p-8 border-b border-gray-100 bg-gray-50/50">
+                <h3 class="text-xl font-black text-kcpsNavy uppercase">💡 Insights</h3>
+            </div>
+            
+            <div class="p-8 space-y-4">
+                <!-- Engagement Rate -->
+                <div class="p-4 bg-kcpsBlue/5 border-l-4 border-kcpsBlue rounded-lg">
+                    <p class="text-sm text-gray-900">
+                        <span class="font-black text-kcpsBlue">Engagement Rate:</span><br>
+                        <span class="text-gray-600">{{ unique_users }} user{{ unique_users|pluralize }} viewed this content</span>
+                    </p>
+                </div>
+
+                <!-- Average Session -->
+                <div class="p-4 bg-green-50 border-l-4 border-green-500 rounded-lg">
+                    <p class="text-sm text-gray-900">
+                        <span class="font-black text-green-700">Average Session:</span><br>
+                        <span class="text-gray-600">{{ avg_time|floatformat:0 }} seconds per user</span>
+                    </p>
+                </div>
+
+                <!-- Completion Rate -->
+                <div class="p-4 bg-purple-50 border-l-4 border-purple-500 rounded-lg">
+                    <p class="text-sm text-gray-900">
+                        <span class="font-black text-purple-700">Completion Rate:</span><br>
+                        <span class="text-gray-600">{{ avg_completion|floatformat:1 }}% average completion</span>
+                    </p>
+                </div>
+
+                <!-- Last Viewed -->
+                <div class="p-4 bg-orange-50 border-l-4 border-orange-500 rounded-lg">
+                    <p class="text-sm text-gray-900">
+                        <span class="font-black text-orange-700">Last Viewed:</span><br>
+                        <span class="text-gray-600">
+                            {% if views %}
+                            {{ views.0.viewed_at|timesince }} ago
+                            {% else %}
+                            Never
+                            {% endif %}
+                        </span>
+                    </p>
+                </div>
             </div>
         </div>
     </div>
 </div>
 {% endblock %}
-
-

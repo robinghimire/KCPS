@@ -60,6 +60,8 @@
                         <a href="{% url 'dashboard' %}" class="block px-4 py-3 text-sm text-kcpsBlue font-semibold hover:bg-blue-50 border-b border-gray-50">
                             👨‍💼 Admin Panel
                         </a>
+                        <!-- Recommendations Link needs to fix robin -->
+                        <a href="{% url 'recommendations' %}" class="nav-link">✨ Recommendations</a>
                         {% endif %}
                         <form method="post" action="{% url 'logout' %}" class="block">
                             {% csrf_token %}
