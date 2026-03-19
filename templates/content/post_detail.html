@@ -407,23 +407,6 @@
 
     <!-- Engagement Section -->
     <div class="engagement-section">
-        <div class="engagement-buttons">
-            <button onclick="toggleFavorite('post', {{ post.id }})" class="engagement-btn {% if is_favorited %}active{% endif %}">
-                <span class="icon">{% if is_favorited %}❤️{% else %}🤍{% endif %}</span>
-                <span>Like</span>
-            </button>
-            
-            <button onclick="toggleBookmark('post', {{ post.id }})" class="engagement-btn {% if is_bookmarked %}active{% endif %}">
-                <span class="icon">{% if is_bookmarked %}🔖{% else %}🔗{% endif %}</span>
-                <span>Save</span>
-            </button>
-            
-            <button onclick="sharePost()" class="engagement-btn">
-                <span class="icon">📤</span>
-                <span>Share</span>
-            </button>
-        </div>
-
         {% include "content/comments_section.html" %}
     </div>
 </div>

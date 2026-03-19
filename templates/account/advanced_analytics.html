@@ -42,12 +42,12 @@
             </div>
             <div class="bg-gradient-to-br from-orange-500 to-red-600 rounded-2xl shadow-sm p-8 text-white">
                 <p class="text-sm font-black uppercase tracking-widest opacity-90 mb-2">Avg Session</p>
-                <p class="text-4xl font-black">{{ avg_session|floatformat:0 }}s</p>
+                <p class="text-4xl font-black">{{ avg_session|floatformat:0 }}<span class="text-lg">s</span></p>
                 <p class="text-xs opacity-75 mt-3">Time spent per view</p>
             </div>
             <div class="bg-gradient-to-br from-purple-500 to-indigo-600 rounded-2xl shadow-sm p-8 text-white">
                 <p class="text-sm font-black uppercase tracking-widest opacity-90 mb-2">Completion Rate</p>
-                <p class="text-4xl font-black">{{ avg_completion|floatformat:0 }}%</p>
+                <p class="text-4xl font-black">{{ avg_completion|floatformat:0 }}<span class="text-lg">%</span></p>
                 <p class="text-xs opacity-75 mt-3">Average completion</p>
             </div>
         </div>
@@ -66,7 +66,7 @@
                         </div>
                         <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
                             <div class="bg-gradient-to-r from-kcpsBlue to-kcpsTeal h-3 rounded-full" 
-                                 style="width: {{ count|add:1|multiply:100|divide:total_views|floatformat:0 }}%"></div>
+                                 style="width: {% widthratio count total_views 100 %}%"></div>
                         </div>
                     </div>
                     {% endfor %}
@@ -112,7 +112,8 @@
                             <span class="text-sm font-black text-gray-600">{{ completion_0_25 }}</span>
                         </div>
                         <div class="w-full bg-gray-200 rounded-full h-3">
-                            <div class="bg-red-500 h-3 rounded-full" style="width: {{ completion_0_25|add:1|multiply:100|divide:total_views|floatformat:0 }}%"></div>
+                            <div class="bg-red-500 h-3 rounded-full" 
+                                 style="width: {% widthratio completion_0_25 total_views 100 %}%"></div>
                         </div>
                     </div>
                     <div>
@@ -121,7 +122,8 @@
                             <span class="text-sm font-black text-gray-600">{{ completion_25_50 }}</span>
                         </div>
                         <div class="w-full bg-gray-200 rounded-full h-3">
-                            <div class="bg-orange-500 h-3 rounded-full" style="width: {{ completion_25_50|add:1|multiply:100|divide:total_views|floatformat:0 }}%"></div>
+                            <div class="bg-orange-500 h-3 rounded-full" 
+                                 style="width: {% widthratio completion_25_50 total_views 100 %}%"></div>
                         </div>
                     </div>
                     <div>
@@ -130,7 +132,8 @@
                             <span class="text-sm font-black text-gray-600">{{ completion_50_75 }}</span>
                         </div>
                         <div class="w-full bg-gray-200 rounded-full h-3">
-                            <div class="bg-yellow-500 h-3 rounded-full" style="width: {{ completion_50_75|add:1|multiply:100|divide:total_views|floatformat:0 }}%"></div>
+                            <div class="bg-yellow-500 h-3 rounded-full" 
+                                 style="width: {% widthratio completion_50_75 total_views 100 %}%"></div>
                         </div>
                     </div>
                     <div>
@@ -139,7 +142,8 @@
                             <span class="text-sm font-black text-gray-600">{{ completion_75_100 }}</span>
                         </div>
                         <div class="w-full bg-gray-200 rounded-full h-3">
-                            <div class="bg-green-500 h-3 rounded-full" style="width: {{ completion_75_100|add:1|multiply:100|divide:total_views|floatformat:0 }}%"></div>
+                            <div class="bg-green-500 h-3 rounded-full" 
+                                 style="width: {% widthratio completion_75_100 total_views 100 %}%"></div>
                         </div>
                     </div>
                 </div>
@@ -177,7 +181,7 @@
                             <td class="px-6 py-5">
                                 <div class="flex items-center gap-2">
                                     <div class="w-24 bg-gray-200 rounded-full h-2">
-                                        <div class="bg-kcpsBlue h-2 rounded-full" style="width: {{ item.avg_completion }}%"></div>
+                                        <div class="bg-kcpsBlue h-2 rounded-full" style="width: {{ item.avg_completion|floatformat:0 }}%"></div>
                                     </div>
                                     <span class="text-xs font-bold text-gray-600">{{ item.avg_completion|floatformat:0 }}%</span>
                                 </div>
@@ -200,11 +204,11 @@
                 <a href="?export=csv" class="inline-flex items-center gap-2 bg-white hover:bg-gray-50 border-2 border-kcpsBlue text-kcpsBlue font-bold py-2 px-6 rounded-lg transition-all">
                     📄 CSV
                 </a>
-                <a href="?export=pdf" class="inline-flex items-center gap-2 bg-white hover:bg-gray-50 border-2 border-kcpsBlue text-kcpsBlue font-bold py-2 px-6 rounded-lg transition-all">
-                    📑 PDF
-                </a>
                 <a href="?export=json" class="inline-flex items-center gap-2 bg-white hover:bg-gray-50 border-2 border-kcpsBlue text-kcpsBlue font-bold py-2 px-6 rounded-lg transition-all">
                     🔗 JSON
+                </a>
+                <a href="?export=pdf" class="inline-flex items-center gap-2 bg-white hover:bg-gray-50 border-2 border-kcpsBlue text-kcpsBlue font-bold py-2 px-6 rounded-lg transition-all">
+                    📑 PDF
                 </a>
             </div>
         </div>

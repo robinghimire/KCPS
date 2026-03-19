@@ -20,6 +20,22 @@
         <!-- Action Icons & Profile -->
         <div class="flex gap-5 items-center">
             {% if user.is_authenticated %}
+            <!--Saved/Heart-->
+            <div class="relative group">
+                    <button class="p-2 text-gray-500 hover:text-kcpsBlue hover:bg-blue-50 rounded-full transition-all relative">
+                        <span class="text-xl">❤️</span>
+                        <!-- Active Indicator dot -->
+                        <span class="absolute top-2 right-2 w-2 h-2 bg-kcpsGold rounded-full border-2 border-white"></span>
+                    </button>
+                    <!-- Dropdown -->
+                    <div class="invisible group-hover:visible opacity-0 group-hover:opacity-100 absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-xl z-50 border border-gray-100 transition-all transform origin-top-right scale-95 group-hover:scale-100">
+                        <div class="p-3 border-b border-gray-50 text-xs font-bold text-gray-400 uppercase tracking-wider">Liked and Bookmarks</div>
+                        <a href="{% url 'bookmarks-favorites' %}" class="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 hover:bg-kcpsLight hover:text-kcpsBlue">
+                            <span>💝</span> Liked
+                        </a>
+                       
+                    </div>
+                </div>
                 <!-- Notification Bell -->
                 <div class="relative group">
                     <button class="p-2 text-gray-500 hover:text-kcpsBlue hover:bg-blue-50 rounded-full transition-all relative">
@@ -63,8 +79,13 @@
                          <a href="{% url 'recommendations' %}" class="block px-4 py-3 text-sm text-kcpsBlue font-semibold hover:bg-blue-50 border-b border-gray-50">
                             ✨ Recommendations
                         </a>
+                        {% if request.user.is_superuser %}
+                            <a href="{% url 'advanced-analytics' %}" class="block px-4 py-3 text-sm text-kcpsBlue font-semibold hover:bg-blue-50 border-b border-gray-50">
+                                🔍 Advanced Analytics
+                            </a>
+                            {% endif %}
                         <a href="{% url 'recommendations' %}" class="block px-4 py-3 text-sm text-kcpsBlue font-semibold hover:bg-blue-50 border-b border-gray-50">
-                             Saved
+                            🤍 Saved
                         </a>                        
                         {% endif %}
                         <form method="post" action="{% url 'logout' %}" class="block">
