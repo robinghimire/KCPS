@@ -14,8 +14,8 @@
     </div>
 
     <!-- Content Engagement Analytics Section -->
-    <section class="bg-white rounded-2xl shadow-sm overflow-hidden border border-gray-100">
-    <div class="p-6 md:p-8 border-b border-gray-100 bg-gray-50/50">
+    <section class="bg-white rounded-2xl shadow-sm overflow-hidden border border-[#ffefbc]">
+    <div class="p-6 md:p-8 border-b border-[#ffefbc] bg-gray-50/50">
         <h2 class="text-xl font-black text-kcpsNavy mb-6">Engagement Analytics</h2>
         
         <!-- Modern Filter Grid -->
@@ -285,27 +285,43 @@
                         <textarea name="content" rows="10" class="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-kcpsBlue focus:outline-none" placeholder="Write your post content here..." required></textarea>
                     </div>
 
-                    <!-- Videos Upload -->
-                    <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-2">📹 Attach Videos (Optional)</label>
-                        <input type="file" name="post_videos" accept="video/*" multiple class="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-kcpsBlue">
-                        <p class="text-xs text-gray-500 mt-2">You can select multiple videos</p>
-                    </div>
+ <div class="flex flex-col md:flex-row gap-6 p-4">
+    <!-- Videos Upload -->
+    <div class="flex-1 group">
+        <label class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-2xl bg-gray-50 cursor-pointer transition-all hover:border-kcpsBlue hover:bg-blue-50 group-focus-within:ring-2 group-focus-within:ring-kcpsBlue">
+            <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                <span class="text-2xl mb-2">📹</span>
+                <p class="text-sm font-semibold text-gray-700">Attach Videos</p>
+                <p class="text-[10px] text-gray-400 mt-1 uppercase tracking-wider">Multiple allowed</p>
+            </div>
+            <input type="file" name="post_videos" accept="video/*" multiple class="sr-only">
+        </label>
+    </div>
 
-                    <!-- Images Upload -->
-                    <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-2">📸 Attach Images (Optional)</label>
-                        <input type="file" name="post_images" accept="image/*" multiple class="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-kcpsBlue">
-                        <p class="text-xs text-gray-500 mt-2">You can select multiple images</p>
-                    </div>
+    <!-- Images Upload -->
+    <div class="flex-1 group">
+        <label class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-2xl bg-gray-50 cursor-pointer transition-all hover:border-kcpsBlue hover:bg-blue-50 group-focus-within:ring-2 group-focus-within:ring-kcpsBlue">
+            <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                <span class="text-2xl mb-2">📸</span>
+                <p class="text-sm font-semibold text-gray-700">Attach Images</p>
+                <p class="text-[10px] text-gray-400 mt-1 uppercase tracking-wider">Multiple allowed</p>
+            </div>
+            <input type="file" name="post_images" accept="image/*" multiple class="sr-only">
+        </label>
+    </div>
 
-                    <!-- Documents Upload -->
-                    <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-2">📄 Attach Documents (Optional)</label>
-                        <input type="file" name="post_documents" accept=".pdf,.doc,.docx" multiple class="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-kcpsBlue">
-                        <p class="text-xs text-gray-500 mt-2">PDF, DOC, DOCX files only</p>
-                    </div>
-                    
+    <!-- Documents Upload -->
+    <div class="flex-1 group">
+        <label class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-2xl bg-gray-50 cursor-pointer transition-all hover:border-kcpsBlue hover:bg-blue-50 group-focus-within:ring-2 group-focus-within:ring-kcpsBlue">
+            <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                <span class="text-2xl mb-2">📄</span>
+                <p class="text-sm font-semibold text-gray-700">Attach Docs</p>
+                <p class="text-[10px] text-gray-400 mt-1 uppercase tracking-wider">PDF, DOC, DOCX</p>
+            </div>
+            <input type="file" name="post_documents" accept=".pdf,.doc,.docx" multiple class="sr-only">
+        </label>
+    </div>
+</div>
                     <div class="flex gap-4 pt-6 border-t">
                         <button type="submit" class="bg-kcpsBlue hover:bg-kcpsNavy text-white font-bold py-3 px-8 rounded-lg transition-all shadow-sm">
                             📝 Publish Post

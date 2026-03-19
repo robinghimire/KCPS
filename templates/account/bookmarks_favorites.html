@@ -1,0 +1,186 @@
+{% extends "base.html" %}
+
+{% block title %}My Saved Content | KCPS HUB{% endblock %}
+
+{% block content %}
+<div class="space-y-10 pb-10">
+    <div class="max-w-7xl mx-auto px-6 py-12">
+        <!-- Header Section -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
+            <div>
+                <h1 class="text-3xl font-black text-kcpsNavy uppercase tracking-tight">❤️ Saved Content</h1>
+                <p class="text-gray-500 text-sm mt-2">Your bookmarked posts and favorite content.</p>
+            </div>
+            <a href="{% url 'user-dashboard' %}" class="inline-flex items-center gap-2 text-kcpsBlue hover:text-kcpsNavy font-bold transition-colors">
+                <span>←</span> Back to Dashboard
+            </a>
+        </div>
+
+        <!-- Tabs Navigation -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+            <div class="flex bg-gray-50 border-b overflow-x-auto scrollbar-hide justify-center">
+                <button onclick="showTab('bookmarks')" class="tab-btn active px-8 py-5 font-black text-[11px] uppercase tracking-widest border-b-4 border-kcpsBlue text-kcpsBlue whitespace-nowrap transition-all">📌 Bookmarks</button>
+                <button onclick="showTab('favorites')" class="tab-btn px-8 py-5 font-black text-[11px] uppercase tracking-widest border-b-4 border-transparent text-gray-400 hover:text-gray-600 whitespace-nowrap transition-all">⭐ Favorites</button>
+            </div>
+
+            <!-- Bookmarks Tab -->
+            <div id="bookmarks" class="tab-content p-8">
+                {% if bookmarks %}
+                <div class="space-y-4">
+                    {% for bookmark in bookmarks %}
+                    <div class="bg-white rounded-xl border border-gray-200 hover:border-kcpsBlue hover:shadow-md transition-all overflow-hidden group">
+                        <div class="flex flex-col md:flex-row items-start md:items-center justify-between p-6 gap-4">
+                            <!-- Content Info -->
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <span class="text-2xl">
+                                        {% if bookmark.content_type == 'post' %}📝
+                                        {% elif bookmark.content_type == 'video' %}🎥
+                                        {% elif bookmark.content_type == 'document' %}📄
+                                        {% else %}🖼️{% endif %}
+                                    </span>
+                                    <span class="inline-block px-3 py-1 rounded-lg text-xs font-black uppercase tracking-widest
+                                        {% if bookmark.content_type == 'post' %}bg-orange-100 text-orange-700
+                                        {% elif bookmark.content_type == 'video' %}bg-green-100 text-green-700
+                                        {% elif bookmark.content_type == 'document' %}bg-purple-100 text-purple-700
+                                        {% else %}bg-pink-100 text-pink-700{% endif %}">
+                                        {{ bookmark.content_type }}
+                                    </span>
+                                </div>
+                                <h3 class="text-lg font-bold text-gray-900 group-hover:text-kcpsBlue transition-colors">
+                                    {{ bookmark.content_title }}
+                                </h3>
+                                <p class="text-xs text-gray-500 mt-1">Saved on {{ bookmark.created_at|date:"M d, Y \a\t H:i" }}</p>
+                            </div>
+
+                            <!-- Actions -->
+                            <div class="flex gap-3 flex-shrink-0">
+                                {% if bookmark.content_type == 'post' %}
+                                    <a href="{% url 'post-detail' bookmark.content_id %}" class="px-4 py-2 bg-kcpsBlue hover:bg-kcpsNavy text-white font-bold rounded-lg transition-all text-sm">View</a>
+                                {% elif bookmark.content_type == 'video' %}
+                                    <a href="{% url 'video-detail' bookmark.content_id %}" class="px-4 py-2 bg-kcpsBlue hover:bg-kcpsNavy text-white font-bold rounded-lg transition-all text-sm">View</a>
+                                {% elif bookmark.content_type == 'document' %}
+                                    <a href="{% url 'document-detail' bookmark.content_id %}" class="px-4 py-2 bg-kcpsBlue hover:bg-kcpsNavy text-white font-bold rounded-lg transition-all text-sm">View</a>
+                                {% else %}
+                                    <a href="{% url 'image-detail' bookmark.content_id %}" class="px-4 py-2 bg-kcpsBlue hover:bg-kcpsNavy text-white font-bold rounded-lg transition-all text-sm">View</a>
+                                {% endif %}
+                                
+                                <form method="post" action="{% url 'remove-bookmark' bookmark.id %}" style="display:inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="px-4 py-2 bg-red-100 hover:bg-red-200 text-red-700 font-bold rounded-lg transition-all text-sm">Remove</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="text-center py-16">
+                    <p class="text-gray-400 text-xl font-semibold mb-4">No bookmarks yet</p>
+                    <p class="text-gray-500 mb-8">Save posts, videos, documents, and images to access them later.</p>
+                    <a href="{% url 'user-dashboard' %}" class="inline-flex items-center gap-2 bg-kcpsBlue hover:bg-kcpsNavy text-white font-bold py-3 px-8 rounded-lg transition-all">
+                        🔍 Explore Content
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Favorites Tab -->
+            <div id="favorites" class="tab-content hidden p-8">
+                {% if favorites %}
+                <div class="space-y-4">
+                    {% for favorite in favorites %}
+                    <div class="bg-white rounded-xl border border-gray-200 hover:border-kcpsBlue hover:shadow-md transition-all overflow-hidden group">
+                        <div class="flex flex-col md:flex-row items-start md:items-center justify-between p-6 gap-4">
+                            <!-- Content Info -->
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <span class="text-2xl">
+                                        {% if favorite.content_type == 'post' %}📝
+                                        {% elif favorite.content_type == 'video' %}🎥
+                                        {% elif favorite.content_type == 'document' %}📄
+                                        {% else %}🖼️{% endif %}
+                                    </span>
+                                    <span class="inline-block px-3 py-1 rounded-lg text-xs font-black uppercase tracking-widest
+                                        {% if favorite.content_type == 'post' %}bg-orange-100 text-orange-700
+                                        {% elif favorite.content_type == 'video' %}bg-green-100 text-green-700
+                                        {% elif favorite.content_type == 'document' %}bg-purple-100 text-purple-700
+                                        {% else %}bg-pink-100 text-pink-700{% endif %}">
+                                        {{ favorite.content_type }}
+                                    </span>
+                                </div>
+                                <h3 class="text-lg font-bold text-gray-900 group-hover:text-kcpsBlue transition-colors">
+                                    {{ favorite.content_title }}
+                                </h3>
+                                <p class="text-xs text-gray-500 mt-1">Liked on {{ favorite.created_at|date:"M d, Y \a\t H:i" }}</p>
+                            </div>
+
+                            <!-- Actions -->
+                            <div class="flex gap-3 flex-shrink-0">
+                                {% if favorite.content_type == 'post' %}
+                                    <a href="{% url 'post-detail' favorite.content_id %}" class="px-4 py-2 bg-kcpsBlue hover:bg-kcpsNavy text-white font-bold rounded-lg transition-all text-sm">View</a>
+                                {% elif favorite.content_type == 'video' %}
+                                    <a href="{% url 'video-detail' favorite.content_id %}" class="px-4 py-2 bg-kcpsBlue hover:bg-kcpsNavy text-white font-bold rounded-lg transition-all text-sm">View</a>
+                                {% elif favorite.content_type == 'document' %}
+                                    <a href="{% url 'document-detail' favorite.content_id %}" class="px-4 py-2 bg-kcpsBlue hover:bg-kcpsNavy text-white font-bold rounded-lg transition-all text-sm">View</a>
+                                {% else %}
+                                    <a href="{% url 'image-detail' favorite.content_id %}" class="px-4 py-2 bg-kcpsBlue hover:bg-kcpsNavy text-white font-bold rounded-lg transition-all text-sm">View</a>
+                                {% endif %}
+                                
+                                <form method="post" action="{% url 'remove-favorite' favorite.id %}" style="display:inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="px-4 py-2 bg-red-100 hover:bg-red-200 text-red-700 font-bold rounded-lg transition-all text-sm">Unlike</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="text-center py-16">
+                    <p class="text-gray-400 text-xl font-semibold mb-4">No favorites yet</p>
+                    <p class="text-gray-500 mb-8">Like your favorite posts, videos, documents, and images to save them here.</p>
+                    <a href="{% url 'user-dashboard' %}" class="inline-flex items-center gap-2 bg-kcpsBlue hover:bg-kcpsNavy text-white font-bold py-3 px-8 rounded-lg transition-all">
+                        🔍 Explore Content
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Stats Section -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-12">
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+                <p class="text-sm font-black text-gray-400 uppercase tracking-widest mb-3">Total Bookmarks</p>
+                <p class="text-4xl font-black text-kcpsBlue">{{ bookmarks|length }}</p>
+            </div>
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+                <p class="text-sm font-black text-gray-400 uppercase tracking-widest mb-3">Total Favorites</p>
+                <p class="text-4xl font-black text-red-600">{{ favorites|length }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function showTab(tabName) {
+    // Hide all tabs
+    document.querySelectorAll('.tab-content').forEach(tab => {
+        tab.classList.add('hidden');
+    });
+    
+    // Remove active state from all buttons
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('border-kcpsBlue', 'text-kcpsBlue');
+        btn.classList.add('border-transparent', 'text-gray-400');
+    });
+    
+    // Show selected tab
+    document.getElementById(tabName).classList.remove('hidden');
+    
+    // Add active state to clicked button
+    event.target.classList.remove('border-transparent', 'text-gray-400');
+    event.target.classList.add('border-kcpsBlue', 'text-kcpsBlue');
+}
+</script>
+{% endblock %}
