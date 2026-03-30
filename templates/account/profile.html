@@ -68,25 +68,25 @@
             
             <div class="space-y-6">
                 <!-- Username -->
-                <div class="pb-6 border-b border-gray-100">
+                <div class="pb-6 border-b border-gray-300">
                     <label class="text-xs font-black text-gray-400 uppercase tracking-widest block mb-2">Username</label>
                     <p class="text-lg font-semibold text-gray-900">{{ user.username }}</p>
                 </div>
 
                 <!-- Email -->
-                <div class="pb-6 border-b border-gray-100">
+                <div class="pb-6 border-b border-gray-300">
                     <label class="text-xs font-black text-gray-400 uppercase tracking-widest block mb-2">Email Address</label>
                     <p class="text-lg font-semibold text-gray-900">{{ user.email }}</p>
                 </div>
 
                 <!-- First Name -->
-                <div class="pb-6 border-b border-gray-100">
+                <div class="pb-6 border-b border-gray-300">
                     <label class="text-xs font-black text-gray-400 uppercase tracking-widest block mb-2">First Name</label>
                     <p class="text-lg font-semibold text-gray-900">{{ user.first_name|default:"Not set" }}</p>
                 </div>
 
                 <!-- Last Name -->
-                <div class="pb-6 border-b border-gray-100">
+                <div class="pb-6 border-b border-gray-300">
                     <label class="text-xs font-black text-gray-400 uppercase tracking-widest block mb-2">Last Name</label>
                     <p class="text-lg font-semibold text-gray-900">{{ user.last_name|default:"Not set" }}</p>
                 </div>
@@ -143,7 +143,7 @@
                 </a>
 
                 <!-- Sessions -->
-                <div class="flex items-center justify-between p-5 bg-gray-50 rounded-lg border border-gray-200">
+                <div class="flex items-center justify-between p-5 bg-gray-50 hover:bg-blue-50/50 rounded-lg border border-gray-200 hover:border-kcpsBlue transition-all group">
                     <div>
                         <p class="font-bold text-gray-900 group-hover:text-kcpsBlue transition-colors">Active Sessions</p>
                         <p class="text-sm text-gray-600">Manage your login sessions</p>
